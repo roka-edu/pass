@@ -93,7 +93,7 @@
     <div id="reset-page" class="page">
         <div class="card">
             <h2>비밀번호 재설정</h2>
-            <p style="font-size: 12px; color: var(--error-color); margin-bottom: 15px;">인증 성공! 새 비밀번호를 설정하세요.</p>
+            <p style="font-size: 12px; color: var(--status-blue); margin-bottom: 15px;">인증 성공! 새 비밀번호를 설정하세요.</p>
             <input type="password" id="newPw" placeholder="새 비밀번호">
             <input type="password" id="newPwConfirm" placeholder="새 비밀번호 확인">
             <button class="primary" onclick="completePasswordReset()">변경 완료</button>
@@ -155,21 +155,20 @@
                     { id: "req1", title: "성인지 교육 (국방부 나라배움터)", url: "https://mnd.nhi.go.kr" },
                     { id: "req2", title: "가정폭력 예방 교육", url: "https://mnd.nhi.go.kr" },
                     { id: "req3", title: "청렴 및 부패방지 교육", url: "https://mnd.nhi.go.kr" },
-                    { id: "req4", title: "장애인 인식 개선 교육", url: "https://www.kead.or.kr" }
+                    { id: "req4", title: "자살 예방 교육 (생명사랑)", url: "https://mnd.nhi.go.kr" }, // 자살예방 추가
+                    { id: "req5", title: "장애인 인식 개선 교육", url: "https://www.kead.or.kr" }
                 ]
             },
             {
                 category: "3. 기타 및 직무 교육",
                 type: "full_month",
                 items: [
-                    { id: "etc1", title: "보안 교육 (정보/군사보안)", url: "https://mnd.nhi.go.kr" },
-                    { id: "etc2", title: "산업안전보건 교육", url: "https://www.kosha.or.kr" },
-                    { id: "etc3", title: "군 행정실무 교육", url: "https://mnd.nhi.go.kr" }
+                    { id: "etc1", title: "산업안전보건 교육", url: "https://www.kosha.or.kr" } // 보안, 행정 삭제
                 ]
             }
         ];
 
-        // 상태 관리 로직
+        // 수강 완료 데이터 처리
         function getDoneList() {
             const sn = localStorage.getItem('roka_sn');
             return JSON.parse(localStorage.getItem(`done_${sn}`) || "[]");
@@ -183,6 +182,7 @@
             renderMain();
         }
 
+        // 실시간 기수 상태 계산
         function calcStatus(month, part, type) {
             const year = 2026;
             const lastDay = new Date(year, month, 0).getDate();
@@ -262,7 +262,7 @@
             document.getElementById('schedule-modal').style.display = 'flex';
         }
 
-        // 로그인 및 보안 로직
+        // 앱 시스템 로직
         function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
         function closeModal() { document.getElementById('schedule-modal').style.display = 'none'; }
         
@@ -271,14 +271,14 @@
             const name = document.getElementById('regName').value;
             const birth = document.getElementById('regBirth').value;
             const pw = document.getElementById('regPw').value;
-            if(!sn || !name || !birth || !pw) return alert("필수 정보를 모두 입력하세요.");
+            if(!sn || !name || !birth || !pw) return alert("정보를 모두 입력하세요.");
             
             localStorage.setItem('roka_sn', sn);
             localStorage.setItem('roka_rank', document.getElementById('regRank').value);
             localStorage.setItem('roka_name', name);
             localStorage.setItem('roka_birth', birth);
             localStorage.setItem('roka_pw', pw);
-            alert("가입 성공! 로그인 하세요."); showPage('login-page');
+            alert("가입 성공!"); showPage('login-page');
         }
 
         function login() {
@@ -302,7 +302,7 @@
             const pw2 = document.getElementById('newPwConfirm').value;
             if(pw1 && pw1 === pw2) {
                 localStorage.setItem('roka_pw', pw1);
-                alert("비밀번호가 변경되었습니다."); showPage('login-page');
+                alert("비밀번호가 성공적으로 변경되었습니다."); showPage('login-page');
             } else { alert("비밀번호가 일치하지 않습니다."); }
         }
 
