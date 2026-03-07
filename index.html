@@ -17,34 +17,38 @@
         }
         body { font-family: 'Noto Sans KR', sans-serif; margin: 0; background: var(--bg-color); color: #333; overflow-x: hidden; }
         
-        /* 공통 페이지 구조 */
+        /* 공통 페이지 구조 (상-중-하 배치) */
         .page { display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: space-between; padding: 20px; box-sizing: border-box; }
         .active { display: flex; }
 
-        /* 인트로 카드 (중앙 배치) */
-        .card { 
-            background: white; padding: 40px 25px; border-radius: 25px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
-            width: 100%; max-width: 360px; text-align: center; 
+        /* 인트로 카드 (중앙 집중형) */
+        .intro-container { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            flex-grow: 1; width: 100%; max-width: 360px; text-align: center;
             margin-top: 75px; /* 약 2cm 상단 여백 */
         }
 
+        .main-title { font-size: 20px; font-weight: 700; color: #444; margin-bottom: 5px; letter-spacing: -0.5px; }
+        .sub-title { font-size: 28px; font-weight: 800; color: var(--category-bg); margin: 0; letter-spacing: 1px; }
+        .sun-icon { font-size: 40px; margin: 15px 0 35px 0; display: block; }
+
         button.primary { 
             width: 100%; padding: 18px; background: var(--main-color); 
-            color: white; border: none; border-radius: 12px; 
-            font-size: 18px; font-weight: bold; cursor: pointer; 
-            transition: transform 0.2s; 
+            color: white; border: none; border-radius: 15px; 
+            font-size: 19px; font-weight: bold; cursor: pointer; 
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+            transition: all 0.2s; 
         }
-        button.primary:active { transform: scale(0.98); }
+        button.primary:active { transform: scale(0.96); }
         
-        /* 하단 영역 고정 */
+        /* 하단 영역 (보안문구 + 저작권) */
         .bottom-area { width: 100%; max-width: 360px; margin-top: auto; padding-top: 20px; }
         .security-banner { background: #eee; padding: 15px; border-radius: 12px; font-size: 11px; color: #666; text-align: left; line-height: 1.6; border-bottom: 3px solid #ddd; margin-bottom: 10px; }
         .copyright { font-size: 12px; color: #bbb; margin-bottom: 10px; text-align: center; }
 
         /* 메인 교육 목록 리스트 */
-        .edu-list-container { width: 100%; max-width: 480px; flex-grow: 1; margin-top: 20px; }
-        .category-header { background: var(--category-bg); color: white; padding: 12px; border-radius: 8px; margin: 20px 0 10px 0; font-weight: bold; font-size: 14px; }
+        .edu-list-container { width: 100%; max-width: 480px; flex-grow: 1; }
+        .category-header { background: var(--category-bg); color: white; padding: 12px; border-radius: 8px; margin: 25px 0 10px 0; font-weight: bold; font-size: 14px; }
         .edu-item { background: white; padding: 18px; border-radius: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .edu-info { flex: 1; text-align: left; }
         .edu-info h4 { margin: 0 0 10px 0; font-size: 15px; color: #222; line-height: 1.4; }
@@ -53,7 +57,7 @@
         .btn-link { padding: 12px 25px; background: #fff; border-radius: 10px; text-decoration: none; color: var(--main-color); font-size: 13px; font-weight: bold; border: 2px solid var(--main-color); transition: all 0.2s; }
         .btn-link.completed { background: #f0f0f0; color: #aaa; border: 2px solid #ddd; }
 
-        /* 교육일정 모달 (정중앙 배치 교정) */
+        /* 교육일정 모달 (정중앙 배치) */
         .modal { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: var(--modal-bg); z-index: 1000; 
@@ -64,7 +68,9 @@
             width: 100%; max-width: 450px; position: relative; 
             max-height: 80vh; overflow-y: auto; 
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            animation: modalPop 0.3s ease-out;
         }
+        @keyframes modalPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; }
         th, td { border-bottom: 1px solid #eee; padding: 10px 5px; text-align: center; }
@@ -79,9 +85,10 @@
 <body>
 
     <div id="intro-page" class="page active">
-        <div class="card">
-            <h1 style="color: var(--category-bg); margin: 0; font-size: 26px;">☀️ ROKA EDU-PASS</h1>
-            <p style="font-size: 14px; color: #888; margin: 10px 0 30px 0;">2026 육군 교육 통합 관리 시스템</p>
+        <div class="intro-container">
+            <div class="main-title">2026 육군 교육 통합 관리 시스템</div>
+            <div class="sub-title">ROKA EDU-PASS</div>
+            <div class="sun-icon">☀️</div>
             <button class="primary" onclick="startApp()">시작하기</button>
         </div>
         
@@ -97,12 +104,13 @@
     <div id="main-page" class="page" style="justify-content: flex-start;">
         <div style="width: 100%; max-width: 480px; text-align: left; padding: 10px 0;">
             <h2 style="margin:0; font-size: 20px;">🎖️ 교육 현황판</h2>
-            <p style="color: var(--main-color); font-size: 12px; font-weight: bold; margin-top: 5px;">실시간 신청 기간 및 학습 상태 반영</p>
+            <p style="color: var(--main-color); font-size: 12px; font-weight: bold; margin-top: 5px;">실시간 기수 및 학습 상태 정보</p>
         </div>
         
         <div id="edu-container" class="edu-list-container"></div>
         
-        <div class="copyright" style="margin: 40px 0 20px 0;">Copyright © jm.p</div>
+        <button onclick="location.reload()" style="background: none; border: 1px solid #ccc; padding: 8px 20px; font-size: 11px; margin: 30px 0; border-radius: 20px; cursor: pointer; color: #999;">메인으로 돌아가기</button>
+        <div class="copyright" style="margin-bottom: 20px;">Copyright © jm.p</div>
     </div>
 
     <div id="schedule-modal" class="modal" onclick="if(event.target===this) closeModal()">
@@ -123,7 +131,6 @@
     </div>
 
     <script>
-        // 2026년 3월 7일 기준 시스템 날짜
         const TODAY = new Date('2026-03-07');
 
         const eduData = [
@@ -155,7 +162,6 @@
             }
         ];
 
-        // 수강 완료 상태 저장/불러오기 (기기 로컬 저장소 활용)
         function getDoneList() {
             return JSON.parse(localStorage.getItem('roka_done_v2') || "[]");
         }
@@ -167,19 +173,16 @@
             renderMain();
         }
 
-        // 기간에 따른 상태 계산 (신청/학습 기간 통합 표시)
         function calcStatus(month, part, type) {
             const year = 2026;
             const lastDay = new Date(year, month, 0).getDate();
             let start, end, applyEnd;
 
             if (type === 'half_month') {
-                // 인권교육: 1~15일 / 16~말일
                 start = new Date(year, month-1, part === 1 ? 1 : 16);
                 end = new Date(year, month-1, part === 1 ? 15 : lastDay);
-                applyEnd = end; // 신청기간과 학습기간이 동일한 구조로 설정
+                applyEnd = end;
             } else {
-                // 일반교육: 1~7일 신청 / 1~말일 학습
                 start = new Date(year, month-1, 1);
                 end = new Date(year, month-1, lastDay);
                 applyEnd = new Date(year, month-1, 7);
@@ -189,7 +192,7 @@
             if (TODAY >= start && TODAY <= applyEnd) {
                 res = { text: "신청가능", cls: "status-apply" };
             } else if (TODAY > applyEnd && TODAY <= end) {
-                res = { text: "학습진행중", cls: "status-study" };
+                res = { text: "학습중", cls: "status-study" };
             } else if (TODAY < start) {
                 res = { text: "대기", cls: "status-end" };
             }
@@ -216,13 +219,13 @@
                     div.innerHTML = `
                         <div class="edu-info">
                             <h4 style="${isDone ? 'color:#bbb; text-decoration:line-through;' : ''}">${item.title}</h4>
-                            <button class="btn-schedule" onclick="openSchedule('${item.title}', '${cat.type}')">교육일정/기수</button>
-                            <label style="margin-left:10px; font-size:11px; color:#999; cursor:pointer;">
-                                <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleComplete('${item.id}')"> 완료
+                            <button class="btn-schedule" onclick="openSchedule('${item.title}', '${cat.type}')">상세일정</button>
+                            <label style="margin-left:8px; font-size:11px; color:#999; cursor:pointer;">
+                                <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleComplete('${item.id}')"> 완료체크
                             </label>
                         </div>
                         <a href="${item.url}" target="_blank" class="btn-link ${isDone ? 'completed' : ''}">
-                            ${isDone ? '수강완료' : '수강하기'}
+                            ${isDone ? '수강완료' : '바로가기'}
                         </a>
                     `;
                     container.appendChild(div);
@@ -260,8 +263,6 @@
         function closeModal() {
             document.getElementById('schedule-modal').style.display = 'none';
         }
-
-        window.scrollTo(0,0);
     </script>
 </body>
 </html>
