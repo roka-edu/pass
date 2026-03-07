@@ -11,7 +11,6 @@
             --bg-color: #f8f9fa; 
             --category-bg: #5D4037; 
             --modal-bg: rgba(0,0,0,0.6); 
-            --error-color: #f44336; 
             --status-green: #2ecc71;
             --status-blue: #3498db;
         }
@@ -20,33 +19,36 @@
         .page { display: none; min-height: 100vh; flex-direction: column; align-items: center; padding: 15px; box-sizing: border-box; }
         .active { display: flex; }
 
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 360px; text-align: center; margin-top: 20px; z-index: 10; }
+        /* 카드 및 레이아웃 */
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 360px; text-align: center; margin-top: 20px; }
         input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; box-sizing: border-box; }
         button.primary { width: 100%; padding: 15px; background: var(--main-color); color: white; border: none; border-radius: 10px; font-size: 17px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         
+        /* 버튼 스타일 */
         .btn-schedule { width: 115px; height: 32px; background: #6c757d; color: white; border: none; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: bold; margin-bottom: 5px; }
-        .btn-link { padding: 10px 35px; background: #fff; border-radius: 8px; text-decoration: none; color: var(--main-color); font-size: 13px; font-weight: bold; border: 2px solid var(--main-color); white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; }
+        .btn-link { padding: 10px 40px; background: #fff; border-radius: 8px; text-decoration: none; color: var(--main-color); font-size: 13px; font-weight: bold; border: 2px solid var(--main-color); white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; }
         .btn-link.completed { background: #eee; color: #888; border: 2px solid #ccc; }
 
-        .category-header { width: 100%; max-width: 480px; background: var(--category-bg); color: white; padding: 10px 12px; border-radius: 8px; margin: 12px 0 8px 0; font-weight: bold; font-size: 14px; }
+        /* 교육 리스트 스타일 */
+        .category-header { width: 100%; max-width: 480px; background: var(--category-bg); color: white; padding: 10px 12px; border-radius: 8px; margin: 15px 0 8px 0; font-weight: bold; font-size: 14px; }
         .edu-item { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); width: 100%; max-width: 480px; box-sizing: border-box; }
         .edu-info { flex: 1; text-align: left; }
         .edu-info h4 { margin: 0; font-size: 15px; margin-bottom: 8px; line-height: 1.4; color: #222; }
 
+        /* 모달 스타일 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 100%; max-width: 450px; position: relative; overflow-y: auto; max-height: 80vh; }
+        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 100%; max-width: 450px; position: relative; overflow-y: auto; max-height: 85vh; }
         
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 11px; }
         th, td { border: 1px solid #eee; padding: 8px; text-align: center; }
         th { background: #f4f4f4; }
         
         .status-badge { padding: 2px 6px; border-radius: 4px; color: white; font-weight: bold; font-size: 10px; }
-        .status-apply { background: var(--status-green); } /* 신청가능 */
-        .status-study { background: var(--status-blue); }  /* 학습중 */
-        .status-end { background: #bbb; }                 /* 종료 */
+        .status-apply { background: var(--status-green); } 
+        .status-study { background: var(--status-blue); }  
+        .status-end { background: #bbb; }                 
 
-        .footer-area { width: 100%; max-width: 360px; margin-top: auto; padding-bottom: 20px; text-align: center; }
-        .copyright { font-size: 12px; color: #bbb; letter-spacing: 1px; }
+        .copyright { font-size: 12px; color: #bbb; margin: 20px 0; }
     </style>
 </head>
 <body>
@@ -54,38 +56,46 @@
     <div id="login-page" class="page active">
         <div class="card">
             <h1 style="color: var(--category-bg); margin: 0 0 5px 0; font-size: 22px;">☀️ ROKA EDU-PASS</h1>
-            <p style="font-size: 13px; color: #888; margin-bottom: 15px;">2026 교육관리 시스템</p>
+            <p style="font-size: 13px; color: #888; margin-bottom: 15px;">2026 교육 통합 관리</p>
             <input type="text" id="loginSn" placeholder="군번 (ID)">
             <input type="password" id="loginPw" placeholder="비밀번호">
             <button class="primary" onclick="login()">로그인</button>
-            <div id="loginMsg" style="color:red; font-size:12px; margin-top:5px;"></div>
-            <div style="margin-top:15px; border-top: 1px solid #eee; padding-top: 15px; display: flex; flex-direction: column; gap: 8px;">
-                <button onclick="showPage('signup-page')" style="background: #6c757d; font-size: 13px; border: none; color: white; padding: 10px; border-radius: 8px; cursor: pointer;">신규 회원가입</button>
-                <button onclick="showPage('find-page')" style="background: none; font-size: 12px; border: none; color: #999; cursor: pointer; text-decoration: underline;">비밀번호 찾기 / 초기화</button>
+            <div id="loginMsg" style="color:red; font-size:11px; margin-top:5px;"></div>
+            <div style="margin-top:15px; border-top: 1px solid #eee; padding-top: 15px;">
+                <button onclick="showPage('signup-page')" style="background: #6c757d; font-size: 13px; border: none; color: white; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%;">신규 회원가입</button>
             </div>
         </div>
-        <div class="footer-area"><div class="copyright">Copyright © jm.p</div></div>
+        <div class="copyright">Copyright © jm.p</div>
     </div>
 
-    <div id="find-page" class="page"><div class="card"><h2>본인 확인</h2><input type="text" id="findName" placeholder="성명"><input type="text" id="findBirth" placeholder="생년월일 6자리"><button class="primary" onclick="verifyForReset()">확인</button><button onclick="showPage('login-page')" style="background:none; border:none; color:#888; cursor:pointer; margin-top:10px;">취소</button></div></div>
-    <div id="reset-page" class="page"><div class="card"><h2>비밀번호 재설정</h2><input type="password" id="newPw" placeholder="새 비밀번호"><input type="password" id="newPwConfirm" placeholder="확인"><button class="primary" onclick="completePasswordReset()">변경 완료</button></div></div>
-    <div id="signup-page" class="page"><div class="card"><h2>정보 등록</h2><input type="text" id="regSn" placeholder="군번"><input type="text" id="regRank" placeholder="계급"><input type="text" id="regName" placeholder="성명"><input type="text" id="regBirth" placeholder="생년월일"><input type="password" id="regPw" placeholder="비밀번호"><button class="primary" onclick="register()">가입하기</button><button onclick="showPage('login-page')" style="background:none; border:none; color:#888; cursor:pointer; margin-top:10px;">취소</button></div></div>
+    <div id="signup-page" class="page">
+        <div class="card">
+            <h2>정보 등록</h2>
+            <input type="text" id="regSn" placeholder="군번">
+            <input type="text" id="regRank" placeholder="계급">
+            <input type="text" id="regName" placeholder="성명">
+            <input type="password" id="regPw" placeholder="비밀번호">
+            <button class="primary" onclick="register()">가입 완료</button>
+            <button onclick="showPage('login-page')" style="background:none; border:none; color:#888; margin-top:10px; cursor:pointer;">취소</button>
+        </div>
+    </div>
 
     <div id="main-page" class="page">
         <div style="width: 100%; max-width: 480px; text-align: left; padding: 10px 0;">
             <h2 id="welcome-msg" style="margin:0; font-size: 18px;"></h2>
-            <p style="color: #FF9800; font-size: 12px; font-weight: bold; margin-top: 5px;">2026 교육일정 (현 시각 기준 실시간 상태)</p>
+            <p style="color: #FF9800; font-size: 12px; font-weight: bold; margin-top: 5px;">2026 연간 통합 교육 과정</p>
         </div>
+        
         <div id="edu-container" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
-        <button onclick="logout()" style="background: none; border: 1px solid #ccc; padding: 8px 20px; font-size: 11px; margin-top: 20px; border-radius: 20px; cursor: pointer; color: #999;">로그아웃</button>
-        <div class="copyright" style="margin-top: 20px;">Copyright © jm.p</div>
+        
+        <button onclick="logout()" style="background: none; border: 1px solid #ccc; padding: 8px 20px; font-size: 11px; margin-top: 30px; border-radius: 20px; cursor: pointer; color: #999;">로그아웃</button>
+        <div class="copyright">Copyright © jm.p</div>
     </div>
 
     <div id="schedule-modal" class="modal" onclick="if(event.target===this) closeModal()">
         <div class="modal-content">
             <span style="position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #999;" onclick="closeModal()">&times;</span>
-            <h3 id="modal-title" style="margin: 0; font-size: 15px; color: var(--category-bg); border-left: 4px solid var(--main-color); padding-left: 10px; text-align: left;"></h3>
-            <p style="font-size: 10px; color: #666; text-align: left; margin-top: 5px;">* 현재 날짜 기준 실시간 상태가 표시됩니다.</p>
+            <h3 id="modal-title" style="margin: 0; font-size: 15px; color: var(--category-bg); border-left: 4px solid var(--main-color); padding-left: 10px;"></h3>
             <table>
                 <thead><tr><th>기수</th><th>신청기간</th><th>학습기간</th><th>상태</th></tr></thead>
                 <tbody id="modal-table-body"></tbody>
@@ -94,76 +104,77 @@
     </div>
 
     <script>
-        // 오늘의 날짜 고정 (사용자 요청 시점: 2026-03-07)
-        const TODAY = new Date('2026-03-07');
+        const TODAY = new Date('2026-03-07'); // 시스템 기준 날짜
 
-        const eduCategories = [
+        const eduData = [
             {
-                name: "1. 필수교육 (연 24회 기수 편성)",
-                type: "human_rights", // 특수 기수 (인권 교육 등)
+                category: "1. 인권 교육 (연 24회 편성)",
+                type: "half_month", 
                 items: [
-                    { id: "edu_hr1", title: "인권의 이해", url: "https://mnd.nhi.go.kr" },
-                    { id: "edu_hr2", title: "군인 인권의 이해", url: "https://mnd.nhi.go.kr" }
+                    { id: "hr1", title: "인권의 이해", url: "https://mnd.nhi.go.kr" },
+                    { id: "hr2", title: "군인 인권의 이해", url: "https://mnd.nhi.go.kr" }
                 ]
             },
             {
-                name: "2. 필수/공통 (연 12회 기수 편성)",
-                type: "normal", // 일반 기수
+                category: "2. 법정 필수 교육 (연 12회 편성)",
+                type: "full_month",
                 items: [
-                    { id: "edu1", title: "성인지 교육 (국방부 나라배움터)", url: "https://mnd.nhi.go.kr" },
-                    { id: "edu2", title: "가정폭력 예방 (국방부 나라배움터)", url: "https://mnd.nhi.go.kr" },
-                    { id: "edu3", title: "청렴 및 부패방지 교육", url: "https://mnd.nhi.go.kr" },
-                    { id: "edu4", title: "장애인 인식 개선 교육", url: "https://www.kead.or.kr" }
+                    { id: "req1", title: "성인지 교육 (국방부 나라배움터)", url: "https://mnd.nhi.go.kr" },
+                    { id: "req2", title: "가정폭력 예방 교육", url: "https://mnd.nhi.go.kr" },
+                    { id: "req3", title: "청렴 및 부패방지 교육", url: "https://mnd.nhi.go.kr" },
+                    { id: "req4", title: "장애인 인식 개선 교육", url: "https://www.kead.or.kr" }
+                ]
+            },
+            {
+                category: "3. 기타 및 직무 교육",
+                type: "full_month",
+                items: [
+                    { id: "etc1", title: "보안 교육 (정보보안/군사보안)", url: "https://mnd.nhi.go.kr" },
+                    { id: "etc2", title: "산업안전보건 교육", url: "https://www.kosha.or.kr" },
+                    { id: "etc3", title: "군 행정실무 및 공문서 작성", url: "https://mnd.nhi.go.kr" }
                 ]
             }
         ];
 
-        // 수강 완료 데이터 처리
         function getDoneList() {
             const sn = localStorage.getItem('roka_sn');
             return JSON.parse(localStorage.getItem(`done_${sn}`) || "[]");
         }
 
-        function toggleComplete(eduId) {
+        function toggleComplete(id) {
             const sn = localStorage.getItem('roka_sn');
             let list = getDoneList();
-            list = list.includes(eduId) ? list.filter(id => id !== eduId) : [...list, eduId];
+            list = list.includes(id) ? list.filter(i => i !== id) : [...list, id];
             localStorage.setItem(`done_${sn}`, JSON.stringify(list));
             renderMain();
         }
 
-        // 일정 계산 및 상태 반환 함수
-        function getScheduleInfo(month, half, type) {
+        // 일정 및 상태 계산 로직
+        function calcStatus(month, part, type) {
             const year = 2026;
-            let applyStart, applyEnd, studyStart, studyEnd;
             const lastDay = new Date(year, month, 0).getDate();
+            let aS, aE, sS, sE;
 
-            if (type === 'human_rights') {
-                // 인권 교육: 월 2회 (1~15일 / 16~말일)
-                if (half === 1) {
-                    applyStart = new Date(year, month-1, 1); applyEnd = new Date(year, month-1, 15);
-                    studyStart = new Date(year, month-1, 1); studyEnd = new Date(year, month-1, 15);
-                } else {
-                    applyStart = new Date(year, month-1, 16); applyEnd = new Date(year, month-1, lastDay);
-                    studyStart = new Date(year, month-1, 16); studyEnd = new Date(year, month-1, lastDay);
-                }
+            if (type === 'half_month') {
+                // 상반기(1) 혹은 하반기(2)
+                aS = new Date(year, month-1, part === 1 ? 1 : 16);
+                aE = new Date(year, month-1, part === 1 ? 15 : lastDay);
+                sS = aS; sE = aE;
             } else {
-                // 일반 교육: 월 1회 (1~7일 신청 / 1~말일 학습)
-                applyStart = new Date(year, month-1, 1); applyEnd = new Date(year, month-1, 7);
-                studyStart = new Date(year, month-1, 1); studyEnd = new Date(year, month-1, lastDay);
+                // 일반형 (1~7일 신청 / 1~말일 학습)
+                aS = new Date(year, month-1, 1);
+                aE = new Date(year, month-1, 7);
+                sS = new Date(year, month-1, 1);
+                sE = new Date(year, month-1, lastDay);
             }
 
-            let status = { text: "종료", class: "status-end" };
-            if (TODAY >= applyStart && TODAY <= applyEnd) status = { text: "신청가능", class: "status-apply" };
-            else if (TODAY >= studyStart && TODAY <= studyEnd) status = { text: "학습중", class: "status-study" };
-            else if (TODAY < applyStart) status = { text: "대기", class: "status-end" };
+            let res = { text: "종료", cls: "status-end" };
+            if (TODAY >= aS && TODAY <= aE) res = { text: "신청가능", cls: "status-apply" };
+            else if (TODAY >= sS && TODAY <= sE) res = { text: "학습중", cls: "status-study" };
+            else if (TODAY < aS) res = { text: "대기", cls: "status-end" };
 
-            const formatDate = (d) => `${d.getMonth()+1}/${d.getDate()}`;
-            return {
-                apply: `${formatDate(applyStart)}~${formatDate(applyEnd)}`,
-                study: `${formatDate(studyStart)}~${formatDate(studyEnd)}`,
-                status: status
-            };
+            const fmt = (d) => `${d.getMonth()+1}/${d.getDate()}`;
+            return { apply: `${fmt(aS)}~${fmt(aE)}`, study: `${fmt(sS)}~${fmt(sE)}`, status: res };
         }
 
         function renderMain() {
@@ -172,26 +183,29 @@
             const doneList = getDoneList();
             container.innerHTML = "";
 
-            eduCategories.forEach(cat => {
-                const h = document.createElement('div'); h.className = 'category-header'; h.innerText = cat.name;
-                container.appendChild(h);
+            eduData.forEach(cat => {
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.innerText = cat.category;
+                container.appendChild(header);
+
                 cat.items.forEach(item => {
                     const isDone = doneList.includes(item.id);
-                    const i = document.createElement('div');
-                    i.className = 'edu-item';
-                    i.innerHTML = `
+                    const div = document.createElement('div');
+                    div.className = 'edu-item';
+                    div.innerHTML = `
                         <div class="edu-info">
-                            <h4 style="${isDone ? 'color:#888; text-decoration:line-through;' : ''}">${item.title}</h4>
-                            <button class="btn-schedule" onclick="openSchedule('${item.title}', '${cat.type}')">일정/기수조회</button><br>
-                            <button onclick="toggleComplete('${item.id}')" style="font-size:10px; border:none; background:none; color:${isDone ? '#4CAF50' : '#999'}; cursor:pointer; font-weight:bold; padding:0;">
-                                ${isDone ? '✅ 수강완료 취소' : '⬜ 완료 시 클릭'}
+                            <h4 style="${isDone ? 'color:#bbb; text-decoration:line-through;' : ''}">${item.title}</h4>
+                            <button class="btn-schedule" onclick="openSchedule('${item.title}', '${cat.type}')">기수/일정 확인</button><br>
+                            <button onclick="toggleComplete('${item.id}')" style="font-size:10px; border:none; background:none; color:${isDone ? '#4CAF50' : '#aaa'}; cursor:pointer; font-weight:bold;">
+                                ${isDone ? '✅ 완료 취소' : '⬜ 완료 체크'}
                             </button>
                         </div>
                         <a href="${item.url}" target="_blank" class="btn-link ${isDone ? 'completed' : ''}">
                             ${isDone ? '수강완료' : '수강하기'}
                         </a>
                     `;
-                    container.appendChild(i);
+                    container.appendChild(div);
                 });
             });
         }
@@ -201,50 +215,39 @@
             const tbody = document.getElementById('modal-table-body');
             tbody.innerHTML = "";
 
-            if (type === 'human_rights') {
-                // 인권 교육: 1~24기 (월 2회)
+            if (type === 'half_month') {
                 for (let m = 1; m <= 12; m++) {
-                    for (let h = 1; h <= 2; h++) {
-                        const gisu = (m - 1) * 2 + h;
-                        const info = getScheduleInfo(m, h, type);
-                        tbody.innerHTML += `<tr><td>${gisu}기</td><td>${info.apply}</td><td>${info.study}</td><td><span class="status-badge ${info.status.class}">${info.status.text}</span></td></tr>`;
+                    for (let p = 1; p <= 2; p++) {
+                        const gisu = (m - 1) * 2 + p;
+                        const info = calcStatus(m, p, type);
+                        tbody.innerHTML += `<tr><td>${gisu}기</td><td>${info.apply}</td><td>${info.study}</td><td><span class="status-badge ${info.status.cls}">${info.status.text}</span></td></tr>`;
                     }
                 }
             } else {
-                // 일반 교육: 1~12기 (월 1회)
                 for (let m = 1; m <= 12; m++) {
-                    const info = getScheduleInfo(m, 1, type);
-                    tbody.innerHTML += `<tr><td>${m}기</td><td>${info.apply}</td><td>${info.study}</td><td><span class="status-badge ${info.status.class}">${info.status.text}</span></td></tr>`;
+                    const info = calcStatus(m, 1, type);
+                    tbody.innerHTML += `<tr><td>${m}기</td><td>${info.apply}</td><td>${info.study}</td><td><span class="status-badge ${info.status.cls}">${info.status.text}</span></td></tr>`;
                 }
             }
             document.getElementById('schedule-modal').style.display = 'flex';
         }
 
-        // 공통 기능들
-        function showPage(pId) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(pId).classList.add('active'); }
+        // 기본 앱 로직
+        function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
         function closeModal() { document.getElementById('schedule-modal').style.display = 'none'; }
         function logout() { showPage('login-page'); }
         function login() {
             const sn = document.getElementById('loginSn').value;
             const pw = document.getElementById('loginPw').value;
             if(sn === localStorage.getItem('roka_sn') && pw === localStorage.getItem('roka_pw')) { showPage('main-page'); renderMain(); }
-            else { document.getElementById('loginMsg').innerText="정보 불일치"; }
+            else { document.getElementById('loginMsg').innerText = "군번 또는 비밀번호가 틀립니다."; }
         }
         function register() {
             localStorage.setItem('roka_sn', document.getElementById('regSn').value);
             localStorage.setItem('roka_rank', document.getElementById('regRank').value);
             localStorage.setItem('roka_name', document.getElementById('regName').value);
-            localStorage.setItem('roka_birth', document.getElementById('regBirth').value);
             localStorage.setItem('roka_pw', document.getElementById('regPw').value);
-            alert("가입완료"); showPage('login-page');
-        }
-        function verifyForReset() {
-            if(document.getElementById('findName').value === localStorage.getItem('roka_name')) showPage('reset-page');
-            else alert("정보 불일치");
-        }
-        function completePasswordReset() {
-            localStorage.setItem('roka_pw', document.getElementById('newPw').value);
-            alert("변경완료"); showPage('login-page');
+            alert("가입되었습니다."); showPage('login-page');
         }
     </script>
 </body>
