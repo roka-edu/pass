@@ -6,38 +6,59 @@
     <title>ROKA EDU-PASS 2026</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --main-color: #FF9800; --bg-color: #f8f9fa; --category-bg: #5D4037; --modal-bg: rgba(0,0,0,0.6); --error-color: #f44336; }
+        :root { 
+            --main-color: #FF9800; 
+            --bg-color: #f8f9fa; 
+            --category-bg: #5D4037; 
+            --modal-bg: rgba(0,0,0,0.6); 
+            --error-color: #f44336; 
+            --btn-schedule: #2C3E50; /* 일정조회: 딥 블루 */
+            --btn-apply: #E74C3C;    /* 수강: 비비드 레드 */
+        }
         body { font-family: 'Noto Sans KR', sans-serif; margin: 0; background: var(--bg-color); color: #333; overflow-x: hidden; }
         
         .page { display: none; min-height: 100vh; flex-direction: column; align-items: center; padding: 15px; box-sizing: border-box; }
         .active { display: flex; }
 
-        /* 카드 스타일 */
         .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 360px; text-align: center; margin-top: 20px; z-index: 10; }
         input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; box-sizing: border-box; }
         button.primary { width: 100%; padding: 15px; background: var(--main-color); color: white; border: none; border-radius: 10px; font-size: 17px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         
         .msg-box { font-size: 12px; margin-top: 5px; height: 18px; color: var(--error-color); font-weight: bold; }
 
-        /* 버튼 규격 (가로 3cm 고정 - 약 115px) */
-        .btn-schedule { width: 115px; height: 32px; background: #6c757d; color: white; border: none; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: bold; }
-        .btn-link { padding: 8px 12px; background: #fff; border-radius: 8px; text-decoration: none; color: var(--main-color); font-size: 12px; font-weight: bold; border: 1px solid var(--main-color); white-space: nowrap; }
-
-        .category-header { width: 100%; max-width: 480px; background: var(--category-bg); color: white; padding: 8px 12px; border-radius: 8px; margin: 12px 0 8px 0; font-weight: bold; font-size: 13px; }
-        .edu-item { background: white; padding: 12px 15px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); width: 100%; max-width: 480px; box-sizing: border-box; }
-        .edu-info { flex: 1; text-align: left; }
-        .edu-info h4 { margin: 0; font-size: 13px; margin-bottom: 5px; line-height: 1.4; }
-
-        /* [수정] 모달 팝업 정중앙 정렬 로직 */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 100%; max-width: 380px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        /* [수정] 일정조회 버튼: 가로 2cm (약 75px) */
+        .btn-schedule { width: 75px; height: 32px; background: var(--btn-schedule); color: white; border: none; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: bold; }
         
+        /* [수정] 수강 버튼: 가로 약 5cm(190px), 세로 확장 */
+        .btn-link { 
+            width: 130px; 
+            height: 48px; 
+            background: var(--btn-apply); 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 10px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+        }
+
+        .category-header { width: 100%; max-width: 480px; background: var(--category-bg); color: white; padding: 10px 12px; border-radius: 8px; margin: 12px 0 8px 0; font-weight: bold; font-size: 14px; }
+        .edu-item { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); width: 100%; max-width: 480px; box-sizing: border-box; }
+        
+        .edu-info { flex: 1; text-align: left; padding-right: 10px; }
+        /* [수정] 교육명 글씨 크기 확대 */
+        .edu-info h4 { margin: 0; font-size: 15px; margin-bottom: 8px; line-height: 1.4; color: #222; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 100%; max-width: 380px; position: relative; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 11px; }
         th, td { border: 1px solid #eee; padding: 8px; text-align: center; }
-        th { background: #f8f9fa; }
 
         .footer-area { width: 100%; max-width: 360px; margin-top: auto; padding-bottom: 20px; text-align: center; }
-        .security-info { background: #eee; padding: 15px; border-radius: 12px; font-size: 11px; color: #666; text-align: left; line-height: 1.6; margin-bottom: 15px; border-bottom: 3px solid #ddd; }
+        .security-info { background: #eee; padding: 15px; border-radius: 12px; font-size: 11px; color: #666; text-align: left; line-height: 1.6; margin-bottom: 15px; }
         .copyright { font-size: 12px; color: #bbb; letter-spacing: 1px; }
     </style>
 </head>
@@ -54,45 +75,50 @@
             
             <div style="margin-top:15px; border-top: 1px solid #eee; padding-top: 15px; display: flex; flex-direction: column; gap: 8px;">
                 <button onclick="showPage('signup-page')" style="background: #6c757d; font-size: 13px; border: none; color: white; padding: 10px; border-radius: 8px; cursor: pointer;">신규 회원가입</button>
-                <button onclick="showPage('reset-page')" style="background: none; font-size: 12px; border: none; color: #999; cursor: pointer; text-decoration: underline;">비밀번호 찾기 / 초기화</button>
+                <button onclick="showPage('find-page')" style="background: none; font-size: 12px; border: none; color: #999; cursor: pointer; text-decoration: underline;">비밀번호 찾기 / 초기화</button>
             </div>
         </div>
-
         <div class="footer-area">
-            <div class="security-info">
-                <strong>🛡️ 개인정보 및 보안 안내</strong><br>
-                본 서비스는 별도의 서버를 운영하지 않습니다. 군번, 비밀번호, 생년월일 등 모든 정보는 사용자 기기(LocalStorage) 내에만 저장되며 외부로 전송되지 않습니다.
-            </div>
+            <div class="security-info">🛡️ 본 서비스의 모든 데이터는 브라우저 내부(LocalStorage)에만 저장되며 외부로 전송되지 않습니다.</div>
             <div class="copyright">Copyright © jm.p</div>
+        </div>
+    </div>
+
+    <div id="find-page" class="page">
+        <div class="card">
+            <h2 style="margin:0 0 10px 0; color: var(--category-bg); font-size: 20px;">본인 확인</h2>
+            <p style="font-size: 12px; color: #666; margin-bottom: 15px;">가입 시 입력한 성명과 생년월일을 입력하세요.</p>
+            <input type="text" id="findName" placeholder="성명">
+            <input type="text" id="findBirth" placeholder="생년월일 6자리">
+            <button class="primary" onclick="verifyForReset()">확인</button>
+            <div id="findMsg" class="msg-box"></div>
+            <button onclick="showPage('login-page')" style="background: none; border: none; color: #888; margin-top: 10px; cursor: pointer; font-size: 13px;">돌아가기</button>
+        </div>
+    </div>
+
+    <div id="reset-page" class="page">
+        <div class="card">
+            <h2 style="margin:0 0 10px 0; color: var(--category-bg); font-size: 20px;">비밀번호 재설정</h2>
+            <p style="font-size: 12px; color: #E74C3C; margin-bottom: 15px;">보안을 위해 새로운 비밀번호를 설정해주세요.</p>
+            <input type="password" id="newPw" placeholder="새 비밀번호 입력">
+            <input type="password" id="newPwConfirm" placeholder="새 비밀번호 확인">
+            <button class="primary" onclick="completePasswordReset()">비밀번호 변경 완료</button>
+            <div id="resetMsg" class="msg-box"></div>
         </div>
     </div>
 
     <div id="signup-page" class="page">
         <div class="card">
             <h2 style="margin:0 0 10px 0; color: var(--category-bg); font-size: 20px;">정보 등록</h2>
-            <input type="text" id="regSn" placeholder="군번 (중복확인)">
+            <input type="text" id="regSn" placeholder="군번">
             <input type="text" id="regRank" placeholder="계급">
             <input type="text" id="regName" placeholder="성명">
-            <input type="text" id="regBirth" placeholder="생년월일 6자리 (예: 980515)">
+            <input type="text" id="regBirth" placeholder="생년월일 6자리">
             <input type="password" id="regPw" placeholder="비밀번호 설정">
             <button class="primary" onclick="register()">가입하기</button>
             <div id="regMsg" class="msg-box"></div>
-            <button onclick="showPage('login-page')" style="background: none; border: none; color: #888; margin-top: 10px; cursor: pointer; font-size: 13px;">취소하고 돌아가기</button>
+            <button onclick="showPage('login-page')" style="background: none; border: none; color: #888; margin-top: 10px; cursor: pointer; font-size: 13px;">취소</button>
         </div>
-        <div class="footer-area"><div class="copyright">Copyright © jm.p</div></div>
-    </div>
-
-    <div id="reset-page" class="page">
-        <div class="card">
-            <h2 style="margin:0 0 10px 0; color: var(--category-bg); font-size: 20px;">비밀번호 초기화</h2>
-            <p style="font-size: 12px; color: #666; margin-bottom: 15px;">성명과 생년월일이 일치하면<br>비밀번호가 <strong>'0000'</strong>으로 초기화됩니다.</p>
-            <input type="text" id="resetName" placeholder="등록된 성명">
-            <input type="text" id="resetBirth" placeholder="등록된 생년월일 6자리">
-            <button class="primary" onclick="resetPassword()">초기화 실행</button>
-            <div id="resetMsg" class="msg-box"></div>
-            <button onclick="showPage('login-page')" style="background: none; border: none; color: #888; margin-top: 10px; cursor: pointer; font-size: 13px;">돌아가기</button>
-        </div>
-        <div class="footer-area"><div class="copyright">Copyright © jm.p</div></div>
     </div>
 
     <div id="main-page" class="page">
@@ -102,13 +128,13 @@
         </div>
         <div id="edu-container" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
         <button onclick="logout()" style="background: none; border: 1px solid #ccc; padding: 8px 20px; font-size: 11px; margin-top: 20px; border-radius: 20px; cursor: pointer; color: #999;">로그아웃</button>
-        <div class="footer-area" style="margin-top: 20px;"><div class="copyright">Copyright © jm.p</div></div>
+        <div class="copyright" style="margin-top: 20px;">Copyright © jm.p</div>
     </div>
 
-    <div id="schedule-modal" class="modal" onclick="closeModalOutside(event)">
+    <div id="schedule-modal" class="modal" onclick="if(event.target===this) closeModal()">
         <div class="modal-content">
             <span style="position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #999;" onclick="closeModal()">&times;</span>
-            <h3 id="modal-title" style="margin: 0; font-size: 14px; color: var(--category-bg); border-left: 4px solid var(--main-color); padding-left: 10px; text-align: left;"></h3>
+            <h3 id="modal-title" style="margin: 0; font-size: 14px; color: var(--category-bg); border-left: 4px solid var(--main-color); padding-left: 10px;"></h3>
             <table>
                 <thead><tr><th>기수</th><th>신청기간</th><th>학습기간</th></tr></thead>
                 <tbody id="modal-table-body"></tbody>
@@ -139,43 +165,54 @@
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            window.scrollTo(0, 0);
+            document.querySelectorAll('.msg-box').forEach(m => m.innerText = "");
         }
 
+        // 회원가입
         function register() {
             const sn = document.getElementById('regSn').value.trim();
             const rank = document.getElementById('regRank').value.trim();
             const name = document.getElementById('regName').value.trim();
             const birth = document.getElementById('regBirth').value.trim();
             const pw = document.getElementById('regPw').value.trim();
-            const msg = document.getElementById('regMsg');
-
-            if (!sn || !rank || !name || !birth || !pw) { msg.innerText = "모든 항목을 입력해 주세요."; return; }
-            if (localStorage.getItem('roka_sn') === sn) { msg.innerText = "이미 등록된 군번입니다."; return; }
-
+            if(!sn || !rank || !name || !birth || !pw) { document.getElementById('regMsg').innerText="모든 항목 입력 필수"; return; }
+            if(localStorage.getItem('roka_sn') === sn) { document.getElementById('regMsg').innerText="이미 등록된 군번"; return; }
+            
             localStorage.setItem('roka_sn', sn);
             localStorage.setItem('roka_rank', rank);
             localStorage.setItem('roka_name', name);
             localStorage.setItem('roka_birth', birth);
             localStorage.setItem('roka_pw', pw);
-            alert("가입 성공! 로그인을 진행해 주세요."); showPage('login-page');
+            alert("가입 완료!"); showPage('login-page');
         }
 
+        // 로그인
         function login() {
             const sn = document.getElementById('loginSn').value.trim();
             const pw = document.getElementById('loginPw').value.trim();
-            if (sn === localStorage.getItem('roka_sn') && pw === localStorage.getItem('roka_pw')) {
+            if(sn === localStorage.getItem('roka_sn') && pw === localStorage.getItem('roka_pw')) {
                 showPage('main-page'); renderMain();
-            } else { document.getElementById('loginMsg').innerText = "일치하는 정보가 없습니다."; }
+            } else { document.getElementById('loginMsg').innerText="정보가 일치하지 않습니다."; }
         }
 
-        function resetPassword() {
-            const name = document.getElementById('resetName').value.trim();
-            const birth = document.getElementById('resetBirth').value.trim();
-            if (name === localStorage.getItem('roka_name') && birth === localStorage.getItem('roka_birth')) {
-                localStorage.setItem('roka_pw', '0000');
-                alert("비밀번호가 '0000'으로 초기화되었습니다."); showPage('login-page');
-            } else { document.getElementById('resetMsg').innerText = "정보가 일치하지 않습니다."; }
+        // 비밀번호 초기화 전 인증
+        function verifyForReset() {
+            const name = document.getElementById('findName').value.trim();
+            const birth = document.getElementById('findBirth').value.trim();
+            if(name === localStorage.getItem('roka_name') && birth === localStorage.getItem('roka_birth')) {
+                showPage('reset-page'); // 인증 성공 시 재설정 페이지로
+            } else { document.getElementById('findMsg').innerText="일치하는 정보가 없습니다."; }
+        }
+
+        // 비밀번호 재설정 완료
+        function completePasswordReset() {
+            const pw1 = document.getElementById('newPw').value.trim();
+            const pw2 = document.getElementById('newPwConfirm').value.trim();
+            if(!pw1 || pw1 !== pw2) { document.getElementById('resetMsg').innerText="비밀번호가 일치하지 않습니다."; return; }
+            
+            localStorage.setItem('roka_pw', pw1);
+            alert("비밀번호가 변경되었습니다. 다시 로그인해주세요.");
+            showPage('login-page');
         }
 
         function renderMain() {
@@ -190,9 +227,9 @@
                     i.innerHTML = `
                         <div class="edu-info">
                             <h4>${item.title}</h4>
-                            <button class="btn-schedule" onclick="openSchedule('${item.title}')">📅 일정 조회</button>
+                            <button class="btn-schedule" onclick="openSchedule('${item.title}')">일정조회</button>
                         </div>
-                        <a href="${item.url}" target="_blank" class="btn-link">수강</a>
+                        <a href="${item.url}" target="_blank" class="btn-link">수강하기</a>
                     `;
                     container.appendChild(i);
                 });
@@ -211,14 +248,7 @@
         }
 
         function closeModal() { document.getElementById('schedule-modal').style.display = 'none'; }
-        
-        // 배경 클릭 시 닫기 기능 추가
-        function closeModalOutside(event) {
-            if (event.target === document.getElementById('schedule-modal')) closeModal();
-        }
-
         function logout() { showPage('login-page'); }
-        window.onload = () => showPage('login-page');
     </script>
 </body>
 </html>
