@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROKA EDU-PASS</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; background: #f0f2f5; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 500px; min-height: 100vh; background: white; display: flex; flex-direction: column; }
+        #login-page, #main-page { padding: 30px; display: none; flex-direction: column; align-items: center; }
+        .active { display: flex !important; }
+        .sun-icon { font-size: 60px; margin-bottom: 20px; }
+        h1 { color: #5D4037; margin-bottom: 10px; }
+        input { width: 80%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 16px; }
+        button { width: 85%; padding: 15px; background: #FF9800; color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .edu-card { width: 90%; background: #fff; border: 1px solid #eee; padding: 15px; margin-bottom: 10px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .btn-go { background: #FF9800; color: white; padding: 8px 15px; border-radius: 8px; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="login-page" class="active">
+            <div class="sun-icon">☀️</div>
+            <h1>ROKA EDU-PASS</h1>
+            <p>정보를 입력하고 시작하세요</p>
+            <input type="text" id="rankInput" placeholder="계급 (예: 상병)">
+            <input type="text" id="nameInput" placeholder="성명">
+            <button onclick="saveAndGo()">시작하기</button>
+        </div>
+
+        <div id="main-page">
+            <h2 id="userTitle">님, 환영합니다!</h2>
+            <div id="list-container" style="width: 100%;"></div>
+            <button onclick="logout()" style="background: #999; width: 50%; padding: 10px;">로그아웃</button>
+        </div>
+    </div>
+
+    <script>
+        const eduData = [
+            { title: "성인지 교육", url: "https://e-learning.nhi.go.kr", dday: "D-15" },
+            { title: "보안 교육", url: "https://www.mnd.go.kr", dday: "D-5" },
+            { title: "정신전력", url: "https://www.dema.mil.kr", dday: "매주" }
+        ];
+
+        function saveAndGo() {
+            const r = document.getElementById('rankInput').value;
+            const n = document.getElementById('nameInput').value;
+            if (r && n) {
+                localStorage.setItem('myRank', r);
+                localStorage.setItem('myName', n);
+                location.reload();
+            }
+        }
+
+        window.onload = function() {
+            const savedName = localStorage.getItem('myName');
+            const savedRank = localStorage.getItem('myRank');
+            if (savedName) {
+                document.getElementById('login-page').classList.remove('active');
+                document.getElementById('main-page').classList.add('active');
+                document.getElementById('userTitle').innerText = `${savedRank} ${savedName}님, 환영합니다! ☀️`;
+                
+                const list = document.getElementById('list-container');
+                eduData.forEach(item => {
+                    list.innerHTML += `<div class="edu-card">
+                        <div><b>${item.title}</b><br><small>${item.dday}</small></div>
+                        <a href="${item.url}" target="_blank" class="btn-go">수강</a>
+                    </div>`;
+                });
+            }
+        }
+
+        function logout() { localStorage.clear(); location.reload(); }
+    </script>
+</body>
+</html>
