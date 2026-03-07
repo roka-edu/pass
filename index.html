@@ -12,53 +12,49 @@
             --category-bg: #5D4037; 
             --modal-bg: rgba(0,0,0,0.6); 
             --error-color: #f44336; 
-            --btn-schedule: #2C3E50; /* 일정조회: 딥 블루 */
-            --btn-apply: #E74C3C;    /* 수강: 비비드 레드 */
         }
         body { font-family: 'Noto Sans KR', sans-serif; margin: 0; background: var(--bg-color); color: #333; overflow-x: hidden; }
         
         .page { display: none; min-height: 100vh; flex-direction: column; align-items: center; padding: 15px; box-sizing: border-box; }
         .active { display: flex; }
 
+        /* 공통 카드 스타일 */
         .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 360px; text-align: center; margin-top: 20px; z-index: 10; }
         input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; box-sizing: border-box; }
         button.primary { width: 100%; padding: 15px; background: var(--main-color); color: white; border: none; border-radius: 10px; font-size: 17px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         
         .msg-box { font-size: 12px; margin-top: 5px; height: 18px; color: var(--error-color); font-weight: bold; }
 
-        /* [수정] 일정조회 버튼: 가로 2cm (약 75px) */
-        .btn-schedule { width: 75px; height: 32px; background: var(--btn-schedule); color: white; border: none; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: bold; }
+        /* [복구] 일정조회 버튼: 그레이 스타일 (3cm 규격) */
+        .btn-schedule { width: 115px; height: 32px; background: #6c757d; color: white; border: none; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: bold; }
         
-        /* [수정] 수강 버튼: 가로 약 5cm(190px), 세로 확장 */
+        /* [수정] 수강하기 버튼: 오렌지 테두리 스타일 + 가로 1cm 확장 */
         .btn-link { 
-            width: 130px; 
-            height: 48px; 
-            background: var(--btn-apply); 
-            color: white; 
+            padding: 8px 25px; /* 좌우 패딩을 늘려 가로 1cm 확장 효과 */
+            background: #fff; 
+            border-radius: 8px; 
             text-decoration: none; 
-            border-radius: 10px; 
-            font-size: 16px; 
+            color: var(--main-color); 
+            font-size: 12px; 
             font-weight: bold; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+            border: 1px solid var(--main-color); 
+            white-space: nowrap; 
         }
 
         .category-header { width: 100%; max-width: 480px; background: var(--category-bg); color: white; padding: 10px 12px; border-radius: 8px; margin: 12px 0 8px 0; font-weight: bold; font-size: 14px; }
         .edu-item { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); width: 100%; max-width: 480px; box-sizing: border-box; }
         
-        .edu-info { flex: 1; text-align: left; padding-right: 10px; }
-        /* [수정] 교육명 글씨 크기 확대 */
+        .edu-info { flex: 1; text-align: left; }
         .edu-info h4 { margin: 0; font-size: 15px; margin-bottom: 8px; line-height: 1.4; color: #222; }
 
+        /* 모달 중앙 정렬 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .modal-content { background: white; padding: 20px; border-radius: 15px; width: 100%; max-width: 380px; position: relative; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 11px; }
         th, td { border: 1px solid #eee; padding: 8px; text-align: center; }
 
         .footer-area { width: 100%; max-width: 360px; margin-top: auto; padding-bottom: 20px; text-align: center; }
-        .security-info { background: #eee; padding: 15px; border-radius: 12px; font-size: 11px; color: #666; text-align: left; line-height: 1.6; margin-bottom: 15px; }
+        .security-info { background: #eee; padding: 15px; border-radius: 12px; font-size: 11px; color: #666; text-align: left; line-height: 1.6; margin-bottom: 15px; border-bottom: 3px solid #ddd; }
         .copyright { font-size: 12px; color: #bbb; letter-spacing: 1px; }
     </style>
 </head>
@@ -79,15 +75,14 @@
             </div>
         </div>
         <div class="footer-area">
-            <div class="security-info">🛡️ 본 서비스의 모든 데이터는 브라우저 내부(LocalStorage)에만 저장되며 외부로 전송되지 않습니다.</div>
+            <div class="security-info"><strong>🛡️ 보안 안내</strong>: 본 서비스는 서버 없이 사용자 기기에만 정보를 저장합니다. 안심하고 사용하세요.</div>
             <div class="copyright">Copyright © jm.p</div>
         </div>
     </div>
 
     <div id="find-page" class="page">
         <div class="card">
-            <h2 style="margin:0 0 10px 0; color: var(--category-bg); font-size: 20px;">본인 확인</h2>
-            <p style="font-size: 12px; color: #666; margin-bottom: 15px;">가입 시 입력한 성명과 생년월일을 입력하세요.</p>
+            <h2 style="margin:0 0 10px 0; color: var(--category-bg); font-size: 20px;">정보 확인</h2>
             <input type="text" id="findName" placeholder="성명">
             <input type="text" id="findBirth" placeholder="생년월일 6자리">
             <button class="primary" onclick="verifyForReset()">확인</button>
@@ -98,11 +93,10 @@
 
     <div id="reset-page" class="page">
         <div class="card">
-            <h2 style="margin:0 0 10px 0; color: var(--category-bg); font-size: 20px;">비밀번호 재설정</h2>
-            <p style="font-size: 12px; color: #E74C3C; margin-bottom: 15px;">보안을 위해 새로운 비밀번호를 설정해주세요.</p>
-            <input type="password" id="newPw" placeholder="새 비밀번호 입력">
+            <h2 style="margin:0 0 10px 0; color: var(--category-bg); font-size: 20px;">비밀번호 변경</h2>
+            <input type="password" id="newPw" placeholder="새 비밀번호">
             <input type="password" id="newPwConfirm" placeholder="새 비밀번호 확인">
-            <button class="primary" onclick="completePasswordReset()">비밀번호 변경 완료</button>
+            <button class="primary" onclick="completePasswordReset()">변경 완료</button>
             <div id="resetMsg" class="msg-box"></div>
         </div>
     </div>
@@ -168,16 +162,13 @@
             document.querySelectorAll('.msg-box').forEach(m => m.innerText = "");
         }
 
-        // 회원가입
         function register() {
             const sn = document.getElementById('regSn').value.trim();
             const rank = document.getElementById('regRank').value.trim();
             const name = document.getElementById('regName').value.trim();
             const birth = document.getElementById('regBirth').value.trim();
             const pw = document.getElementById('regPw').value.trim();
-            if(!sn || !rank || !name || !birth || !pw) { document.getElementById('regMsg').innerText="모든 항목 입력 필수"; return; }
-            if(localStorage.getItem('roka_sn') === sn) { document.getElementById('regMsg').innerText="이미 등록된 군번"; return; }
-            
+            if(!sn || !rank || !name || !birth || !pw) return;
             localStorage.setItem('roka_sn', sn);
             localStorage.setItem('roka_rank', rank);
             localStorage.setItem('roka_name', name);
@@ -186,33 +177,29 @@
             alert("가입 완료!"); showPage('login-page');
         }
 
-        // 로그인
         function login() {
             const sn = document.getElementById('loginSn').value.trim();
             const pw = document.getElementById('loginPw').value.trim();
             if(sn === localStorage.getItem('roka_sn') && pw === localStorage.getItem('roka_pw')) {
                 showPage('main-page'); renderMain();
-            } else { document.getElementById('loginMsg').innerText="정보가 일치하지 않습니다."; }
+            } else { document.getElementById('loginMsg').innerText="정보 불일치"; }
         }
 
-        // 비밀번호 초기화 전 인증
         function verifyForReset() {
             const name = document.getElementById('findName').value.trim();
             const birth = document.getElementById('findBirth').value.trim();
             if(name === localStorage.getItem('roka_name') && birth === localStorage.getItem('roka_birth')) {
-                showPage('reset-page'); // 인증 성공 시 재설정 페이지로
-            } else { document.getElementById('findMsg').innerText="일치하는 정보가 없습니다."; }
+                showPage('reset-page');
+            } else { document.getElementById('findMsg').innerText="정보 불일치"; }
         }
 
-        // 비밀번호 재설정 완료
         function completePasswordReset() {
             const pw1 = document.getElementById('newPw').value.trim();
             const pw2 = document.getElementById('newPwConfirm').value.trim();
-            if(!pw1 || pw1 !== pw2) { document.getElementById('resetMsg').innerText="비밀번호가 일치하지 않습니다."; return; }
-            
-            localStorage.setItem('roka_pw', pw1);
-            alert("비밀번호가 변경되었습니다. 다시 로그인해주세요.");
-            showPage('login-page');
+            if(pw1 && pw1 === pw2) {
+                localStorage.setItem('roka_pw', pw1);
+                alert("변경 완료!"); showPage('login-page');
+            } else { document.getElementById('resetMsg').innerText="비밀번호 확인 요망"; }
         }
 
         function renderMain() {
