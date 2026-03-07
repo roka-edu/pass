@@ -3,74 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROKA EDU-PASS</title>
+    <title>ROKA EDU-PASS 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; margin: 0; background: #f0f2f5; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 500px; min-height: 100vh; background: white; display: flex; flex-direction: column; }
-        #login-page, #main-page { padding: 30px; display: none; flex-direction: column; align-items: center; }
-        .active { display: flex !important; }
-        .sun-icon { font-size: 60px; margin-bottom: 20px; }
-        h1 { color: #5D4037; margin-bottom: 10px; }
-        input { width: 80%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 16px; }
-        button { width: 85%; padding: 15px; background: #FF9800; color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; }
-        .edu-card { width: 90%; background: #fff; border: 1px solid #eee; padding: 15px; margin-bottom: 10px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .btn-go { background: #FF9800; color: white; padding: 8px 15px; border-radius: 8px; text-decoration: none; font-size: 14px; }
+        :root { --main-color: #FF9800; --bg-color: #f8f9fa; --category-bg: #5D4037; --modal-bg: rgba(0,0,0,0.6); --error-color: #f44336; }
+        body { font-family: 'Noto Sans KR', sans-serif; margin: 0; background: var(--bg-color); color: #333; overflow-x: hidden; }
+        
+        .page { display: none; min-height: 100vh; flex-direction: column; align-items: center; padding: 15px; box-sizing: border-box; }
+        .active { display: flex; }
+
+        /* 카드 스타일 */
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 360px; text-align: center; margin-top: 20px; z-index: 10; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; box-sizing: border-box; }
+        button.primary { width: 100%; padding: 15px; background: var(--main-color); color: white; border: none; border-radius: 10px; font-size: 17px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        
+        /* 알림 문구 */
+        .msg-box { font-size: 12px; margin-top: 5px; height: 18px; color: var(--error-color); font-weight: bold; }
+
+        /* 버튼 규격 (가로 3cm 고정 - 약 115px) */
+        .btn-schedule { width: 115px; height: 32px; background: #6c757d; color: white; border: none; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: bold; }
+        .btn-link { padding: 8px 12px; background: #fff; border-radius: 8px; text-decoration: none; color: var(--main-color); font-size: 12px; font-weight: bold; border: 1px solid var(--main-color); white-space: nowrap; }
+
+        /* 카테고리 및 리스트 스타일 */
+        .category-header { width: 100%; max-width: 480px; background: var(--category-bg); color: white; padding: 8px 12px; border-radius: 8px; margin: 12px 0 8px 0; font-weight: bold; font-size: 13px; }
+        .edu-item { background: white; padding: 12px 15px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); width: 100%; max-width: 480px; box-sizing: border-box; }
+        .edu-info { flex: 1; text-align: left; }
+        .edu-info h4 { margin: 0; font-size: 13px; margin-bottom: 5px; line-height: 1.4; }
+
+        /* 푸터 영역 (보안 및 저작권) */
+        .footer-area { width: 100%; max-width: 360px; margin-top: auto; padding-bottom: 20px; text-align: center; }
+        .security-info { background: #eee; padding: 15px; border-radius: 12px; font-size: 11px; color: #666; text-align: left; line-height: 1.6; margin-bottom: 15px; border-bottom: 3px solid #ddd; }
+        .copyright { font-size: 12px; color: #bbb; letter-spacing: 1px; }
+
+        /* 일정 모달 팝업 */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
+        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 100%; max-width: 400px; position: relative; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 11px; }
+        th, td { border: 1px solid #eee; padding: 8px; text-align: center; }
+        th { background: #f8f9fa; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div id="login-page" class="active">
-            <div class="sun-icon">☀️</div>
-            <h1>ROKA EDU-PASS</h1>
-            <p>정보를 입력하고 시작하세요</p>
-            <input type="text" id="rankInput" placeholder="계급 (예: 상병)">
-            <input type="text" id="nameInput" placeholder="성명">
-            <button onclick="saveAndGo()">시작하기</button>
+
+    <div id="login-page" class="page active">
+        <div class="card">
+            <h1 style="color: var(--category-bg); margin: 0 0 5px 0; font-size: 22px;">☀️ ROKA EDU-PASS</h1>
+            <p style="font-size: 13px; color: #888; margin-bottom: 15px;">2026 교육관리 시스템</p>
+            <input type="text" id="loginSn" placeholder="군번 (ID)">
+            <input type="password" id="loginPw" placeholder="비밀번호">
+            <button class="primary" onclick="login()">로그인</button>
+            <div id="loginMsg" class="msg-box"></div>
+            
+            <div style="margin-top:15px; border-top: 1px solid #eee; padding-top: 15px; display: flex; flex-direction: column; gap: 8px;">
+                <button onclick="showPage('signup-page')" style="background: #6c757d; font-size: 13px; border: none; color: white; padding: 10px; border-radius: 8px; cursor: pointer;">신규 회원가입</button>
+                <button onclick="showPage('reset-page')" style="background: none; font-size: 12px; border: none; color: #999; cursor: pointer; text-decoration: underline;">비밀번호 찾기 / 초기화</button>
+            </div>
         </div>
 
-        <div id="main-page">
-            <h2 id="userTitle">님, 환영합니다!</h2>
-            <div id="list-container" style="width: 100%;"></div>
-            <button onclick="logout()" style="background: #999; width: 50%; padding: 10px;">로그아웃</button>
+        <div class="footer-area">
+            <div class="security-info">
+                <strong>🛡️ 개인정보 및 보안 안내</strong><br>
+                본 서비스는 별도의 서버를 운영하지 않습니다. 군번, 비밀번호, 생년월일 등 모든 정보는 사용자 기기(LocalStorage) 내에만 저장되며 외부로 전송되지 않습니다.
+            </div>
+            <div class="copyright">Copyright © jm.p</div>
+        </div>
+    </div>
+
+    <div id="signup-page" class="page">
+        <div class="card">
+            <h2 style="margin:0 0 10px 0; color: var(--category-bg); font-size: 20px;">정보 등록</h2>
+            <input type="text" id="regSn" placeholder="군번 (중복확인)">
+            <input type="text" id="regRank" placeholder="계급">
+            <input type="text" id="regName" placeholder="성명">
+            <input type="text" id="regBirth" placeholder="생년월일 6자리 (예: 980515)">
+            <input type="password" id="regPw" placeholder="비밀번호 설정">
+            <button class="primary" onclick="register()">가입하기</button>
+            <div id="regMsg" class="msg-box"></div>
+            <button onclick="showPage('login-page')" style="background: none; border: none; color: #888; margin-top: 10px; cursor: pointer; font-size: 13px;">취소하고 돌아가기</button>
+        </div>
+        <div class="footer-area"><div class="copyright">Copyright © jm.p</div></div>
+    </div>
+
+    <div id="reset-page" class="page">
+        <div class="card">
+            <h2 style="margin:0 0 10px 0; color: var(--category-bg); font-size: 20px;">비밀번호 초기화</h2>
+            <p style="font-size: 12px; color: #666; margin-bottom: 15px;">성명과 생년월일이 일치하면<br>비밀번호가 <strong>'0000'</strong>으로 초기화됩니다.</p>
+            <input type="text" id="resetName" placeholder="등록된 성명">
+            <input type="text" id="resetBirth" placeholder="등록된 생년월일 6자리">
+            <button class="primary" onclick="resetPassword()">초기화 실행</button>
+            <div id="resetMsg" class="msg-box"></div>
+            <button onclick="showPage('login-page')" style="background: none; border: none; color: #888; margin-top: 10px; cursor: pointer; font-size: 13px;">돌아가기</button>
+        </div>
+        <div class="footer-area"><div class="copyright">Copyright © jm.p</div></div>
+    </div>
+
+    <div id="main-page" class="page">
+        <div style="width: 100%; max-width: 480px; text-align: left; padding: 10px 0;">
+            <h2 id="welcome-msg" style="margin:0; font-size: 18px;"></h2>
+            <p style="color: #FF9800; font-size: 12px; font-weight: bold; margin-top: 5px;">2026 연간 교육 일정 확인</p>
+        </div>
+        <div id="edu-container" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
+        <button onclick="logout()" style="background: none; border: 1px solid #ccc; padding: 8px 20px; font-size: 11px; margin-top: 20px; border-radius: 20px; cursor: pointer; color: #999;">로그아웃</button>
+        <div class="footer-area" style="margin-top: 20px;"><div class="copyright">Copyright © jm.p</div></div>
+    </div>
+
+    <div id="schedule-modal" class="modal">
+        <div class="modal-content">
+            <span style="position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #999;" onclick="closeModal()">&times;</span>
+            <h3 id="modal-title" style="margin: 0; font-size: 14px; color: var(--category-bg); border-left: 4px solid var(--main-color); padding-left: 10px;"></h3>
+            <table>
+                <thead><tr><th>기수</th><th>신청기간</th><th>학습기간</th></tr></thead>
+                <tbody id="modal-table-body"></tbody>
+            </table>
         </div>
     </div>
 
     <script>
-        const eduData = [
-            { title: "성인지 교육", url: "https://e-learning.nhi.go.kr", dday: "D-15" },
-            { title: "보안 교육", url: "https://www.mnd.go.kr", dday: "D-5" },
-            { title: "정신전력", url: "https://www.dema.mil.kr", dday: "매주" }
+        const eduCategories = [
+            {
+                name: "1. 필수교육",
+                items: [
+                    { title: "성인지 교육 (국방부 나라배움터)", url: "https://mnd.nhi.go.kr" },
+                    { title: "가정폭력 예방 (국방부 나라배움터)", url: "https://mnd.nhi.go.kr" },
+                    { title: "청렴 교육 (국방부 나라배움터)", url: "https://mnd.nhi.go.kr" },
+                    { title: "장애인 인식 개선 (한국장애인고용공단)", url: "https://www.kead.or.kr" }
+                ]
+            },
+            {
+                name: "2. 기타 및 직무",
+                items: [ 
+                    { title: "인권교육 (국방부 나라배움터)", url: "https://mnd.nhi.go.kr" },
+                    { title: "산업안전보건 교육 (안전보건공단)", url: "https://www.kosha.or.kr" }
+                ]
+            }
         ];
 
-        function saveAndGo() {
-            const r = document.getElementById('rankInput').value;
-            const n = document.getElementById('nameInput').value;
-            if (r && n) {
-                localStorage.setItem('myRank', r);
-                localStorage.setItem('myName', n);
-                location.reload();
-            }
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.msg-box').forEach(m => m.innerText = "");
         }
 
-        window.onload = function() {
-            const savedName = localStorage.getItem('myName');
-            const savedRank = localStorage.getItem('myRank');
-            if (savedName) {
-                document.getElementById('login-page').classList.remove('active');
-                document.getElementById('main-page').classList.add('active');
-                document.getElementById('userTitle').innerText = `${savedRank} ${savedName}님, 환영합니다! ☀️`;
-                
-                const list = document.getElementById('list-container');
-                eduData.forEach(item => {
-                    list.innerHTML += `<div class="edu-card">
-                        <div><b>${item.title}</b><br><small>${item.dday}</small></div>
-                        <a href="${item.url}" target="_blank" class="btn-go">수강</a>
-                    </div>`;
+        function register() {
+            const sn = document.getElementById('regSn').value.trim();
+            const rank = document.getElementById('regRank').value.trim();
+            const name = document.getElementById('regName').value.trim();
+            const birth = document.getElementById('regBirth').value.trim();
+            const pw = document.getElementById('regPw').value.trim();
+            const msg = document.getElementById('regMsg');
+
+            if (!sn || !rank || !name || !birth || !pw) { msg.innerText = "모든 항목을 입력해 주세요."; return; }
+            if (localStorage.getItem('roka_sn') === sn) { msg.innerText = "이미 등록된 군번입니다."; return; }
+
+            localStorage.setItem('roka_sn', sn);
+            localStorage.setItem('roka_rank', rank);
+            localStorage.setItem('roka_name', name);
+            localStorage.setItem('roka_birth', birth);
+            localStorage.setItem('roka_pw', pw);
+            alert("가입 성공! 로그인을 진행해 주세요."); showPage('login-page');
+        }
+
+        function login() {
+            const sn = document.getElementById('loginSn').value.trim();
+            const pw = document.getElementById('loginPw').value.trim();
+            if (sn === localStorage.getItem('roka_sn') && pw === localStorage.getItem('roka_pw')) {
+                showPage('main-page'); renderMain();
+            } else { document.getElementById('loginMsg').innerText = "일치하는 정보가 없습니다."; }
+        }
+
+        function resetPassword() {
+            const name = document.getElementById('resetName').value.trim();
+            const birth = document.getElementById('resetBirth').value.trim();
+            if (name === localStorage.getItem('roka_name') && birth === localStorage.getItem('roka_birth')) {
+                localStorage.setItem('roka_pw', '0000');
+                alert("비밀번호가 '0000'으로 초기화되었습니다."); showPage('login-page');
+            } else { document.getElementById('resetMsg').innerText = "정보가 일치하지 않습니다."; }
+        }
+
+        function renderMain() {
+            document.getElementById('welcome-msg').innerText = `${localStorage.getItem('roka_rank')} ${localStorage.getItem('roka_name')}님`;
+            const container = document.getElementById('edu-container');
+            container.innerHTML = "";
+            eduCategories.forEach(cat => {
+                const h = document.createElement('div'); h.className = 'category-header'; h.innerText = cat.name;
+                container.appendChild(h);
+                cat.items.forEach(item => {
+                    const i = document.createElement('div'); i.className = 'edu-item';
+                    i.innerHTML = `
+                        <div class="edu-info">
+                            <h4>${item.title}</h4>
+                            <button class="btn-schedule" onclick="openSchedule('${item.title}')">📅 일정 조회</button>
+                        </div>
+                        <a href="${item.url}" target="_blank" class="btn-link">수강</a>
+                    `;
+                    container.appendChild(i);
                 });
-            }
+            });
         }
 
-        function logout() { localStorage.clear(); location.reload(); }
+        function openSchedule(title) {
+            document.getElementById('modal-title').innerText = title;
+            const tbody = document.getElementById('modal-table-body');
+            tbody.innerHTML = "";
+            for(let i=1; i<=12; i++) {
+                const lastDay = new Date(2026, i, 0).getDate();
+                tbody.innerHTML += `<tr><td>${i}기</td><td>01일~07일</td><td>01일~${lastDay}일</td></tr>`;
+            }
+            document.getElementById('schedule-modal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('schedule-modal').style.display = 'none'; }
+        function logout() { showPage('login-page'); }
+        window.onload = () => showPage('login-page');
     </script>
 </body>
 </html>
