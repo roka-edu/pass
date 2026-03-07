@@ -17,30 +17,28 @@
         input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; box-sizing: border-box; }
         button.primary { width: 100%; padding: 15px; background: var(--main-color); color: white; border: none; border-radius: 10px; font-size: 17px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         
-        /* 알림 문구 */
         .msg-box { font-size: 12px; margin-top: 5px; height: 18px; color: var(--error-color); font-weight: bold; }
 
         /* 버튼 규격 (가로 3cm 고정 - 약 115px) */
         .btn-schedule { width: 115px; height: 32px; background: #6c757d; color: white; border: none; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: bold; }
         .btn-link { padding: 8px 12px; background: #fff; border-radius: 8px; text-decoration: none; color: var(--main-color); font-size: 12px; font-weight: bold; border: 1px solid var(--main-color); white-space: nowrap; }
 
-        /* 카테고리 및 리스트 스타일 */
         .category-header { width: 100%; max-width: 480px; background: var(--category-bg); color: white; padding: 8px 12px; border-radius: 8px; margin: 12px 0 8px 0; font-weight: bold; font-size: 13px; }
         .edu-item { background: white; padding: 12px 15px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); width: 100%; max-width: 480px; box-sizing: border-box; }
         .edu-info { flex: 1; text-align: left; }
         .edu-info h4 { margin: 0; font-size: 13px; margin-bottom: 5px; line-height: 1.4; }
 
-        /* 푸터 영역 (보안 및 저작권) */
-        .footer-area { width: 100%; max-width: 360px; margin-top: auto; padding-bottom: 20px; text-align: center; }
-        .security-info { background: #eee; padding: 15px; border-radius: 12px; font-size: 11px; color: #666; text-align: left; line-height: 1.6; margin-bottom: 15px; border-bottom: 3px solid #ddd; }
-        .copyright { font-size: 12px; color: #bbb; letter-spacing: 1px; }
-
-        /* 일정 모달 팝업 */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
-        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 100%; max-width: 400px; position: relative; }
+        /* [수정] 모달 팝업 정중앙 정렬 로직 */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 100%; max-width: 380px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 11px; }
         th, td { border: 1px solid #eee; padding: 8px; text-align: center; }
         th { background: #f8f9fa; }
+
+        .footer-area { width: 100%; max-width: 360px; margin-top: auto; padding-bottom: 20px; text-align: center; }
+        .security-info { background: #eee; padding: 15px; border-radius: 12px; font-size: 11px; color: #666; text-align: left; line-height: 1.6; margin-bottom: 15px; border-bottom: 3px solid #ddd; }
+        .copyright { font-size: 12px; color: #bbb; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -107,10 +105,10 @@
         <div class="footer-area" style="margin-top: 20px;"><div class="copyright">Copyright © jm.p</div></div>
     </div>
 
-    <div id="schedule-modal" class="modal">
+    <div id="schedule-modal" class="modal" onclick="closeModalOutside(event)">
         <div class="modal-content">
             <span style="position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #999;" onclick="closeModal()">&times;</span>
-            <h3 id="modal-title" style="margin: 0; font-size: 14px; color: var(--category-bg); border-left: 4px solid var(--main-color); padding-left: 10px;"></h3>
+            <h3 id="modal-title" style="margin: 0; font-size: 14px; color: var(--category-bg); border-left: 4px solid var(--main-color); padding-left: 10px; text-align: left;"></h3>
             <table>
                 <thead><tr><th>기수</th><th>신청기간</th><th>학습기간</th></tr></thead>
                 <tbody id="modal-table-body"></tbody>
@@ -141,7 +139,7 @@
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            document.querySelectorAll('.msg-box').forEach(m => m.innerText = "");
+            window.scrollTo(0, 0);
         }
 
         function register() {
@@ -213,6 +211,12 @@
         }
 
         function closeModal() { document.getElementById('schedule-modal').style.display = 'none'; }
+        
+        // 배경 클릭 시 닫기 기능 추가
+        function closeModalOutside(event) {
+            if (event.target === document.getElementById('schedule-modal')) closeModal();
+        }
+
         function logout() { showPage('login-page'); }
         window.onload = () => showPage('login-page');
     </script>
