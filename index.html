@@ -13,6 +13,7 @@
             --modal-bg: rgba(0,0,0,0.6); 
             --status-green: #2ecc71;
             --status-blue: #3498db;
+            --error-color: #f44336;
         }
         body { font-family: 'Noto Sans KR', sans-serif; margin: 0; background: var(--bg-color); color: #333; overflow-x: hidden; }
         
@@ -20,13 +21,13 @@
         .active { display: flex; }
 
         /* 카드 및 레이아웃 */
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 360px; text-align: center; margin-top: 20px; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 360px; text-align: center; margin-top: 20px; position: relative; }
         input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; box-sizing: border-box; }
         button.primary { width: 100%; padding: 15px; background: var(--main-color); color: white; border: none; border-radius: 10px; font-size: 17px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         
         /* 버튼 스타일 */
         .btn-schedule { width: 115px; height: 32px; background: #6c757d; color: white; border: none; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: bold; margin-bottom: 5px; }
-        .btn-link { padding: 10px 40px; background: #fff; border-radius: 8px; text-decoration: none; color: var(--main-color); font-size: 13px; font-weight: bold; border: 2px solid var(--main-color); white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; }
+        .btn-link { padding: 10px 40px; background: #fff; border-radius: 8px; text-decoration: none; color: var(--main-color); font-size: 13px; font-weight: bold; border: 2px solid var(--main-color); white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; min-width: 100px; }
         .btn-link.completed { background: #eee; color: #888; border: 2px solid #ccc; }
 
         /* 교육 리스트 스타일 */
@@ -48,6 +49,9 @@
         .status-study { background: var(--status-blue); }  
         .status-end { background: #bbb; }                 
 
+        /* 보안 안내 문구 스타일 */
+        .security-banner { background: #f0f0f0; padding: 15px; border-radius: 12px; font-size: 11px; color: #666; text-align: left; line-height: 1.6; margin-top: 20px; border-bottom: 3px solid #ddd; width: 100%; max-width: 360px; box-sizing: border-box; }
+
         .copyright { font-size: 12px; color: #bbb; margin: 20px 0; }
     </style>
 </head>
@@ -56,16 +60,44 @@
     <div id="login-page" class="page active">
         <div class="card">
             <h1 style="color: var(--category-bg); margin: 0 0 5px 0; font-size: 22px;">☀️ ROKA EDU-PASS</h1>
-            <p style="font-size: 13px; color: #888; margin-bottom: 15px;">2026 교육 통합 관리</p>
+            <p style="font-size: 13px; color: #888; margin-bottom: 15px;">2026 교육 통합 관리 시스템</p>
             <input type="text" id="loginSn" placeholder="군번 (ID)">
             <input type="password" id="loginPw" placeholder="비밀번호">
             <button class="primary" onclick="login()">로그인</button>
-            <div id="loginMsg" style="color:red; font-size:11px; margin-top:5px;"></div>
-            <div style="margin-top:15px; border-top: 1px solid #eee; padding-top: 15px;">
-                <button onclick="showPage('signup-page')" style="background: #6c757d; font-size: 13px; border: none; color: white; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%;">신규 회원가입</button>
+            <div id="loginMsg" style="color:var(--error-color); font-size:11px; margin-top:5px; min-height: 15px;"></div>
+            
+            <div style="margin-top:15px; border-top: 1px solid #eee; padding-top: 15px; display: flex; flex-direction: column; gap: 8px;">
+                <button onclick="showPage('signup-page')" style="background: #6c757d; font-size: 13px; border: none; color: white; padding: 10px; border-radius: 8px; cursor: pointer;">신규 회원가입</button>
+                <button onclick="showPage('find-page')" style="background: none; font-size: 12px; border: none; color: #999; cursor: pointer; text-decoration: underline;">비밀번호 찾기 / 초기화</button>
             </div>
         </div>
+        
+        <div class="security-banner">
+            <strong>🛡️ 보안 및 기기 연동 안내</strong><br>
+            본 앱은 서버 없이 사용자의 브라우저에만 정보를 암호화하여 저장합니다. 따라서 **폰과 PC의 정보는 연동되지 않으며**, 각 기기에서 최초 1회 가입이 필요합니다.
+        </div>
         <div class="copyright">Copyright © jm.p</div>
+    </div>
+
+    <div id="find-page" class="page">
+        <div class="card">
+            <h2>본인 인증</h2>
+            <p style="font-size: 12px; color: #666; margin-bottom: 15px;">등록된 이름과 생년월일을 입력하세요.</p>
+            <input type="text" id="findName" placeholder="성명">
+            <input type="text" id="findBirth" placeholder="생년월일 6자리">
+            <button class="primary" onclick="verifyForReset()">인증하기</button>
+            <button onclick="showPage('login-page')" style="background:none; border:none; color:#888; margin-top:10px; cursor:pointer;">돌아가기</button>
+        </div>
+    </div>
+
+    <div id="reset-page" class="page">
+        <div class="card">
+            <h2>비밀번호 재설정</h2>
+            <p style="font-size: 12px; color: var(--error-color); margin-bottom: 15px;">인증 성공! 새 비밀번호를 설정하세요.</p>
+            <input type="password" id="newPw" placeholder="새 비밀번호">
+            <input type="password" id="newPwConfirm" placeholder="새 비밀번호 확인">
+            <button class="primary" onclick="completePasswordReset()">변경 완료</button>
+        </div>
     </div>
 
     <div id="signup-page" class="page">
@@ -74,7 +106,8 @@
             <input type="text" id="regSn" placeholder="군번">
             <input type="text" id="regRank" placeholder="계급">
             <input type="text" id="regName" placeholder="성명">
-            <input type="password" id="regPw" placeholder="비밀번호">
+            <input type="text" id="regBirth" placeholder="생년월일 6자리">
+            <input type="password" id="regPw" placeholder="비밀번호 설정">
             <button class="primary" onclick="register()">가입 완료</button>
             <button onclick="showPage('login-page')" style="background:none; border:none; color:#888; margin-top:10px; cursor:pointer;">취소</button>
         </div>
@@ -104,7 +137,7 @@
     </div>
 
     <script>
-        const TODAY = new Date('2026-03-07'); // 시스템 기준 날짜
+        const TODAY = new Date('2026-03-07'); 
 
         const eduData = [
             {
@@ -129,13 +162,14 @@
                 category: "3. 기타 및 직무 교육",
                 type: "full_month",
                 items: [
-                    { id: "etc1", title: "보안 교육 (정보보안/군사보안)", url: "https://mnd.nhi.go.kr" },
+                    { id: "etc1", title: "보안 교육 (정보/군사보안)", url: "https://mnd.nhi.go.kr" },
                     { id: "etc2", title: "산업안전보건 교육", url: "https://www.kosha.or.kr" },
-                    { id: "etc3", title: "군 행정실무 및 공문서 작성", url: "https://mnd.nhi.go.kr" }
+                    { id: "etc3", title: "군 행정실무 교육", url: "https://mnd.nhi.go.kr" }
                 ]
             }
         ];
 
+        // 상태 관리 로직
         function getDoneList() {
             const sn = localStorage.getItem('roka_sn');
             return JSON.parse(localStorage.getItem(`done_${sn}`) || "[]");
@@ -149,19 +183,16 @@
             renderMain();
         }
 
-        // 일정 및 상태 계산 로직
         function calcStatus(month, part, type) {
             const year = 2026;
             const lastDay = new Date(year, month, 0).getDate();
             let aS, aE, sS, sE;
 
             if (type === 'half_month') {
-                // 상반기(1) 혹은 하반기(2)
                 aS = new Date(year, month-1, part === 1 ? 1 : 16);
                 aE = new Date(year, month-1, part === 1 ? 15 : lastDay);
                 sS = aS; sE = aE;
             } else {
-                // 일반형 (1~7일 신청 / 1~말일 학습)
                 aS = new Date(year, month-1, 1);
                 aE = new Date(year, month-1, 7);
                 sS = new Date(year, month-1, 1);
@@ -218,9 +249,8 @@
             if (type === 'half_month') {
                 for (let m = 1; m <= 12; m++) {
                     for (let p = 1; p <= 2; p++) {
-                        const gisu = (m - 1) * 2 + p;
                         const info = calcStatus(m, p, type);
-                        tbody.innerHTML += `<tr><td>${gisu}기</td><td>${info.apply}</td><td>${info.study}</td><td><span class="status-badge ${info.status.cls}">${info.status.text}</span></td></tr>`;
+                        tbody.innerHTML += `<tr><td>${(m-1)*2+p}기</td><td>${info.apply}</td><td>${info.study}</td><td><span class="status-badge ${info.status.cls}">${info.status.text}</span></td></tr>`;
                     }
                 }
             } else {
@@ -232,23 +262,51 @@
             document.getElementById('schedule-modal').style.display = 'flex';
         }
 
-        // 기본 앱 로직
-        function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+        // 로그인 및 보안 로직
+        function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
         function closeModal() { document.getElementById('schedule-modal').style.display = 'none'; }
-        function logout() { showPage('login-page'); }
+        
+        function register() {
+            const sn = document.getElementById('regSn').value;
+            const name = document.getElementById('regName').value;
+            const birth = document.getElementById('regBirth').value;
+            const pw = document.getElementById('regPw').value;
+            if(!sn || !name || !birth || !pw) return alert("필수 정보를 모두 입력하세요.");
+            
+            localStorage.setItem('roka_sn', sn);
+            localStorage.setItem('roka_rank', document.getElementById('regRank').value);
+            localStorage.setItem('roka_name', name);
+            localStorage.setItem('roka_birth', birth);
+            localStorage.setItem('roka_pw', pw);
+            alert("가입 성공! 로그인 하세요."); showPage('login-page');
+        }
+
         function login() {
             const sn = document.getElementById('loginSn').value;
             const pw = document.getElementById('loginPw').value;
-            if(sn === localStorage.getItem('roka_sn') && pw === localStorage.getItem('roka_pw')) { showPage('main-page'); renderMain(); }
-            else { document.getElementById('loginMsg').innerText = "군번 또는 비밀번호가 틀립니다."; }
+            if(sn === localStorage.getItem('roka_sn') && pw === localStorage.getItem('roka_pw')) {
+                showPage('main-page'); renderMain();
+            } else { document.getElementById('loginMsg').innerText = "군번 또는 비밀번호가 틀립니다."; }
         }
-        function register() {
-            localStorage.setItem('roka_sn', document.getElementById('regSn').value);
-            localStorage.setItem('roka_rank', document.getElementById('regRank').value);
-            localStorage.setItem('roka_name', document.getElementById('regName').value);
-            localStorage.setItem('roka_pw', document.getElementById('regPw').value);
-            alert("가입되었습니다."); showPage('login-page');
+
+        function verifyForReset() {
+            const n = document.getElementById('findName').value;
+            const b = document.getElementById('findBirth').value;
+            if(n === localStorage.getItem('roka_name') && b === localStorage.getItem('roka_birth')) {
+                showPage('reset-page');
+            } else { alert("정보가 일치하지 않습니다."); }
         }
+
+        function completePasswordReset() {
+            const pw1 = document.getElementById('newPw').value;
+            const pw2 = document.getElementById('newPwConfirm').value;
+            if(pw1 && pw1 === pw2) {
+                localStorage.setItem('roka_pw', pw1);
+                alert("비밀번호가 변경되었습니다."); showPage('login-page');
+            } else { alert("비밀번호가 일치하지 않습니다."); }
+        }
+
+        function logout() { showPage('login-page'); }
     </script>
 </body>
 </html>
