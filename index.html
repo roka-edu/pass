@@ -17,70 +17,74 @@
             --bg-color: #f8f9fa; 
             --category-bg: #5D4037; 
             --modal-bg: rgba(0,0,0,0.7); 
-            --status-green: #2ecc71;
-            --status-blue: #3498db;
-            --status-gray: #bbb;
-            --margin-1cm: 38px; /* 화면상 약 1cm 여백 */
+            --margin-1cm: 35px; /* 약 1cm 여백 */
         }
         
         html, body { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
             overflow: hidden; font-family: 'Noto Sans KR', sans-serif; 
-            background: var(--bg-color); display: flex; justify-content: center;
+            background: #333; /* PC 배경은 어둡게 */
+            display: flex; justify-content: center;
         }
 
         .app-shell {
             width: 100%; max-width: 500px; height: 100%;
             display: flex; flex-direction: column; position: relative;
+            background: var(--bg-color); /* 앱 본체 배경 */
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
         }
 
         .page { display: none; width: 100%; height: 100%; flex-direction: column; padding: 15px; box-sizing: border-box; }
         .active { display: flex; }
 
-        /* [1페이지: 인트로 - 기존 유지] */
+        /* [1페이지: 인트로] */
         #intro-page { justify-content: space-between; align-items: center; }
         .intro-content { 
             flex: 1; display: flex; flex-direction: column; 
             justify-content: center; align-items: center;
             transform: translateY(-50px);
         }
-        .sun-icon { font-size: 50px; margin: 20px 0 35px 0; }
+        .main-title { font-size: 20px; font-weight: 700; color: #444; margin-bottom: 5px; }
+        .sub-title { font-size: 28px; font-weight: 800; color: var(--category-bg); margin: 0; }
+        .sun-icon { font-size: 55px; margin: 20px 0 35px 0; }
         button.primary { 
             width: 85%; padding: 18px; background: var(--main-color); 
             color: white; border: none; border-radius: 15px; font-size: 19px; font-weight: bold; cursor: pointer;
         }
 
-        /* [2페이지: 메인목록 - 레이아웃 핵심 수정] */
+        /* [2페이지: 메인목록] */
         #main-page { 
-            padding-top: var(--margin-1cm); /* 상단 1cm 여백 */
+            padding-top: var(--margin-1cm); 
             justify-content: flex-start;
         }
         .edu-list-wrapper {
             flex: 1; display: flex; flex-direction: column; 
-            justify-content: space-around; /* 1, 2, 3번 사이를 유연하게 벌림 */
-            margin-bottom: var(--margin-1cm); /* 산업안전 박스와 하단 버튼 사이 1cm 여백 */
+            justify-content: flex-start; /* PC에서도 벌어지지 않게 상단 정렬 */
+            gap: 15px; /* 카테고리 간 모바일 수준의 적당한 여백 */
+            margin-bottom: var(--margin-1cm); /* 하단 버튼과 1cm 여백 */
         }
         .category-group { display: flex; flex-direction: column; gap: 5px; }
         .category-header { background: var(--category-bg); color: white; padding: 7px 12px; border-radius: 6px; font-weight: bold; font-size: 13px; }
         .edu-item { background: white; padding: 9px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .edu-info h4 { margin: 0 0 4px 0; font-size: 14px; color: #222; line-height: 1.2; }
+        .edu-info h4 { margin: 0 0 3px 0; font-size: 14px; color: #222; line-height: 1.2; }
 
         .btn-schedule { background: #6c757d; color: white; border: none; border-radius: 4px; padding: 3px 8px; font-size: 10px; cursor: pointer; font-weight: bold; }
         .btn-link { padding: 9px 18px; background: #fff; border-radius: 8px; text-decoration: none; color: var(--main-color); font-size: 12px; font-weight: bold; border: 2px solid var(--main-color); white-space: nowrap; }
         .btn-link.completed { background: #f0f0f0; color: #aaa; border: 2px solid #ddd; }
 
-        /* 하단 고정 영역 */
+        /* 하단 영역 및 문구 크기 복구 */
         .bottom-area { width: 100%; text-align: center; }
         .security-banner { 
-            background: #fff; padding: 10px; border-radius: 10px; 
-            font-size: 10.5px; color: #555; text-align: left; line-height: 1.4; 
-            border: 1px solid #ddd; margin-bottom: 8px; 
+            background: #fff; padding: 12px; border-radius: 10px; 
+            font-size: 11px; /* 폰트 크기 이전 버전으로 복구 */
+            color: #444; text-align: left; line-height: 1.5; 
+            border: 1px solid #ddd; margin-bottom: 8px; font-weight: 400;
         }
         .btn-bottom-group { display: flex; gap: 8px; justify-content: center; margin-bottom: 6px; }
-        .btn-mini { background:none; border:1px solid #ccc; padding:5px 12px; font-size:10px; border-radius:12px; color:#888; cursor:pointer; }
+        .btn-mini { background:none; border:1px solid #ccc; padding:6px 14px; font-size:11px; border-radius:12px; color:#777; cursor:pointer; }
         .copyright { font-size: 10px; color: #bbb; padding-bottom: env(safe-area-inset-bottom, 10px); }
 
-        /* 모달 (기존 유지) */
+        /* 모달 유지 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 9999; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 20px; border-radius: 20px; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
@@ -131,7 +135,7 @@
     </div>
 
     <script>
-        // 보안 방어벽 (기존 유지)
+        // 보안 방어벽 유지
         (function(){ if(self!==top) top.location=self.location; })();
 
         const TODAY = new Date('2026-03-09');
@@ -139,34 +143,34 @@
             {
                 category: "1. 법정 필수 및 인권 교육",
                 items: [
-                    { id: "v9_1", title: "성인지 교육 (국방부)", url: "https://mnd.nhi.go.kr" },
-                    { id: "v9_2", title: "자살 예방 교육 (생명사랑)", url: "https://mnd.nhi.go.kr" },
-                    { id: "v9_3", title: "청렴/부패방지 및 인권", url: "https://mnd.nhi.go.kr" },
-                    { id: "v9_4", title: "장애인 인식 개선 교육", url: "https://www.kead.or.kr" }
+                    { id: "v10_1", title: "성인지 교육 (국방부)", url: "https://mnd.nhi.go.kr" },
+                    { id: "v10_2", title: "자살 예방 교육 (생명사랑)", url: "https://mnd.nhi.go.kr" },
+                    { id: "v10_3", title: "청렴/부패방지 및 인권", url: "https://mnd.nhi.go.kr" },
+                    { id: "v10_4", title: "장애인 인식 개선 교육", url: "https://www.kead.or.kr" }
                 ]
             },
             {
                 category: "2. 정보보안 및 안전관리 교육",
                 items: [
-                    { id: "v9_5", title: "정보보안 교육", url: "https://mnd.nhi.go.kr" },
-                    { id: "v9_6", title: "육군 안전관리교육(안전관리자)", url: "http://safety.step.or.kr" },
-                    { id: "v9_7", title: "육군 안전관리교육(안전실무자)", url: "http://safety.step.or.kr" }
+                    { id: "v10_5", title: "정보보안 교육", url: "https://mnd.nhi.go.kr" },
+                    { id: "v10_6", title: "육군 안전관리교육(안전관리자)", url: "http://safety.step.or.kr" },
+                    { id: "v10_7", title: "육군 안전관리교육(안전실무자)", url: "http://safety.step.or.kr" }
                 ]
             },
             {
                 category: "3. 직무 및 기타 안전",
                 items: [
-                    { id: "v9_8", title: "산업안전보건 교육", url: "http://edu.kosha.or.kr" }
+                    { id: "v10_8", title: "산업안전보건 교육", url: "http://edu.kosha.or.kr" }
                 ]
             }
         ];
 
-        function getDoneList() { try { return JSON.parse(localStorage.getItem('roka_v9_data') || "[]"); } catch(e) { return []; } }
+        function getDoneList() { try { return JSON.parse(localStorage.getItem('roka_v10_data') || "[]"); } catch(e) { return []; } }
         
         function toggleComplete(id) {
             let list = getDoneList();
             list = list.includes(id) ? list.filter(i => i !== id) : [...list, id];
-            localStorage.setItem('roka_v9_data', JSON.stringify(list));
+            localStorage.setItem('roka_v10_data', JSON.stringify(list));
             renderMain();
         }
 
@@ -225,7 +229,7 @@
         }
 
         function closeModal() { document.getElementById('schedule-modal').style.display = 'none'; }
-        function safeReset() { if(confirm('기록을 초기화할까요?')) { localStorage.removeItem('roka_v9_data'); location.reload(); } }
+        function safeReset() { if(confirm('기록을 초기화할까요?')) { localStorage.removeItem('roka_v10_data'); location.reload(); } }
     </script>
 </body>
 </html>
