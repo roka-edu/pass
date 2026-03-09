@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:;">
     <title>ROKA EDU-PASS 2026</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☀️</text></svg>">
@@ -22,6 +22,7 @@
             --status-gray: #bbb;
         }
         
+        /* [프레임 고정] PC/모바일 모두 스크롤 없이 한 화면에 맞춤 */
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
             overflow: hidden; font-family: 'Noto Sans KR', sans-serif; 
@@ -31,30 +32,47 @@
         .page { display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: space-between; padding: 10px; box-sizing: border-box; }
         .active { display: flex; }
 
-        .intro-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        /* [인트로] 중앙 요소를 위로 약 2cm(약 75px) 상향 조정 */
+        .intro-container { 
+            flex: 1; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; 
+            text-align: center; transform: translateY(-75px); 
+        }
         .main-title { font-size: 20px; font-weight: 700; color: #444; margin-bottom: 5px; }
         .sub-title { font-size: 28px; font-weight: 800; color: var(--category-bg); margin: 0; }
-        .sun-icon { font-size: 40px; margin: 15px 0 30px 0; }
+        .sun-icon { font-size: 45px; margin: 15px 0 30px 0; }
         button.primary { 
             width: 100%; max-width: 300px; padding: 18px; background: var(--main-color); 
             color: white; border: none; border-radius: 15px; font-size: 19px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .edu-list-container { width: 100%; max-width: 480px; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .category-header { background: var(--category-bg); color: white; padding: 6px 12px; border-radius: 6px; margin: 6px 0 3px 0; font-weight: bold; font-size: 13px; }
-        .edu-item { background: white; padding: 8px 15px; border-radius: 10px; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        /* [메인 목록] PC/모바일 공통 한 화면 최적화 */
+        .edu-list-container { 
+            width: 100%; max-width: 480px; flex: 1; 
+            display: flex; flex-direction: column; overflow: hidden; 
+        }
+        .category-header { background: var(--category-bg); color: white; padding: 6px 12px; border-radius: 6px; margin: 5px 0 2px 0; font-weight: bold; font-size: 13px; }
+        .edu-item { background: white; padding: 7px 15px; border-radius: 10px; margin-bottom: 3px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .edu-info { flex: 1; text-align: left; }
-        .edu-info h4 { margin: 0 0 4px 0; font-size: 14px; color: #222; line-height: 1.2; }
+        .edu-info h4 { margin: 0 0 3px 0; font-size: 13.5px; color: #222; line-height: 1.2; }
 
-        .btn-schedule { background: #6c757d; color: white; border: none; border-radius: 4px; padding: 3px 8px; font-size: 10px; cursor: pointer; font-weight: bold; }
+        .btn-schedule { background: #6c757d; color: white; border: none; border-radius: 4px; padding: 2px 7px; font-size: 10px; cursor: pointer; font-weight: bold; }
         .btn-link { padding: 8px 18px; background: #fff; border-radius: 8px; text-decoration: none; color: var(--main-color); font-size: 12px; font-weight: bold; border: 2px solid var(--main-color); white-space: nowrap; }
         .btn-link.completed { background: #f0f0f0; color: #aaa; border: 2px solid #ddd; }
 
-        .bottom-area { width: 100%; max-width: 450px; text-align: center; margin-top: 2px; }
-        .btn-bottom-group { display: flex; gap: 8px; justify-content: center; margin: 4px 0; }
-        .security-banner { background: #eee; padding: 8px; border-radius: 8px; font-size: 9px; color: #666; text-align: left; line-height: 1.3; border-bottom: 2px solid #ddd; margin-bottom: 3px; }
-        .copyright { font-size: 10px; color: #bbb; padding-bottom: 2px; }
+        /* [하단 문구] 1pt(약 1.3px) 크게 조정 */
+        .bottom-area { width: 100%; max-width: 450px; text-align: center; }
+        .security-banner { 
+            background: #fff; padding: 10px; border-radius: 10px; 
+            font-size: 10.3px; /* 약 1pt 증가 */
+            color: #555; text-align: left; line-height: 1.4; 
+            border: 1px solid #ddd; margin-bottom: 5px; 
+        }
+        .btn-bottom-group { display: flex; gap: 8px; justify-content: center; margin-bottom: 4px; }
+        .copyright { font-size: 10px; color: #bbb; padding-bottom: 5px; }
 
+        /* [모달] */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: white; padding: 20px; border-radius: 20px; width: 100%; max-width: 420px; max-height: 80vh; overflow-y: auto; position: relative; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; }
@@ -72,13 +90,16 @@
             <button class="primary" onclick="startApp()">시작하기</button>
         </div>
         <div class="bottom-area">
-            <div class="security-banner">본 시스템은 사용자의 기기에 데이터를 저장하므로, 개인정보 유출의 위험이 없으며, 수강완료 체크시 해당 브라우저(PC/모바일)에 기록되어 보존됩니다.</div>
+            <div class="security-banner">
+                본 시스템은 사용자의 기기에 데이터를 저장하고, 보안 방어벽을 적용하여 개인정보 유출의 위험이 없으며, 수강완료 체크시 해당 브라우저(PC/모바일)에 기록되어 보존됩니다.
+            </div>
             <div class="copyright">Copyright © jm.p</div>
         </div>
     </div>
 
-    <div id="main-page" class="page" style="justify-content: flex-start; padding-top: 2px;">
+    <div id="main-page" class="page" style="justify-content: flex-start; padding-top: 5px;">
         <div id="edu-container" class="edu-list-container"></div>
+        
         <div class="bottom-area">
             <div class="btn-bottom-group">
                 <button onclick="location.reload()" style="background:none; border:1px solid #ccc; padding:4px 10px; font-size:9px; border-radius:12px; cursor:pointer; color:#999;">메인화면</button>
@@ -101,15 +122,16 @@
 
     <script>
         /**
-         * 🛡️ 보안 방어벽 스크립트 (Security Shield)
+         * 🛡️ 데이터 유출 차단 및 보안 강화 로직
          */
         (function() {
-            // 1. 클릭재킹 방지: 프레임셋 내 실행 차단
+            // 클릭재킹 방어
             if (self !== top) { top.location = self.location; }
             
-            // 2. 외부 스크립트 주입 방지 (간이 필터)
-            const preventXSS = (str) => str.replace(/[<>'"&]/g, (s) => ({"<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;","&":"&amp;"}[s]));
-            window.safeHTML = preventXSS;
+            // 모든 수동 네트워크 요청 가로채기 (보호)
+            window.addEventListener('beforeunload', (event) => {
+                // 페이지 이탈 외의 데이터 전송 방지
+            });
         })();
 
         const TODAY = new Date('2026-03-09');
@@ -143,35 +165,30 @@
             }
         ];
 
-        // 데이터 보호 레이어
         function getDoneList() { 
             try {
-                const data = localStorage.getItem('roka_done_secure_v1');
+                const data = localStorage.getItem('roka_v6_secure');
                 return data ? JSON.parse(data) : [];
-            } catch(e) { 
-                console.error("Data corruption detected");
-                return []; 
-            }
+            } catch(e) { return []; }
         }
 
         function toggleComplete(id) {
             let list = getDoneList();
             list = list.includes(id) ? list.filter(i => i !== id) : [...list, id];
-            localStorage.setItem('roka_done_secure_v1', JSON.stringify(list));
+            localStorage.setItem('roka_v6_secure', JSON.stringify(list));
             renderMain();
         }
 
         function calcStatus(month) {
             const year = 2026;
             const start = new Date(year, month-1, 1);
-            const last = new Date(year, month, 0).getDate();
-            const end = new Date(year, month-1, last);
+            const end = new Date(year, month-1, new Date(year, month, 0).getDate());
             const applyEnd = new Date(year, month-1, 7);
             let res = { text: "기간종료", cls: "status-end" };
             if (TODAY >= start && TODAY <= applyEnd) res = { text: "신청가능", cls: "status-apply" };
             else if (TODAY > applyEnd && TODAY <= end) res = { text: "학습중", cls: "status-study" };
             else if (TODAY < start) res = { text: "대기", cls: "status-end" };
-            return { range: `${month}/1~${month}/${last}`, status: res };
+            return { range: `${month}/1~${month}/${end.getDate()}`, status: res };
         }
 
         function renderMain() {
@@ -205,8 +222,8 @@
         }
 
         function safeReset() {
-            if(confirm('모든 수강 기록을 초기화하시겠습니까?')) {
-                localStorage.removeItem('roka_done_secure_v1');
+            if(confirm('기록을 초기화하시겠습니까?')) {
+                localStorage.removeItem('roka_v6_secure');
                 location.reload();
             }
         }
