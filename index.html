@@ -59,9 +59,10 @@
         }
         .edu-list-wrapper {
             flex: 1; display: flex; flex-direction: column; 
-            justify-content: flex-start; /* PC에서도 벌어지지 않게 상단 정렬 */
-            gap: 15px; /* 카테고리 간 모바일 수준의 적당한 여백 */
-            margin-bottom: var(--margin-1cm); /* 하단 버튼과 1cm 여백 */
+            justify-content: flex-start; 
+            gap: 15px; 
+            margin-bottom: var(--margin-1cm); 
+            overflow-y: auto; /* 항목이 많아질 경우 스크롤 가능하게 */
         }
         .category-group { display: flex; flex-direction: column; gap: 5px; }
         .category-header { background: var(--category-bg); color: white; padding: 7px 12px; border-radius: 6px; font-weight: bold; font-size: 13px; }
@@ -72,13 +73,12 @@
         .btn-link { padding: 9px 18px; background: #fff; border-radius: 8px; text-decoration: none; color: var(--main-color); font-size: 12px; font-weight: bold; border: 2px solid var(--main-color); white-space: nowrap; }
         .btn-link.completed { background: #f0f0f0; color: #aaa; border: 2px solid #ddd; }
 
-        /* 하단 영역 및 문구 크기 복구 */
         .bottom-area { width: 100%; text-align: center; }
         .security-banner { 
             background: #fff; padding: 12px; border-radius: 10px; 
-            font-size: 11px; /* 폰트 크기 이전 버전으로 복구 */
+            font-size: 11px; 
             color: #444; text-align: left; line-height: 1.5; 
-            border: 1px solid #ddd; margin-bottom: 8px; font-weight: 400;
+            border: 1px solid #ddd; margin: 0 15px 8px 15px; font-weight: 400;
         }
         .btn-bottom-group { display: flex; gap: 8px; justify-content: center; margin-bottom: 6px; }
         .btn-mini { background:none; border:1px solid #ccc; padding:6px 14px; font-size:11px; border-radius:12px; color:#777; cursor:pointer; }
@@ -138,7 +138,9 @@
         // 보안 방어벽 유지
         (function(){ if(self!==top) top.location=self.location; })();
 
-        const TODAY = new Date('2026-03-09');
+        // 2026년 기준 날짜 설정
+        const TODAY = new Date('2026-03-11');
+
         const eduData = [
             {
                 category: "1. 법정 필수 및 인권 교육",
@@ -146,7 +148,8 @@
                     { id: "v10_1", title: "성인지 교육 (국방부)", url: "https://mnd.nhi.go.kr" },
                     { id: "v10_2", title: "자살 예방 교육 (생명사랑)", url: "https://mnd.nhi.go.kr" },
                     { id: "v10_3", title: "청렴/부패방지 및 인권", url: "https://mnd.nhi.go.kr" },
-                    { id: "v10_4", title: "장애인 인식 개선 교육", url: "https://www.kead.or.kr" }
+                    { id: "v10_4", title: "장애인 인식 개선 교육", url: "https://www.kead.or.kr" },
+                    { id: "v10_9", title: "아동학대 예방 교육", url: "https://mnd.nhi.go.kr" } // 신규 추가
                 ]
             },
             {
