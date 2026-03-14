@@ -11,72 +11,28 @@
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23FF9800%22/><text y=%22.9em%22 x=%225%22 font-size=%2280%22 fill=%22white%22>☀️</text></svg>">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="EDU-PASS">
 
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --main-color: #FF9800; 
-            --bg-color: #f8f9fa; 
-            --category-bg: #5D4037; 
-            --modal-bg: rgba(0,0,0,0.8); 
-        }
-        
-        html, body { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            overflow: hidden; font-family: 'Noto Sans KR', sans-serif; 
-            background: #333; display: flex; justify-content: center;
-        }
-
-        .app-shell {
-            width: 100%; max-width: 500px; height: 100%;
-            display: flex; flex-direction: column; position: relative;
-            background: var(--bg-color);
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
-        }
-
+        :root { --main-color: #FF9800; --bg-color: #f8f9fa; --category-bg: #5D4037; --modal-bg: rgba(0,0,0,0.8); }
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Noto Sans KR', sans-serif; background: #333; display: flex; justify-content: center; }
+        .app-shell { width: 100%; max-width: 500px; height: 100%; display: flex; flex-direction: column; background: var(--bg-color); box-shadow: 0 0 20px rgba(0,0,0,0.2); }
         .page { display: none; width: 100%; height: 100%; flex-direction: column; padding: 15px; box-sizing: border-box; overflow: hidden; justify-content: space-between; }
         .active { display: flex; }
-
-        /* [1페이지: 인트로] */
         .intro-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .main-title { font-size: 19px; font-weight: 700; color: #444; margin-bottom: 5px; }
         .sub-title { font-size: 26px; font-weight: 800; color: var(--category-bg); margin: 0; }
-        .sun-icon { font-size: 60px; margin: 25px 0; }
+        .sun-icon { font-size: 60px; margin: 20px 0; }
         button.primary { width: 85%; padding: 16px; background: var(--main-color); color: white; border: none; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; }
-
-        /* [2페이지: 메인목록] */
-        #main-page { padding-top: 10px; }
-        .edu-list-wrapper {
-            flex: 1; display: flex; flex-direction: column; gap: 8px; 
-            overflow-y: auto; padding-bottom: 10px;
-            -webkit-overflow-scrolling: touch;
-        }
-        .category-group { display: flex; flex-direction: column; gap: 5px; }
+        .edu-list-wrapper { flex: 1; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; padding-bottom: 10px; -webkit-overflow-scrolling: touch; }
         .category-header { background: var(--category-bg); color: white; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 11.5px; }
         .edu-item { background: white; padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-        .edu-info h4 { margin: 0 0 3px 0; font-size: 13.5px; color: #222; line-height: 1.3; }
-
-        .btn-schedule { background: #6c757d; color: white; border: none; border-radius: 4px; padding: 3px 7px; font-size: 10px; cursor: pointer; font-weight: bold; }
-        .btn-link { padding: 8px 16px; background: #fff; border-radius: 8px; text-decoration: none; color: var(--main-color); font-size: 11.5px; font-weight: bold; border: 2px solid var(--main-color); white-space: nowrap; }
-        .btn-link.completed { background: #f0f0f0; color: #aaa; border: 2px solid #ddd; }
-
-        /* 하단 영역 최적화 */
+        .btn-schedule { background: #6c757d; color: white; border: none; border-radius: 4px; padding: 3px 7px; font-size: 10px; cursor: pointer; }
+        .btn-link { padding: 8px 16px; background: #fff; border-radius: 8px; text-decoration: none; color: var(--main-color); font-size: 11.5px; font-weight: bold; border: 2px solid var(--main-color); }
         .bottom-area { width: 100%; background: var(--bg-color); padding-top: 5px; }
-        .security-banner { 
-            background: #fff; padding: 10px; border-radius: 10px; 
-            font-size: 10.5px; color: #666; text-align: left; line-height: 1.4; 
-            border: 1px solid #eee; margin-bottom: 8px; font-weight: 400;
-        }
-        
-        .bottom-flex-group { 
-            display: flex; justify-content: space-between; align-items: center; 
-            gap: 5px; padding: 5px 2px 10px 2px;
-        }
-        .btn-mini { background:none; border:1px solid #ccc; padding:6px 10px; font-size: 10px; border-radius:12px; color:#888; cursor:pointer; white-space: nowrap; }
-        .copyright { font-size: 10px; color: #bbb; white-space: nowrap; font-weight: bold; }
-
-        /* 모달 스타일 */
+        .security-banner { background: #fff; padding: 10px; border-radius: 10px; font-size: 10.5px; color: #666; line-height: 1.4; border: 1px solid #eee; margin-bottom: 8px; }
+        .bottom-flex-group { display: flex; justify-content: space-between; align-items: center; padding: 5px 2px 10px 2px; }
+        .btn-mini { background:none; border:1px solid #ccc; padding:6px 10px; font-size: 10px; border-radius:12px; color:#888; cursor:pointer; }
+        .copyright { font-size: 10px; color: #bbb; font-weight: bold; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 9999; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 18px; border-radius: 20px; width: 90%; max-width: 480px; max-height: 80vh; overflow-y: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; }
@@ -85,25 +41,19 @@
     </style>
 </head>
 <body>
-
     <div class="app-shell">
         <div id="intro-page" class="page active">
             <div class="intro-content">
-                <div class="main-title">2026 육군 교육 통합 관리 시스템</div>
+                <div class="main-title" style="font-size:19px; font-weight:700; color:#444;">2026 육군 교육 통합 관리 시스템</div>
                 <div class="sub-title">ROKA EDU-PASS</div>
                 <div class="sun-icon">☀️</div>
                 <button class="primary" onclick="startApp()">시스템 시작하기</button>
             </div>
             <div class="bottom-area">
-                <div class="security-banner">
-                    본 시스템은 개인정보 유출 방지를 위해 서버가 아닌 사용자 기기에 데이터를 암호화하여 저장하며, 완료 기록은 현재 사용 중인 기기에 귀속됩니다.
-                </div>
-                <div class="bottom-flex-group" style="justify-content: center;">
-                    <div class="copyright">Copyright © 12사단 소령 박지민</div>
-                </div>
+                <div class="security-banner">본 시스템은 개인정보 유출 방지를 위해 서버가 아닌 사용자 기기에 데이터를 암호화하여 저장하며, 완료 기록은 현재 사용 중인 기기에 귀속됩니다.</div>
+                <div class="bottom-flex-group" style="justify-content: center;"><div class="copyright">Copyright © 12사단 소령 박지민</div></div>
             </div>
         </div>
-
         <div id="main-page" class="page">
             <div id="edu-container" class="edu-list-wrapper"></div>
             <div class="bottom-area">
@@ -118,60 +68,32 @@
             </div>
         </div>
     </div>
-
     <div id="schedule-modal" class="modal" onclick="if(event.target===this) closeModal()">
         <div class="modal-content">
             <h3 id="modal-title" style="margin-top:0; font-size:15px; border-left:4px solid var(--main-color); padding-left:10px; margin-bottom:15px;"></h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>구분</th>
-                        <th style="background:#fff9f4;">신청 및 학습기간</th>
-                    </tr>
-                </thead>
-                <tbody id="modal-table-body"></tbody>
-            </table>
+            <table><thead><tr><th>구분</th><th style="background:#fff9f4;">신청 및 학습기간</th></tr></thead><tbody id="modal-table-body"></tbody></table>
             <button onclick="closeModal()" style="width:100%; margin-top:15px; padding:12px; border:none; border-radius:12px; background:#f5f5f5; font-weight:bold; cursor:pointer;">창 닫기</button>
         </div>
     </div>
-
     <script>
         (function(){ if(self!==top) top.location=self.location; })();
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then(() => console.log('PWA Active'));
-        }
-
-        const TODAY = new Date();
-
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
         const eduData = [
-            {
-                category: "1. 법정 필수 및 인권 교육",
-                items: [
-                    { id: "v10_1", title: "성인지 교육 (국방부)", url: "https://mnd.nhi.go.kr", type: "standard" },
-                    { id: "v10_2", title: "자살 예방 교육 (생명사랑)", url: "https://mnd.nhi.go.kr", type: "split" },
-                    { id: "v10_3", title: "청렴/부패방지 및 인권", url: "https://mnd.nhi.go.kr", type: "split" },
-                    { id: "v10_10", title: "사이버 인권교육", url: "https://mnd.nhi.go.kr", type: "standard" },
-                    { id: "v10_4", title: "장애인 인식 개선 교육", url: "https://www.kead.or.kr", type: "standard" },
-                    { id: "v10_9", title: "아동학대 예방 교육", url: "https://mnd.nhi.go.kr", type: "standard" }
-                ]
-            },
-            {
-                category: "2. 정보보안 교육",
-                items: [
-                    { id: "v10_5", title: "정보보안 교육", url: "https://mnd.nhi.go.kr", type: "standard" }
-                ]
-            },
-            {
-                category: "3. 직무 및 기타 안전 (3가지 중 1개 수강)",
-                items: [
-                    { id: "v10_8", title: "산업안전보건 교육", url: "http://edu.kosha.or.kr", type: "standard" },
-                    { id: "v10_6", title: "육군 안전관리교육 (관리자)", url: "http://safety.step.or.kr", type: "standard" },
-                    { id: "v10_7", title: "육군 안전관리교육 (실무자)", url: "http://safety.step.or.kr", type: "standard" }
-                ]
-            }
+            { category: "1. 법정 필수 및 인권 교육", items: [
+                { id: "v10_1", title: "성인지 교육 (국방부)", url: "https://mnd.nhi.go.kr", type: "standard" },
+                { id: "v10_2", title: "자살 예방 교육 (생명사랑)", url: "https://mnd.nhi.go.kr", type: "split" },
+                { id: "v10_3", title: "청렴/부패방지 및 인권", url: "https://mnd.nhi.go.kr", type: "split" },
+                { id: "v10_10", title: "사이버 인권교육", url: "https://mnd.nhi.go.kr", type: "standard" },
+                { id: "v10_4", title: "장애인 인식 개선 교육", url: "https://www.kead.or.kr", type: "standard" },
+                { id: "v10_9", title: "아동학대 예방 교육", url: "https://mnd.nhi.go.kr", type: "standard" }
+            ]},
+            { category: "2. 정보보안 교육", items: [{ id: "v10_5", title: "정보보안 교육", url: "https://mnd.nhi.go.kr", type: "standard" }]},
+            { category: "3. 직무 및 기타 안전 (3가지 중 1개 수강)", items: [
+                { id: "v10_8", title: "산업안전보건 교육", url: "http://edu.kosha.or.kr", type: "standard" },
+                { id: "v10_6", title: "육군 안전관리교육 (관리자)", url: "http://safety.step.or.kr", type: "standard" },
+                { id: "v10_7", title: "육군 안전관리교육 (실무자)", url: "http://safety.step.or.kr", type: "standard" }
+            ]}
         ];
-
         function getDoneList() { try { return JSON.parse(localStorage.getItem('roka_v10_data') || "[]"); } catch(e) { return []; } }
         function toggleComplete(id) {
             let list = getDoneList();
@@ -179,74 +101,46 @@
             localStorage.setItem('roka_v10_data', JSON.stringify(list));
             renderMain();
         }
-
         function renderMain() {
             const container = document.getElementById('edu-container');
             const doneList = getDoneList();
             container.innerHTML = "";
             eduData.forEach(cat => {
-                const group = document.createElement('div');
-                group.className = 'category-group';
-                let html = `<div class="category-header">${cat.category}</div>`;
+                let html = `<div class="category-group"><div class="category-header">${cat.category}</div>`;
                 cat.items.forEach(item => {
                     const isDone = doneList.includes(item.id);
-                    html += `
-                        <div class="edu-item">
-                            <div class="edu-info">
-                                <h4 style="${isDone?'color:#bbb;text-decoration:line-through;':''}">${item.title}</h4>
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <button class="btn-schedule" onclick="openSchedule('${item.title}', '${item.type}')">일정</button>
-                                    <label style="font-size:10px; color:#999; cursor:pointer; display:flex; align-items:center; gap:2px;">
-                                        <input type="checkbox" ${isDone?'checked':''} onchange="toggleComplete('${item.id}')"> 완료
-                                    </label>
-                                </div>
-                            </div>
-                            <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="btn-link ${isDone?'completed':''}">수강하기</a>
-                        </div>`;
+                    html += `<div class="edu-item"><div class="edu-info">
+                        <h4 style="${isDone?'color:#bbb;text-decoration:line-through;':''}">${item.title}</h4>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <button class="btn-schedule" onclick="openSchedule('${item.title}', '${item.type}')">일정</button>
+                            <label style="font-size:10px; color:#999; cursor:pointer;"><input type="checkbox" ${isDone?'checked':''} onchange="toggleComplete('${item.id}')"> 완료</label>
+                        </div></div>
+                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="btn-link ${isDone?'completed':''}">수강하기</a></div>`;
                 });
-                group.innerHTML = html;
-                container.appendChild(group);
+                container.innerHTML += html + `</div>`;
             });
         }
-
         function openSchedule(title, type) {
             document.getElementById('modal-title').innerText = title;
             const tbody = document.getElementById('modal-table-body');
             tbody.innerHTML = "";
-            
             if (type === "split") {
                 for (let m = 1; m <= 12; m++) {
-                    const lastDay = new Date(2026, m, 0).getDate();
-                    tbody.innerHTML += `<tr><td>${m}월 (전반기)</td><td class="apply-hl">${m}/1 ~ ${m}/16</td></tr>`;
-                    tbody.innerHTML += `<tr><td>${m}월 (후반기)</td><td class="apply-hl">${m}/17 ~ ${m}/${lastDay}</td></tr>`;
+                    const last = new Date(2026, m, 0).getDate();
+                    tbody.innerHTML += `<tr><td>${m}월 (전반)</td><td class="apply-hl">${m}/1 ~ ${m}/16</td></tr><tr><td>${m}월 (후반)</td><td class="apply-hl">${m}/17 ~ ${m}/${last}</td></tr>`;
                 }
             } else {
-                for (let m = 1; m <= 12; m++) {
-                    tbody.innerHTML += `<tr><td>${m}기</td><td class="apply-hl">${m}/1 ~ ${m}/7 (신청)</td></tr>`;
-                }
+                for (let m = 1; m <= 12; m++) { tbody.innerHTML += `<tr><td>${m}기</td><td class="apply-hl">${m}/1 ~ ${m}/7 (신청)</td></tr>`; }
             }
             document.getElementById('schedule-modal').style.display = 'flex';
         }
-
         function requestNoti() {
-            if (!("Notification" in window)) { alert("지원하지 않는 단말기입니다."); return; }
-            Notification.requestPermission().then(p => {
-                if (p === 'granted') {
-                    const day = TODAY.getDate();
-                    let msg = (day >= 17) ? "후반기 교육 신청 기간입니다!" : "매월 초 신청 기간입니다!";
-                    alert(`알림 설정 완료! 현재 안내: ${msg}`);
-                } else { alert('알림 권한을 허용해주세요.'); }
-            });
+            if (!("Notification" in window)) { alert("알림 비지원 단말입니다."); return; }
+            Notification.requestPermission().then(p => { if (p === 'granted') alert('알림 설정 완료! 매월 초/중순에 안내드립니다.'); });
         }
-
-        function startApp() { 
-            document.getElementById('intro-page').classList.remove('active'); 
-            document.getElementById('main-page').classList.add('active'); 
-            renderMain(); 
-        }
-
+        function startApp() { document.getElementById('intro-page').classList.remove('active'); document.getElementById('main-page').classList.add('active'); renderMain(); }
         function closeModal() { document.getElementById('schedule-modal').style.display = 'none'; }
-        function safeReset() { if(confirm('기록을 초기화하시겠습니까?')) { localStorage.removeItem('roka_v10_data'); location.reload(); } }
+        function safeReset() { if(confirm('초기화할까요?')) { localStorage.removeItem('roka_v10_data'); location.reload(); } }
     </script>
 </body>
 </html>
