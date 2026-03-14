@@ -31,45 +31,48 @@
         .page { display: none; width: 100%; height: 100%; flex-direction: column; overflow: hidden; }
         .active { display: flex; }
 
-        /* 콘텐츠 영역 */
         .top-content { 
             flex: 1; display: flex; flex-direction: column; 
             overflow-y: auto; padding: 15px 15px 5px 15px; 
             -webkit-overflow-scrolling: touch;
         }
 
-        /* 하단 고정 영역 */
         .bottom-fixed-area { 
             width: 100%; background: #ffffff; 
             padding: 10px 15px calc(10px + env(safe-area-inset-bottom)) 15px; 
             border-top: 1px solid #eee; text-align: center;
         }
 
-        /* 인트로 구성 (위로 1cm 이동 반영) */
+        /* [수정] 인트로 구성: 위로 1cm 이동 및 중앙 정렬 고정 */
         #intro-page .top-content { 
             justify-content: center; align-items: center; text-align: center;
-            transform: translateY(-35px); /* 약 1cm 위로 올림 */
+            transform: translateY(-35px);
         }
-        .sun-icon { font-size: 80px; margin: 20px 0; }
-        button.primary { width: 100%; padding: 20px; background: var(--main-color); color: white; border: none; border-radius: 16px; font-size: 20px; font-weight: bold; cursor: pointer; }
+        
+        /* [수정] 해 로고 중앙 배치 및 하단 여백 2cm(약 75px) 확보 */
+        .sun-icon { 
+            font-size: 80px; 
+            margin: 20px auto 75px auto; 
+            display: block; 
+            line-height: 1;
+        }
 
-        /* 리스트 스타일 */
+        button.primary { width: 100%; padding: 20px; background: var(--main-color); color: white; border: none; border-radius: 16px; font-size: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(255,152,0,0.3); }
+
+        /* 메인 리스트 스타일 유지 */
         .category-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
         .category-header { background: var(--category-bg); color: white; padding: 8px 12px; border-radius: 8px; font-weight: bold; font-size: 13px; text-align: left; }
         .edu-item { background: white; padding: 12px 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
         .edu-info { text-align: left; }
         .edu-info h4 { margin: 0 0 4px 0; font-size: 14px; color: #222; line-height: 1.4; }
-
         .btn-schedule { background: #6c757d; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 11px; cursor: pointer; }
         .btn-link { padding: 10px 16px; background: #fff; border-radius: 10px; text-decoration: none; color: var(--main-color); font-size: 12px; font-weight: bold; border: 2px solid var(--main-color); }
 
-        /* 하단 알림/버튼 중앙 배치 */
         .security-banner { background: #f1f3f5; padding: 10px; border-radius: 10px; font-size: 11px; color: #666; line-height: 1.5; margin-bottom: 10px; }
         .bottom-btn-group { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
         .btn-mini { background:none; border:1px solid #ddd; padding: 8px 15px; font-size: 12px; border-radius:15px; color:#777; cursor:pointer; }
         .copyright { font-size: 11px; color: #999; font-weight: bold; }
 
-        /* 모달 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: white; padding: 25px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; }
         table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 13px; }
@@ -81,14 +84,14 @@
     <div class="app-shell">
         <div id="intro-page" class="page active">
             <div class="top-content">
-                <div style="font-size:20px; font-weight:700; color:#444;">2026 육군 교육 통합 관리</div>
+                <div style="font-size:20px; font-weight:700; color:#444;">2026 육군 교육 통합관리 시스템</div>
                 <div style="font-size:32px; font-weight:900; color:var(--category-bg); margin:8px 0;">ROKA EDU-PASS</div>
                 <div class="sun-icon">☀️</div>
-                <button class="primary" onclick="startApp()">시스템 접속하기</button>
+                <button class="primary" onclick="startApp()">시작하기</button>
             </div>
             <div class="bottom-fixed-area">
                 <div class="security-banner">본 앱은 개인의 교육 이수 현황 관리를 돕는 도구이며,<br>국방망과 연동되지 않는 독립형 시스템입니다.</div>
-                <div class="copyright">Copyright © 12사단 소령 박지민</div>
+                <div class="bottom-flex-group" style="justify-content: center;"><div class="copyright">Copyright © 12사단 소령 박지민</div></div>
             </div>
         </div>
 
@@ -163,12 +166,9 @@
         function openSchedule(title, type) {
             document.getElementById('modal-title').innerText = title;
             const container = document.getElementById('schedule-body');
-            
             if (type === "checking") {
                 container.innerHTML = `<div style="padding:20px; font-weight:bold; color:var(--main-color); font-size:18px;">일정 확인 중</div>`;
-            } else if (type === "child-abuse") {
-                container.innerHTML = `<table><tr><th>구분</th><th class="hl">1/6 ~ 12/31</th></tr></table>`;
-            } else if (type === "full-year") {
+            } else if (type === "child-abuse" || type === "full-year") {
                 container.innerHTML = `<table><tr><th>구분</th><th class="hl">1/1 ~ 12/31</th></tr></table>`;
             } else if (type === "suicide") {
                 container.innerHTML = `<table><tr><th>구분</th><th class="hl">2/16 ~ 6/30</th></tr></table>`;
