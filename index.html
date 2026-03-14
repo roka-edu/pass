@@ -120,11 +120,11 @@
                 { id: "v10_2", title: "자살 예방 교육 (생명사랑)", url: "https://mnd.nhi.go.kr", type: "suicide" },
                 { id: "v10_3", title: "반부패청렴교육", url: "https://acrc.nhi.go.kr", type: "split" },
                 { id: "v10_10", title: "사이버 인권교육", url: "https://mnd.nhi.go.kr", type: "standard" },
-                { id: "v10_4", title: "장애인 인식 개선 교육", url: "https://mnd.nhi.go.kr", type: "standard" },
+                { id: "v10_4", title: "장애인 인식 개선 교육", url: "https://mnd.nhi.go.kr", type: "full-year" },
                 { id: "v10_9", title: "아동학대 예방 교육", url: "https://mnd.nhi.go.kr", type: "standard" }
             ]},
             { category: "2. 정보보안 교육", items: [{ id: "v10_5", title: "정보보안 교육", url: "https://mnd.nhi.go.kr", type: "standard" }]},
-            { category: "3. 직무 및 기타 안전 (3가지 중 1개 수강)", items: [
+            { category: "3. 직무 및 기타 안전 (3가지 중 1가지 수강)", items: [
                 { id: "v10_8", title: "산업안전보건 교육", url: "http://edu.kosha.or.kr", type: "standard" },
                 { id: "v10_6", title: "육군 안전관리교육 (관리자)", url: "http://safety.step.or.kr", type: "always" },
                 { id: "v10_7", title: "육군 안전관리교육 (실무자)", url: "http://safety.step.or.kr", type: "always" }
@@ -164,7 +164,10 @@
             const tbody = document.getElementById('modal-table-body');
             tbody.innerHTML = "";
             
-            if (type === "suicide") {
+            if (type === "full-year") {
+                tbody.innerHTML = `<tr><td>2026년 연간</td><td class="hl">1/1 ~ 12/31</td></tr>
+                                   <tr><td colspan="2" style="font-size:10px; color:#888;">* 신청 및 학습기간 동일</td></tr>`;
+            } else if (type === "suicide") {
                 tbody.innerHTML = `<tr><td>2026년 상반기</td><td class="hl">2/16 ~ 6/30</td></tr>
                                    <tr><td colspan="2" style="font-size:10px; color:#888;">* 신청 및 학습기간 동일</td></tr>`;
             } else if (type === "always") {
