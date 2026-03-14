@@ -16,7 +16,7 @@
     <style>
         :root { --main-color: #FF9800; --bg-color: #f8f9fa; --category-bg: #5D4037; --modal-bg: rgba(0,0,0,0.8); }
         
-        /* 화면 전체 꽉 채움 레이아웃 */
+        /* 화면 전체 꽉 채움 레이아웃 고정 */
         html, body { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
             overflow: hidden; font-family: 'Noto Sans KR', sans-serif; 
@@ -32,14 +32,14 @@
         .page { display: none; width: 100%; height: 100%; flex-direction: column; padding: 0; overflow: hidden; }
         .active { display: flex; }
 
-        /* 콘텐츠 영역 (스크롤) */
+        /* 콘텐츠 영역 (스크롤 고정) */
         .top-content { 
             flex: 1; display: flex; flex-direction: column; 
             overflow-y: auto; padding: 15px 15px 5px 15px; 
             -webkit-overflow-scrolling: touch;
         }
 
-        /* 하단 고정 영역 */
+        /* 하단 고정 영역 (비율 고정) */
         .bottom-fixed-area { 
             width: 100%; background: var(--bg-color); 
             padding: 5px 15px calc(8px + env(safe-area-inset-bottom)) 15px; 
@@ -118,9 +118,9 @@
             { category: "1. 법정 필수 및 인권 교육", items: [
                 { id: "v10_1", title: "성인지 교육 (국방부)", url: "https://mnd.nhi.go.kr", type: "standard" },
                 { id: "v10_2", title: "자살 예방 교육 (생명사랑)", url: "https://mnd.nhi.go.kr", type: "suicide" },
-                { id: "v10_3", title: "청렴/부패방지 및 인권", url: "https://mnd.nhi.go.kr", type: "split" },
+                { id: "v10_3", title: "반부패청렴교육", url: "https://acrc.nhi.go.kr", type: "split" },
                 { id: "v10_10", title: "사이버 인권교육", url: "https://mnd.nhi.go.kr", type: "standard" },
-                { id: "v10_4", title: "장애인 인식 개선 교육", url: "https://www.kead.or.kr", type: "standard" },
+                { id: "v10_4", title: "장애인 인식 개선 교육", url: "https://mnd.nhi.go.kr", type: "standard" },
                 { id: "v10_9", title: "아동학대 예방 교육", url: "https://mnd.nhi.go.kr", type: "standard" }
             ]},
             { category: "2. 정보보안 교육", items: [{ id: "v10_5", title: "정보보안 교육", url: "https://mnd.nhi.go.kr", type: "standard" }]},
