@@ -15,54 +15,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --main-color: #FF9800; --bg-color: #f8f9fa; --category-bg: #5D4037; --modal-bg: rgba(0,0,0,0.8); }
-        
-        /* 화면 전체 꽉 채움 레이아웃 고정 */
-        html, body { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            overflow: hidden; font-family: 'Noto Sans KR', sans-serif; 
-            background: #333; display: flex; justify-content: center; align-items: center;
-        }
-
-        .app-shell { 
-            width: 100%; max-width: 500px; height: 100%; 
-            display: flex; flex-direction: column; 
-            background: var(--bg-color); position: relative;
-        }
-
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Noto Sans KR', sans-serif; background: #333; display: flex; justify-content: center; align-items: center; }
+        .app-shell { width: 100%; max-width: 500px; height: 100%; display: flex; flex-direction: column; background: var(--bg-color); position: relative; }
         .page { display: none; width: 100%; height: 100%; flex-direction: column; padding: 0; overflow: hidden; }
         .active { display: flex; }
-
-        /* 콘텐츠 영역 (스크롤 고정) */
-        .top-content { 
-            flex: 1; display: flex; flex-direction: column; 
-            overflow-y: auto; padding: 15px 15px 5px 15px; 
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* 하단 고정 영역 (비율 고정) */
-        .bottom-fixed-area { 
-            width: 100%; background: var(--bg-color); 
-            padding: 5px 15px calc(8px + env(safe-area-inset-bottom)) 15px; 
-            box-sizing: border-box; border-top: 1px solid #eee;
-        }
-
+        .top-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 15px; -webkit-overflow-scrolling: touch; }
+        .bottom-fixed-area { width: 100%; background: var(--bg-color); padding: 5px 15px calc(8px + env(safe-area-inset-bottom)) 15px; box-sizing: border-box; border-top: 1px solid #eee; }
         #intro-page .top-content { justify-content: center; align-items: center; text-align: center; }
         .sun-icon { font-size: 65px; margin: 15px 0; }
         button.primary { width: 90%; padding: 18px; background: var(--main-color); color: white; border: none; border-radius: 15px; font-size: 19px; font-weight: bold; cursor: pointer; }
-
         .category-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
         .category-header { background: var(--category-bg); color: white; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 11.5px; }
         .edu-item { background: white; padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
         .edu-info h4 { margin: 0 0 3px 0; font-size: 13px; color: #222; line-height: 1.3; }
-
         .btn-schedule { background: #6c757d; color: white; border: none; border-radius: 4px; padding: 3px 8px; font-size: 10px; cursor: pointer; }
         .btn-link { padding: 8px 15px; background: #fff; border-radius: 8px; text-decoration: none; color: var(--main-color); font-size: 11px; font-weight: bold; border: 2px solid var(--main-color); white-space: nowrap; }
-
         .security-banner { background: #fff; padding: 8px; border-radius: 10px; font-size: 10px; color: #666; line-height: 1.4; border: 1px solid #eee; margin-bottom: 8px; }
         .bottom-flex-group { display: flex; justify-content: space-between; align-items: center; }
         .copyright { font-size: 10.5px; color: #bbb; font-weight: bold; }
         .btn-mini { background:none; border:1px solid #ccc; padding: 5px 10px; font-size: 10px; border-radius:12px; color:#888; cursor:pointer; }
-
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 9999; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 20px; border-radius: 20px; width: 90%; max-width: 480px; max-height: 80vh; overflow-y: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
@@ -84,14 +55,13 @@
                 <div class="bottom-flex-group" style="justify-content: center;"><div class="copyright">Copyright © 12사단 소령 박지민</div></div>
             </div>
         </div>
-
         <div id="main-page" class="page">
             <div id="edu-container" class="top-content"></div>
             <div class="bottom-fixed-area">
                 <div class="bottom-flex-group">
                     <div class="copyright">© 12사단 소령 박지민</div>
                     <div style="display: flex; gap: 5px;">
-                        <button class="btn-mini" onclick="requestNoti()">알림받기</button>
+                        <button class="btn-mini" onclick="requestNoti()">알림설정</button>
                         <button class="btn-mini" onclick="location.reload()">새로고침</button>
                         <button class="btn-mini" style="border-color:#ffcdd2; color:#e57373;" onclick="safeReset()">초기화</button>
                     </div>
@@ -99,7 +69,6 @@
             </div>
         </div>
     </div>
-
     <div id="schedule-modal" class="modal" onclick="if(event.target===this) closeModal()">
         <div class="modal-content">
             <h3 id="modal-title" style="margin-top:0; font-size:15px; border-left:4px solid var(--main-color); padding-left:10px; margin-bottom:15px;"></h3>
@@ -107,12 +76,13 @@
             <button onclick="closeModal()" style="width:100%; margin-top:15px; padding:12px; border:none; border-radius:12px; background:#f5f5f5; font-weight:bold; cursor:pointer;">창 닫기</button>
         </div>
     </div>
-
     <script>
         (function(){ if(self!==top) top.location=self.location; })();
         if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
         const TODAY = new Date();
+        const CUR_M = TODAY.getMonth() + 1;
+        const CUR_D = TODAY.getDate();
 
         const eduData = [
             { category: "1. 법정 필수 및 인권 교육", items: [
@@ -157,39 +127,45 @@
                 });
                 container.innerHTML += html + `</div>`;
             });
+            checkEducationAlerts();
+        }
+
+        function checkEducationAlerts() {
+            if (Notification.permission !== "granted") return;
+            let msg = "";
+            // 1. 정기 교육 (매월 1일 기준 3일 전인 26~28일부터 시작 후 7일까지)
+            if ((CUR_D >= 26) || (CUR_D <= 7)) msg = "곧 정기 교육 수강신청 기간입니다! 일정을 확인하세요.";
+            // 2. 청렴 교육 후반기 (매월 17일 기준 3일 전인 14일부터 시작 후 7일인 23일까지)
+            if (CUR_D >= 14 && CUR_D <= 23) msg = "청렴교육 후반기 신청 기간입니다! 잊지말고 신청하세요.";
+            // 3. 자살 예방 (2/16 기준 3일 전인 13일부터 23일까지)
+            if (CUR_M === 2 && CUR_D >= 13 && CUR_D <= 23) msg = "자살예방교육 신청 기간입니다!";
+
+            if (msg) new Notification("ROKA EDU-PASS 알림", { body: msg, icon: '☀️' });
         }
 
         function openSchedule(title, type) {
             document.getElementById('modal-title').innerText = title;
             const tbody = document.getElementById('modal-table-body');
             tbody.innerHTML = "";
-            
             if (type === "full-year") {
-                tbody.innerHTML = `<tr><td>2026년 연간</td><td class="hl">1/1 ~ 12/31</td></tr>
-                                   <tr><td colspan="2" style="font-size:10px; color:#888;">* 신청 및 학습기간 동일</td></tr>`;
+                tbody.innerHTML = `<tr><td>2026년 연간</td><td class="hl">1/1 ~ 12/31</td></tr>`;
             } else if (type === "suicide") {
-                tbody.innerHTML = `<tr><td>2026년 상반기</td><td class="hl">2/16 ~ 6/30</td></tr>
-                                   <tr><td colspan="2" style="font-size:10px; color:#888;">* 신청 및 학습기간 동일</td></tr>`;
+                tbody.innerHTML = `<tr><td>2026년 상반기</td><td class="hl">2/16 ~ 6/30</td></tr>`;
             } else if (type === "always") {
-                tbody.innerHTML = `<tr><td>신청 기간</td><td class="hl">상시 가능</td></tr>
-                                   <tr><td>학습 기간</td><td class="hl">수강신청일로부터 30일</td></tr>`;
+                tbody.innerHTML = `<tr><td>신청 기간</td><td class="hl">상시 가능</td></tr><tr><td>학습 기간</td><td class="hl">수강신청일로부터 30일</td></tr>`;
             } else if (type === "split") {
-                for (let m = 1; m <= 12; m++) {
-                    const last = new Date(2026, m, 0).getDate();
-                    tbody.innerHTML += `<tr><td>${m}월 전반기</td><td class="hl">${m}/1 ~ ${m}/16</td></tr>
-                                       <tr><td>${m}월 후반기</td><td class="hl">${m}/17 ~ ${m}/${last}</td></tr>`;
-                }
+                const last = new Date(2026, CUR_M, 0).getDate();
+                tbody.innerHTML = `<tr><td>${CUR_M}월 전반기</td><td class="hl">${CUR_M}/1 ~ ${CUR_M}/16</td></tr>
+                                   <tr><td>${CUR_M}월 후반기</td><td class="hl">${CUR_M}/17 ~ ${CUR_M}/${last}</td></tr>`;
             } else {
-                for (let m = 1; m <= 12; m++) {
-                    tbody.innerHTML += `<tr><td>${m}기</td><td class="hl">${m}/1 ~ ${m}/7 (신청)</td></tr>`;
-                }
+                tbody.innerHTML = `<tr><td>${CUR_M}월 정기</td><td class="hl">${CUR_M}/1 ~ ${CUR_M}/7 (신청)</td></tr>`;
             }
             document.getElementById('schedule-modal').style.display = 'flex';
         }
 
         function requestNoti() {
-            if (!("Notification" in window)) { alert("지원하지 않는 단말입니다."); return; }
-            Notification.requestPermission().then(p => { if (p === 'granted') alert('알림 설정 완료!'); });
+            if (!("Notification" in window)) return;
+            Notification.requestPermission().then(p => { if (p === 'granted') alert('알림 설정 완료! 신청 기간 전후로 안내드립니다.'); });
         }
 
         function startApp() { document.getElementById('intro-page').classList.remove('active'); document.getElementById('main-page').classList.add('active'); renderMain(); }
