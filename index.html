@@ -21,13 +21,13 @@
         .page { display: none; width: 100%; height: 100%; flex-direction: column; overflow: hidden; }
         .active { display: flex; }
         
-        /* [핵심 수정] 두 번째 화면: 남는 세로 공간에 카테고리들을 균등 배분 */
+        /* [수정] 메인 화면: 항목 간의 간격을 균등하게 벌려 화면을 가득 채움 */
         #main-page .top-content { 
             flex: 1; 
             display: flex; 
             flex-direction: column; 
-            justify-content: space-around; /* 세로로 꽉 차게 벌림 */
-            padding: 10px 15px; 
+            justify-content: space-around; 
+            padding: 5px 15px; 
             overflow-y: auto;
         }
         
@@ -37,13 +37,12 @@
             border-top: 1px solid #eee; flex-shrink: 0;
         }
 
-        /* 인트로 구성 (디자인 히스토리 고정) */
         #intro-page .top-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transform: translateY(-35px); }
         .sun-icon { font-size: 80px; margin: 20px 0 75px 0; display: flex; justify-content: center; width: 100%; line-height: 1; }
         button.primary { width: 100%; padding: 20px; background: var(--main-color); color: white; border: none; border-radius: 16px; font-size: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(255,152,0,0.3); }
 
-        /* 교육 과정 리스트 디자인 (꽉 차게 보이기 위해 높이 비중 조절) */
-        .category-group { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+        /* [수정] 카테고리 그룹 간의 간격 축소 반영 */
+        .category-group { display: flex; flex-direction: column; gap: 4px; width: 100%; margin-bottom: 2px; }
         .category-header { background: var(--category-bg); color: white; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 12px; text-align: left; }
         .edu-item { background: white; padding: 10px 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .edu-info { text-align: left; }
@@ -51,12 +50,10 @@
         .btn-schedule { background: #6c757d; color: white; border: none; border-radius: 4px; padding: 3px 6px; font-size: 10px; cursor: pointer; }
         .btn-link { padding: 6px 12px; background: #fff; border-radius: 8px; text-decoration: none; color: var(--main-color); font-size: 11px; font-weight: bold; border: 1.5px solid var(--main-color); }
 
-        /* 하단 수평 배치 */
         .bottom-control-row { display: flex; justify-content: space-between; align-items: center; height: 32px; width: 100%; }
         .bottom-btn-group { display: flex; gap: 6px; }
         .btn-mini { background:none; border:1px solid #ddd; padding: 0 8px; font-size: 11px; border-radius: 12px; color:#777; cursor:pointer; height: 28px; display: flex; align-items: center; }
         
-        /* [수정] 저작권 표시 스타일: 첫 페이지는 중앙 정렬 */
         .copyright { font-size: 10px; color: #999; font-weight: bold; white-space: nowrap; }
         #intro-page .copyright { width: 100%; text-align: center; }
 
@@ -109,7 +106,6 @@
     </div>
 
     <script>
-        // 카카오톡 탈출 로직
         if (/KAKAOTALK/i.test(navigator.userAgent)) {
             if (/Android/i.test(navigator.userAgent)) {
                 location.href = 'intent://' + location.href.replace(/https?:\/\//i, '') + '#Intent;scheme=https;package=com.android.chrome;end';
@@ -120,27 +116,27 @@
 
         const eduData = [
             { category: "1. 법정 필수 및 인권 교육", items: [
-                { id: "v18_1", title: "성인지 교육 (국방부)", url: "https://mnd.nhi.go.kr", type: "checking" },
-                { id: "v18_2", title: "자살 예방 교육 (생명사랑)", url: "https://mnd.nhi.go.kr", type: "suicide" },
-                { id: "v18_3", title: "반부패청렴교육", url: "https://acrc.nhi.go.kr", type: "checking" },
-                { id: "v18_4", title: "사이버 인권교육", url: "https://mnd.nhi.go.kr", type: "human-rights" },
-                { id: "v18_5", title: "장애인 인식 개선 교육", url: "https://mnd.nhi.go.kr", type: "full-year" },
-                { id: "v18_6", title: "아동학대 예방 교육", url: "https://mnd.nhi.go.kr", type: "full-year" },
-                { id: "v18_10", title: "민주주의와 헌법수호", url: "https://mnd.nhi.go.kr", type: "checking" },
-                { id: "v18_11", title: "다문화이해교육", url: "https://mnd.nhi.go.kr", type: "checking" }
+                { id: "v19_1", title: "성인지 교육 (국방부)", url: "https://mnd.nhi.go.kr", type: "gender-edu" },
+                { id: "v19_2", title: "자살 예방 교육 (생명사랑)", url: "https://mnd.nhi.go.kr", type: "suicide" },
+                { id: "v19_3", title: "반부패청렴교육", url: "https://acrc.nhi.go.kr", type: "checking" },
+                { id: "v19_4", title: "사이버 인권교육", url: "https://mnd.nhi.go.kr", type: "human-rights" },
+                { id: "v19_5", title: "장애인 인식 개선 교육", url: "https://mnd.nhi.go.kr", type: "full-year" },
+                { id: "v19_6", title: "아동학대 예방 교육", url: "https://mnd.nhi.go.kr", type: "full-year" },
+                { id: "v19_10", title: "민주주의와 헌법수호", url: "https://mnd.nhi.go.kr", type: "checking" },
+                { id: "v19_11", title: "다문화이해교육", url: "https://mnd.nhi.go.kr", type: "checking" }
             ]},
             { category: "2. 직무 및 기타 안전 (3가지 중 1가지 수강)", items: [
-                { id: "v18_7", title: "산업안전보건 교육", url: "http://edu.kosha.or.kr", type: "checking" },
-                { id: "v18_8", title: "육군 안전관리교육 (관리자)", url: "http://safety.step.or.kr", type: "always" },
-                { id: "v18_9", title: "육군 안전관리교육 (실무자)", url: "http://safety.step.or.kr", type: "always" }
+                { id: "v19_7", title: "산업안전보건 교육", url: "http://edu.kosha.or.kr", type: "checking" },
+                { id: "v19_8", title: "육군 안전관리교육 (관리자)", url: "http://safety.step.or.kr", type: "always" },
+                { id: "v19_9", title: "육군 안전관리교육 (실무자)", url: "http://safety.step.or.kr", type: "always" }
             ]}
         ];
 
-        function getDoneList() { return JSON.parse(localStorage.getItem('roka_v18_data') || "[]"); }
+        function getDoneList() { return JSON.parse(localStorage.getItem('roka_v19_data') || "[]"); }
         function toggleComplete(id) {
             let list = getDoneList();
             list = list.includes(id) ? list.filter(i => i !== id) : [...list, id];
-            localStorage.setItem('roka_v18_data', JSON.stringify(list));
+            localStorage.setItem('roka_v19_data', JSON.stringify(list));
             renderMain();
         }
 
@@ -169,7 +165,9 @@
         function openSchedule(title, type) {
             document.getElementById('modal-title').innerText = title;
             const container = document.getElementById('schedule-body');
-            if (type === "checking") {
+            if (type === "gender-edu") {
+                container.innerHTML = `<table><tr><th>구분</th><th class="hl">3/16 ~ 12/31</th></tr></table>`;
+            } else if (type === "checking") {
                 container.innerHTML = `<div style="padding:40px 20px; font-weight:bold; color:var(--main-color); font-size:18px;">일정 확인 중</div>`;
             } else if (type === "human-rights") {
                 let html = `<table><thead><tr><th>월</th><th>전반기 (1~16일)</th><th>후반기 (17~말일)</th></tr></thead><tbody>`;
@@ -189,7 +187,7 @@
         function requestNoti() { Notification.requestPermission().then(p => { if (p === 'granted') alert('알림 설정 완료!'); }); }
         function startApp() { document.getElementById('intro-page').classList.remove('active'); document.getElementById('main-page').classList.add('active'); renderMain(); }
         function closeModal() { document.getElementById('schedule-modal').style.display = 'none'; }
-        function safeReset() { if(confirm('기록을 초기화할까요?')) { localStorage.removeItem('roka_v18_data'); location.reload(); } }
+        function safeReset() { if(confirm('기록을 초기화할까요?')) { localStorage.removeItem('roka_v19_data'); location.reload(); } }
         window.onload = () => { if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js'); };
     </script>
 </body>
