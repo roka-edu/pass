@@ -16,6 +16,7 @@
         :root { --main-color: #FF9800; --bg-color: #f8f9fa; --category-bg: #5D4037; --modal-bg: rgba(0,0,0,0.8); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         
+        /* 화면 높이 절대 고정 로직 유지 */
         html, body { width: 100%; height: 100dvh; overflow: hidden; font-family: 'Noto Sans KR', sans-serif; background: #000; display: flex; justify-content: center; align-items: center; }
         .app-shell { width: 100%; max-width: 500px; height: 100dvh; display: flex; flex-direction: column; background: var(--bg-color); position: relative; }
         .page { display: none; width: 100%; height: 100%; flex-direction: column; overflow: hidden; }
@@ -60,7 +61,7 @@
 
         .category-header { background: var(--category-bg); color: white; padding: 4px 10px; border-radius: 5px; font-weight: bold; font-size: 12px; text-align: left; flex-shrink: 0; }
         
-        /* [수정] 흰색 카드 세로 0.1cm(4px) 추가 압축 */
+        /* 흰색 카드 0.1cm 압축 디자인 유지 */
         .edu-item { 
             background: white; 
             flex: 1; 
@@ -76,9 +77,9 @@
         
         .btn-schedule { background: #6c757d; color: white; border: none; border-radius: 4px; padding: 2px 6px; font-size: 10px; cursor: pointer; margin-top: 1px; align-self: flex-start; }
         
-        /* [수정] 수강하기 버튼 세로 0.2cm(약 8px) 확대 */
+        /* 수강하기 버튼 세로 확대 유지 */
         .btn-link { 
-            padding: 10px 14px; /* 세로 패딩 상향 */
+            padding: 10px 14px; 
             background: #fff; 
             border-radius: 8px; 
             text-decoration: none; 
@@ -127,7 +128,6 @@
                 <div class="bottom-control-row">
                     <div class="copyright">© 육군 12사단 소령 박지민</div>
                     <div class="bottom-btn-group">
-                        <button class="btn-mini" onclick="requestNoti()">알림설정</button>
                         <button class="btn-mini" onclick="location.reload()">돌아가기</button>
                         <button class="btn-mini" style="border-color:#ffcdd2; color:#e57373;" onclick="safeReset()">초기화</button>
                     </div>
@@ -149,7 +149,7 @@
             if (/Android/i.test(navigator.userAgent)) {
                 location.href = 'intent://' + location.href.replace(/https?:\/\//i, '') + '#Intent;scheme=https;package=com.android.chrome;end';
             } else {
-                alert("알림 설정을 위해 우측 상단 메뉴를 눌러 'Safari로 열기'를 선택해주세요!");
+                alert("우측 상단 메뉴를 눌러 'Safari로 열기'를 선택해주세요!");
             }
         }
 
@@ -216,7 +216,6 @@
             document.getElementById('schedule-modal').style.display = 'flex';
         }
 
-        function requestNoti() { Notification.requestPermission().then(p => { if (p === 'granted') alert('알림 설정 완료!'); }); }
         function startApp() { document.getElementById('intro-page').classList.remove('active'); document.getElementById('main-page').classList.add('active'); renderMain(); }
         function closeModal() { document.getElementById('schedule-modal').style.display = 'none'; }
         function safeReset() { if(confirm('기록을 초기화할까요?')) { localStorage.removeItem('roka_v34_data'); location.reload(); } }
