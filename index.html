@@ -161,7 +161,7 @@
                 { id: "v34_4", title: "사이버 인권교육", url: "https://mnd.nhi.go.kr", type: "human-rights" },
                 { id: "v34_5", title: "장애인 인식 개선 교육", url: "https://mnd.nhi.go.kr", type: "full-year" },
                 { id: "v34_6", title: "아동학대 예방 교육", url: "https://mnd.nhi.go.kr", type: "full-year" },
-                { id: "v34_10", title: "민주주의와 헌법수호", url: "https://mnd.nhi.go.kr", type: "checking" },
+                { id: "v34_10", title: "민주주의와 헌법수호", url: "https://mnd.nhi.go.kr", type: "democracy" },
                 { id: "v34_11", title: "다문화이해교육", url: "https://mnd.nhi.go.kr", type: "checking" }
             ]},
             { category: "2. 직무 및 기타 안전 (3가지 중 1가지 수강)", items: [
@@ -205,6 +205,9 @@
             document.getElementById('modal-title').innerText = title;
             const container = document.getElementById('schedule-body');
             if (type === "gender") { container.innerHTML = `<table><tr><th>구분</th><th class="hl">3/16 ~ 12/31</th></tr></table>`; }
+            else if (type === "democracy") {
+        container.innerHTML = `<table><tr><th>구분</th><th class="hl">3/19 ~ 3/31</th></tr></table>`;
+    }
             else if (type === "human-rights") {
                 let html = `<table><thead><tr><th>월</th><th>기간</th></tr></thead><tbody>`;
                 for(let i=1; i<=12; i++) { html += `<tr><td>${i}월</td><td class="hl">1~16일 / 17~말일</td></tr>`; }
