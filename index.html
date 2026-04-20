@@ -1223,6 +1223,11 @@ function getGPS(){
 
 // ── 음성인식 ───────────────────────────
 var LM={ko:'ko-KR',en:'en-US',zh:'zh-CN',ja:'ja-JP'};
+
+// iOS/Safari 감지
+var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
 // ── 음성 텍스트 파싱 → 출발/도착역 추출 ──
 function parseVoice(tx){
   // "숭실대입구역 가고 싶어" / "강남역까지" / "신림에서 강남" / "강남 가줘" 등 처리
@@ -1285,40 +1290,50 @@ function applyRoute(tx){
 
 function doListen(){
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){simListen();return;}
-
-  // 7. 마이크 권한 이미 허용됐으면 바로 시작
-  var micGranted = localStorage.getItem('mic_granted');
-
-  var r=new SR();r.lang=LM[lang]||'ko-KR';r.continuous=false;r.interimResults=true;
+  if(!SR){
+    if(isIOS) showToast('iOS 설정 → Safari → 마이크를 허용해주세요');
+    simListen(); return;
+  }
+  var r=new SR();
+  r.lang=LM[lang]||'ko-KR';
+  r.continuous=false;
+  r.interimResults=isIOS?false:true; // iOS는 false가 안정적
+  r.maxAlternatives=1;
   var mic=document.getElementById('MIC'),vst=document.getElementById('VST');
-  r.onstart=()=>{
+  r.onstart=function(){
     mic.classList.add('on');
     vst.style.color='var(--green)';
     vst.textContent=T[lang].lis;
   };
-  r.onresult=(e)=>{
-    var tx=e.results[0][0].transcript,fin=e.results[0].isFinal;
+  r.onresult=function(e){
+    var tx=e.results[0][0].transcript;
+    var fin=isIOS?true:e.results[0].isFinal;
     vst.textContent=(fin?T[lang].rec+' ':'')+'"'+tx+'"';
     if(fin){
-      // 권한 허용 저장
       try{localStorage.setItem('mic_granted','1');}catch(ex){}
       mic.classList.remove('on');
       applyRoute(tx);
-      setTimeout(()=>goTo(2),700);
+      setTimeout(function(){goTo(2);},700);
     }
   };
-  r.onerror=(e)=>{
+  r.onend=function(){
+    mic.classList.remove('on');
+  };
+  r.onerror=function(e){
     mic.classList.remove('on');
     if(e.error==='not-allowed'){
-      // 권한 기록 초기화
       try{localStorage.removeItem('mic_granted');}catch(ex){}
-      showToast('마이크 권한을 허용해주세요');
+      showToast(isIOS?'설정 → Safari → 마이크를 허용해주세요':'마이크 권한을 허용해주세요');
+    } else if(e.error==='no-speech'){
+      showToast('말씀을 인식하지 못했어요. 다시 눌러주세요');
     } else {
       simListen();
     }
   };
-  try{r.start();}catch(e){simListen();}
+  try{r.start();}catch(ex){
+    if(isIOS) showToast('마이크 버튼을 다시 눌러주세요');
+    else simListen();
+  }
 }
 function simListen(){
   var mic=document.getElementById('MIC'),vst=document.getElementById('VST');
