@@ -4,344 +4,335 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>ROKA EDU-PASS</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%233E2723'/><text y='65' x='50' text-anchor='middle' font-size='55' fill='%23FF9800'>☀</text></svg>">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>MND EDU-PASS</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23F0F7EE'/><text y='65' x='50' text-anchor='middle' font-size='55' fill='%234E9A30'>☀</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-/* ═══ 리셋 ═══ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-:root {
-  --org: #FF9800; --org-d: #E65100;
-  --bg: #F5F4EF;
-  --bk: #1C1C1E; --wh: #FFFFFF;
-  --g1: #F2F2F7; --g2: #E5E5EA; --g3: #C7C7CC; --g4: #8E8E93; --g5: #636366;
-  --cat1: #3E2723; --cat2: #1A237E;
-  --green: #34C759; --red: #FF3B30;
-  --done-bg: #EDFFF3; --done-border: rgba(52,199,89,.28);
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --acc:#4E9A30;--acc-d:#3D7A24;--acc-lt:#F0F7EE;
+  --bg:#F4FAF2;
+  --bk:#1A2E14;--wh:#FFFFFF;
+  --g1:#EBF4E8;--g2:#D6EBCF;--g3:#A8CC99;--g4:#6E9E60;--g5:#3D6E2E;
+  --hdr-bg:#F0F7EE;
+  --cat1:#2E6B1A;--cat2:#1B5E20;
+  --green:#4E9A30;--red:#D93025;
+  --done-bg:#F0FFF5;--done-bdr:rgba(78,154,48,.28);
 }
-html, body {
-  width: 100%; height: 100dvh; overflow: hidden;
-  font-family: 'Noto Sans KR', -apple-system, sans-serif;
-  background: #000;
-  display: flex; justify-content: center; align-items: center;
-  -webkit-font-smoothing: antialiased;
+html,body{
+  width:100%;height:100dvh;overflow:hidden;
+  font-family:'Noto Sans KR',-apple-system,sans-serif;
+  background:#E8F5E9;
+  display:flex;justify-content:center;align-items:center;
+  -webkit-font-smoothing:antialiased;
 }
-
-/* ═══ 앱 셸 ═══ */
-.app {
-  width: 100%; max-width: 440px; height: 100dvh;
-  background: var(--bg);
-  display: flex; flex-direction: column;
-  position: relative; overflow: hidden;
+.app{
+  width:100%;max-width:440px;height:100dvh;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
 }
 
 /* ═══ 화면 전환 ═══ */
-.screen {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column;
-  transition: opacity .35s ease, transform .35s cubic-bezier(.4,0,.2,1);
+.screen{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  transition:opacity .35s ease,transform .35s cubic-bezier(.4,0,.2,1);
 }
-.screen.hidden {
-  opacity: 0; pointer-events: none; transform: translateY(-14px);
-}
+.screen.hidden{opacity:0;pointer-events:none;transform:translateY(-12px)}
 
 /* ══════════════════════════════
    인트로 화면
 ══════════════════════════════ */
-#scIntro {
-  background: var(--cat1);
-  align-items: center; justify-content: center;
-  padding: 0 32px;
-  text-align: center;
-  z-index: 10;
-}
-.intro-sun {
-  width: 96px; height: 96px; border-radius: 50%;
-  background: rgba(255,152,0,.1);
-  border: 2px solid rgba(255,152,0,.22);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 52px; margin-bottom: 28px;
-  animation: sunPulse 2.8s ease-in-out infinite;
-}
-@keyframes sunPulse {
-  0%,100% { box-shadow: 0 0 0 0 rgba(255,152,0,.25); }
-  50%      { box-shadow: 0 0 0 18px rgba(255,152,0,0); }
-}
-.intro-sub   { font-size: 12px; color: rgba(255,255,255,.4); font-weight: 500; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 7px; }
-.intro-title { font-size: 34px; font-weight: 900; color: #fff; letter-spacing: -.5px; line-height: 1.1; margin-bottom: 10px; }
-.intro-title em { font-style: normal; color: var(--org); }
-.intro-desc  { font-size: 13px; color: rgba(255,255,255,.32); line-height: 1.65; margin-bottom: 46px; }
-
-.btn-start {
-  width: 100%; padding: 18px;
-  background: var(--org); color: #fff;
-  border: none; border-radius: 18px;
-  font-size: 18px; font-weight: 900; letter-spacing: -.2px;
-  cursor: pointer; font-family: inherit;
-  transition: transform .12s;
-}
-.btn-start:active { transform: scale(.97); }
-
-.intro-notice {
-  margin-top: 18px; font-size: 11px;
-  color: rgba(255,255,255,.22); line-height: 1.55;
+#scIntro{
+  background:#F0F7EE;
+  align-items:center;
+  justify-content:center;
+  padding:0 32px;
+  text-align:center;
+  z-index:10;
 }
 
-/* 접속자 카운터 — 우하단 */
-.visitor-box {
-  position: absolute; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); right: 22px;
-  text-align: right;
+/* 콘텐츠 블록 — 전체를 위로 올림 */
+.intro-content{
+  display:flex;flex-direction:column;
+  align-items:center;
+  transform:translateY(-48px); /* 위로 올리기 */
+  width:100%;
 }
-.vb-row { font-size: 10px; color: rgba(255,255,255,.28); font-weight: 500; line-height: 1.9; }
-.vb-row b { color: rgba(255,152,0,.7); font-weight: 700; }
+
+.intro-sun{
+  width:88px;height:88px;border-radius:50%;
+  background:rgba(78,154,48,.1);
+  border:2px solid rgba(78,154,48,.22);
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;margin-bottom:20px;
+  animation:sunPulse 2.8s ease-in-out infinite;
+}
+@keyframes sunPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(78,154,48,.22)}
+  50%{box-shadow:0 0 0 18px rgba(78,154,48,0)}
+}
+.intro-sub{
+  font-size:11px;color:var(--g4);font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;
+}
+.intro-title{
+  font-size:32px;font-weight:900;color:var(--cat1);
+  letter-spacing:-.5px;line-height:1.1;margin-bottom:12px;
+}
+.intro-title em{font-style:normal;color:var(--acc)}
+
+/* 설명 문구 — 한 줄 */
+.intro-desc{
+  font-size:13px;color:var(--g5);line-height:1.55;
+  margin-bottom:36px;
+  white-space:nowrap; /* 한 줄 유지 */
+}
+
+.btn-start{
+  width:100%;padding:17px;
+  background:var(--acc);color:#fff;
+  border:none;border-radius:16px;
+  font-size:17px;font-weight:900;letter-spacing:-.2px;
+  cursor:pointer;font-family:inherit;
+  transition:transform .12s,background .15s;
+}
+.btn-start:active{transform:scale(.97);background:var(--acc-d)}
+
+.intro-notice{
+  margin-top:16px;font-size:11px;
+  color:var(--g3);line-height:1.55;
+}
+
+/* 접속자 카운터 — 우하단 고정 */
+.visitor-box{
+  position:absolute;
+  bottom:calc(22px + env(safe-area-inset-bottom,0px));
+  right:22px;text-align:right;
+}
+.vb-row{font-size:10px;color:var(--g3);font-weight:600;line-height:2}
+.vb-row b{color:var(--acc-d);font-weight:800}
 
 /* ══════════════════════════════
    메인 화면
 ══════════════════════════════ */
-#scMain {
-  background: var(--bg);
-  z-index: 5;
-}
+#scMain{background:var(--bg);z-index:5}
 
 /* 헤더 */
-.top-hdr {
-  background: var(--cat1);
-  padding: 14px 16px 14px;
-  padding-top: calc(14px + env(safe-area-inset-top, 0px));
-  flex-shrink: 0;
+.top-hdr{
+  background:var(--hdr-bg);
+  border-bottom:1.5px solid var(--g2);
+  padding:14px 16px;
+  padding-top:calc(14px + env(safe-area-inset-top,0px));
+  flex-shrink:0;
 }
-.hdr-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 11px; }
-.hdr-left .hdr-sub  { font-size: 11px; font-weight: 500; color: rgba(255,255,255,.38); letter-spacing: .05em; margin-bottom: 2px; }
-.hdr-left .hdr-name { font-size: 22px; font-weight: 900; color: #fff; letter-spacing: -.4px; line-height: 1.1; }
-.hdr-left .hdr-name em { font-style: normal; color: var(--org); }
-.hdr-right { text-align: right; }
-.hdr-pct  { font-size: 26px; font-weight: 900; color: var(--org); line-height: 1; }
-.hdr-plbl { font-size: 10px; color: rgba(255,255,255,.32); margin-top: 2px; }
+.hdr-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:11px}
+.hdr-sub{font-size:11px;font-weight:700;color:var(--g4);letter-spacing:.05em;margin-bottom:2px}
+.hdr-name{font-size:22px;font-weight:900;color:var(--cat1);letter-spacing:-.4px;line-height:1.1}
+.hdr-name em{font-style:normal;color:var(--acc)}
+.hdr-right{text-align:right}
+.hdr-pct{font-size:26px;font-weight:900;color:var(--acc);line-height:1}
+.hdr-plbl{font-size:10px;color:var(--g4);margin-top:2px}
 
 /* 진행 바 */
-.prog-wrap { background: rgba(255,255,255,.12); border-radius: 999px; height: 6px; margin-bottom: 6px; overflow: hidden; }
-.prog-bar  { height: 6px; border-radius: 999px; background: var(--org); transition: width .55s cubic-bezier(.4,0,.2,1); width: 0%; }
-.prog-meta { display: flex; justify-content: space-between; }
-.prog-l    { font-size: 11px; color: rgba(255,255,255,.38); font-weight: 500; }
-.prog-r    { font-size: 11px; color: var(--org); font-weight: 700; }
-
-/* 홈으로 버튼 — 헤더 하단 */
-.btn-home {
-  display: flex; align-items: center; gap: 5px;
-  background: rgba(255,255,255,.1); border: none;
-  border-radius: 10px; padding: 7px 12px; margin-top: 10px;
-  font-size: 12px; font-weight: 700; color: rgba(255,255,255,.7);
-  cursor: pointer; font-family: inherit;
-  transition: background .15s;
-  width: fit-content;
-}
-.btn-home:active { background: rgba(255,255,255,.18); }
-.btn-home-arr { font-size: 13px; }
+.prog-wrap{background:var(--g2);border-radius:999px;height:7px;margin-bottom:6px;overflow:hidden}
+.prog-bar{height:7px;border-radius:999px;background:var(--acc);transition:width .55s cubic-bezier(.4,0,.2,1);width:0%}
+.prog-meta{display:flex;justify-content:space-between}
+.prog-l{font-size:11px;color:var(--g4);font-weight:500}
+.prog-r{font-size:11px;color:var(--acc-d);font-weight:700}
 
 /* 탭 */
-.tabs { display: flex; background: var(--wh); border-bottom: 1px solid var(--g2); flex-shrink: 0; }
-.tab-btn {
-  flex: 1; padding: 11px 0;
-  font-size: 13px; font-weight: 700;
-  color: var(--g4); border: none; background: none;
-  cursor: pointer; border-bottom: 2.5px solid transparent;
-  transition: all .18s; font-family: inherit;
+.tabs{display:flex;background:var(--wh);border-bottom:1px solid var(--g2);flex-shrink:0}
+.tab-btn{
+  flex:1;padding:11px 0;font-size:13px;font-weight:700;
+  color:var(--g4);border:none;background:none;
+  cursor:pointer;border-bottom:2.5px solid transparent;
+  transition:all .18s;font-family:inherit;
 }
-.tab-btn.on { color: var(--cat1); border-bottom-color: var(--org); }
+.tab-btn.on{color:var(--cat1);border-bottom-color:var(--acc)}
 
 /* 스크롤 바디 */
-.scroll-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 12px 14px 24px; }
-.scroll-body::-webkit-scrollbar { display: none; }
+.scroll-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 24px}
+.scroll-body::-webkit-scrollbar{display:none}
 
 /* 카테고리 헤더 */
-.edu-group { margin-bottom: 14px; }
-.cat-hdr {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--cat1); color: #fff;
-  border-radius: 10px; padding: 8px 12px;
-  font-size: 12px; font-weight: 700; margin-bottom: 7px;
+.edu-group{margin-bottom:14px}
+.cat-hdr{
+  display:flex;align-items:center;gap:8px;
+  background:var(--cat1);color:#fff;
+  border-radius:10px;padding:8px 12px;
+  font-size:12px;font-weight:700;margin-bottom:7px;
 }
-.cat-hdr.blue { background: var(--cat2); }
-.cat-num {
-  width: 22px; height: 22px; border-radius: 6px;
-  background: var(--org); color: #fff;
-  font-size: 12px; font-weight: 900;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+.cat-hdr.cat2{background:var(--cat2)}
+.cat-num{
+  width:22px;height:22px;border-radius:6px;
+  background:var(--acc);color:#fff;
+  font-size:12px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
-.cat-num.blue { background: #5C6BC0; }
-.cat-note { font-size: 10px; color: rgba(255,255,255,.42); font-weight: 500; margin-left: auto; }
+.cat-num.n2{background:#388E3C}
+.cat-note{font-size:10px;color:rgba(255,255,255,.45);font-weight:500;margin-left:auto}
 
 /* 교육 카드 */
-.edu-card {
-  background: var(--wh); border-radius: 12px;
-  padding: 10px 12px;
-  display: flex; align-items: center; gap: 10px;
-  border: 1px solid var(--g2); margin-bottom: 5px;
-  transition: background .2s, border-color .2s;
+.edu-card{
+  background:var(--wh);border-radius:12px;
+  padding:10px 12px;
+  display:flex;align-items:center;gap:10px;
+  border:1px solid var(--g2);margin-bottom:5px;
+  transition:background .2s,border-color .2s;
 }
-.edu-card.done { background: var(--done-bg); border-color: var(--done-border); }
-.edu-card.done .edu-title { color: #b0b0b0; text-decoration: line-through; }
+.edu-card.done{background:var(--done-bg);border-color:var(--done-bdr)}
+.edu-card.done .edu-title{color:#aaa;text-decoration:line-through}
 
-/* 왼쪽 원형 체크 */
-.chk-circle {
-  width: 26px; height: 26px; border-radius: 50%;
-  border: 2px solid var(--g3); background: var(--wh);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; transition: all .18s; font-size: 13px; color: transparent;
+.chk-circle{
+  width:26px;height:26px;border-radius:50%;
+  border:2px solid var(--g3);background:var(--wh);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .18s;font-size:13px;color:transparent;
 }
-.chk-circle.done { background: var(--green); border-color: var(--green); color: #fff; }
+.chk-circle.done{background:var(--green);border-color:var(--green);color:#fff}
 
-/* 중앙 정보 */
-.edu-info { flex: 1; min-width: 0; }
-.edu-title { font-size: 13px; font-weight: 700; color: var(--bk); line-height: 1.3; margin-bottom: 4px; }
-.edu-tag {
-  display: inline-block; font-size: 9.5px; font-weight: 700;
-  border-radius: 5px; padding: 2px 7px;
-}
-.tag-period { background: #FFF3E0; color: #BF360C; }
-.tag-always { background: #E8F5E9; color: #1B5E20; }
-.tag-full   { background: #E8F5E9; color: #1B5E20; }
-.tag-check  { background: #EDE7F6; color: #311B92; }
+.edu-info{flex:1;min-width:0}
+.edu-title{font-size:13px;font-weight:700;color:var(--bk);line-height:1.3;margin-bottom:4px}
+.edu-tag{display:inline-block;font-size:9.5px;font-weight:700;border-radius:5px;padding:2px 7px}
+.tag-period{background:#FFF3E0;color:#BF360C}
+.tag-always{background:#E8F5E9;color:#1B5E20}
+.tag-full{background:#E8F5E9;color:#1B5E20}
+.tag-check{background:#EDE7F6;color:#311B92}
 
-/* 우측 버튼 묶음 */
-.edu-actions { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
-.btn-go {
-  font-size: 11px; font-weight: 700;
-  background: var(--org); color: #fff;
-  border: none; border-radius: 8px; padding: 6px 9px;
-  cursor: pointer; white-space: nowrap; font-family: inherit;
-  transition: opacity .12s;
+.edu-actions{display:flex;flex-direction:column;gap:4px;flex-shrink:0}
+.btn-go{
+  font-size:11px;font-weight:700;
+  background:var(--acc);color:#fff;
+  border:none;border-radius:8px;padding:6px 9px;
+  cursor:pointer;white-space:nowrap;font-family:inherit;
+  transition:opacity .12s;
 }
-.btn-go:active { opacity: .8; }
-
-/* 수강완료 버튼 — 미완료: 회색 점선 / 완료: 초록 */
-.btn-done {
-  font-size: 11px; font-weight: 700;
-  background: var(--g1); color: var(--g4);
-  border: 1.5px dashed var(--g3); border-radius: 8px;
-  padding: 6px 9px; cursor: pointer; white-space: nowrap;
-  font-family: inherit; transition: all .18s;
+.btn-go:active{opacity:.8}
+.btn-done{
+  font-size:11px;font-weight:700;
+  background:var(--g1);color:var(--g4);
+  border:1.5px dashed var(--g3);border-radius:8px;
+  padding:6px 9px;cursor:pointer;white-space:nowrap;
+  font-family:inherit;transition:all .18s;
 }
-.btn-done.done {
-  background: var(--green); color: #fff;
-  border: 1.5px solid var(--green);
-}
-.btn-done:active { opacity: .8; }
-
-/* 일정 보기 작은 버튼 */
-.btn-sch {
-  font-size: 10px; font-weight: 600;
-  background: none; color: var(--g4);
-  border: none; padding: 2px 0;
-  cursor: pointer; font-family: inherit;
-  text-decoration: underline; text-underline-offset: 2px;
-  text-align: right;
+.btn-done.done{background:var(--green);color:#fff;border:1.5px solid var(--green)}
+.btn-done:active{opacity:.8}
+.btn-sch{
+  font-size:10px;font-weight:600;background:none;color:var(--g4);
+  border:none;padding:2px 0;cursor:pointer;font-family:inherit;
+  text-decoration:underline;text-underline-offset:2px;text-align:right;
 }
 
-/* 통계 탭 */
-.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 12px; }
-.stat-card { background: var(--wh); border: 1px solid var(--g2); border-radius: 14px; padding: 14px 12px; text-align: center; }
-.stat-num  { font-size: 36px; font-weight: 900; color: var(--cat1); line-height: 1; }
-.stat-num.org { color: var(--org); }
-.stat-lbl  { font-size: 11px; font-weight: 500; color: var(--g4); margin-top: 4px; }
+/* ══════════════════════════════
+   통계 탭
+══════════════════════════════ */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.stat-card{background:var(--wh);border:1px solid var(--g2);border-radius:14px;padding:14px 12px;text-align:center}
+.stat-num{font-size:34px;font-weight:900;color:var(--cat1);line-height:1}
+.stat-num.acc{color:var(--acc)}
+.stat-lbl{font-size:11px;font-weight:500;color:var(--g4);margin-top:4px}
 
-.rate-card { background: var(--wh); border: 1px solid var(--g2); border-radius: 14px; padding: 14px; margin-bottom: 9px; }
-.rate-row  { display: flex; justify-content: space-between; margin-bottom: 8px; }
-.rate-name { font-size: 12px; font-weight: 700; color: var(--bk); }
-.rate-pct  { font-size: 12px; font-weight: 700; color: var(--org); }
-.rate-track { background: var(--g1); border-radius: 999px; height: 7px; overflow: hidden; }
-.rate-fill  { height: 7px; border-radius: 999px; background: var(--org); transition: width .55s cubic-bezier(.4,0,.2,1); }
-.rate-fill.blue { background: #3E51B5; }
+.basis-box{
+  background:var(--wh);border:1px solid var(--g2);
+  border-left:3px solid var(--acc);
+  border-radius:12px;padding:12px 14px;margin-bottom:9px;
+  font-size:11px;color:var(--g5);line-height:1.75;
+}
+.basis-box strong{color:var(--acc-d);font-weight:700}
 
-.notice-box {
-  background: var(--wh); border: 1px solid var(--g2); border-left: 3px solid var(--org);
-  border-radius: 12px; padding: 14px;
-  font-size: 11px; color: var(--g4); line-height: 1.7;
+.rate-card{background:var(--wh);border:1px solid var(--g2);border-radius:14px;padding:14px;margin-bottom:9px}
+.rate-row{display:flex;justify-content:space-between;margin-bottom:8px}
+.rate-name{font-size:12px;font-weight:700;color:var(--bk)}
+.rate-pct{font-size:12px;font-weight:700;color:var(--acc)}
+.rate-track{background:var(--g1);border-radius:999px;height:7px;overflow:hidden}
+.rate-fill{height:7px;border-radius:999px;background:var(--acc);transition:width .55s cubic-bezier(.4,0,.2,1)}
+.rate-fill.cat2{background:#388E3C}
+.rate-note{font-size:10px;color:var(--g4);margin-top:6px;font-weight:500}
+
+.notice-box{
+  background:var(--wh);border:1px solid var(--g2);
+  border-left:3px solid var(--g3);border-radius:12px;
+  padding:14px;font-size:11px;color:var(--g4);line-height:1.7;
 }
 
 /* 하단 바 */
-.bottom-bar {
-  background: var(--wh); border-top: 1px solid var(--g2);
-  padding: 8px 16px;
-  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
-  display: flex; justify-content: space-between; align-items: center;
-  flex-shrink: 0;
+.bottom-bar{
+  background:var(--wh);border-top:1px solid var(--g2);
+  padding:8px 16px;
+  padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));
+  display:flex;justify-content:space-between;align-items:center;
+  flex-shrink:0;
 }
-.copyright { font-size: 10px; color: var(--g4); font-weight: 500; }
-.btn-reset {
-  font-size: 11px; font-weight: 700; color: var(--red);
-  background: rgba(255,59,48,.08); border: none;
-  border-radius: 8px; padding: 6px 11px;
-  cursor: pointer; font-family: inherit;
+.copyright{font-size:10px;color:var(--g4);font-weight:500}
+.btn-reset{
+  font-size:11px;font-weight:700;color:var(--red);
+  background:rgba(217,48,37,.08);border:none;
+  border-radius:8px;padding:6px 11px;
+  cursor:pointer;font-family:inherit;
 }
 
-/* ═══ 일정 모달 (바텀 시트) ═══ */
-.modal-overlay {
-  position: absolute; inset: 0; z-index: 200;
-  background: rgba(0,0,0,.52);
-  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-  display: flex; align-items: flex-end;
-  opacity: 0; pointer-events: none;
-  transition: opacity .25s;
+/* ═══ 모달 ═══ */
+.modal-overlay{
+  position:absolute;inset:0;z-index:200;
+  background:rgba(0,0,0,.42);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  display:flex;align-items:flex-end;
+  opacity:0;pointer-events:none;transition:opacity .25s;
 }
-.modal-overlay.on { opacity: 1; pointer-events: auto; }
-.modal-sheet {
-  background: var(--wh); border-radius: 22px 22px 0 0;
-  width: 100%; padding: 20px 18px;
-  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-  transform: translateY(20px);
-  transition: transform .3s cubic-bezier(.34,1.3,.64,1);
-  max-height: 68%; overflow-y: auto;
+.modal-overlay.on{opacity:1;pointer-events:auto}
+.modal-sheet{
+  background:var(--wh);border-radius:22px 22px 0 0;
+  width:100%;padding:20px 18px;
+  padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));
+  transform:translateY(20px);
+  transition:transform .3s cubic-bezier(.34,1.3,.64,1);
+  max-height:68%;overflow-y:auto;
 }
-.modal-sheet::-webkit-scrollbar { display: none; }
-.modal-overlay.on .modal-sheet { transform: translateY(0); }
-.modal-grip  { width: 36px; height: 4px; border-radius: 2px; background: var(--g2); margin: 0 auto 16px; }
-.modal-title { font-size: 16px; font-weight: 700; color: var(--bk); margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--g2); }
-.sch-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--g2); }
-.sch-row:last-child { border: none; }
-.sch-lbl { font-size: 13px; color: var(--g4); font-weight: 500; }
-.sch-val { font-size: 13px; font-weight: 700; color: var(--org); }
-.btn-modal-close {
-  width: 100%; margin-top: 14px; padding: 13px;
-  background: var(--g1); border: none; border-radius: 13px;
-  font-size: 14px; font-weight: 700; color: var(--bk);
-  cursor: pointer; font-family: inherit;
+.modal-sheet::-webkit-scrollbar{display:none}
+.modal-overlay.on .modal-sheet{transform:translateY(0)}
+.modal-grip{width:36px;height:4px;border-radius:2px;background:var(--g2);margin:0 auto 16px}
+.modal-title{font-size:16px;font-weight:700;color:var(--bk);margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--g2)}
+.sch-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--g2)}
+.sch-row:last-child{border:none}
+.sch-lbl{font-size:13px;color:var(--g4);font-weight:500}
+.sch-val{font-size:13px;font-weight:700;color:var(--acc-d)}
+.btn-modal-close{
+  width:100%;margin-top:14px;padding:13px;
+  background:var(--g1);border:none;border-radius:13px;
+  font-size:14px;font-weight:700;color:var(--bk);
+  cursor:pointer;font-family:inherit;
 }
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- ══════════════════════════════
-       인트로 화면
-  ══════════════════════════════ -->
+  <!-- ══ 인트로 ══ -->
   <div class="screen" id="scIntro">
-    <div class="intro-sun">☀️</div>
-    <div class="intro-sub">전군 교육 통합관리 시스템</div>
-    <div class="intro-title">ROKA <em>EDU</em>-PASS</div>
-    <div class="intro-desc">개인별 교육 이수 현황을<br>한눈에 관리하세요</div>
-    <button class="btn-start" onclick="goMain()">시작하기</button>
-    <div class="intro-notice">본 앱은 국방망과 연동되지 않는 독립형 시스템입니다</div>
-
-    <!-- 접속자 카운터 -->
+    <div class="intro-content">
+      <div class="intro-sun">☀️</div>
+      <div class="intro-sub">전군 교육 통합관리 시스템</div>
+      <div class="intro-title">MND <em>EDU</em>-PASS</div>
+      <div class="intro-desc">개인별 교육 이수 현황을 한눈에 관리하세요</div>
+      <button class="btn-start" onclick="goMain()">시작하기</button>
+      <div class="intro-notice">본 앱은 국방망과 연동되지 않는 독립형 시스템입니다</div>
+    </div>
     <div class="visitor-box">
       <div class="vb-row">오늘 접속 <b id="visToday">-</b>명</div>
       <div class="vb-row">누적 접속 <b id="visTotal">-</b>명</div>
     </div>
   </div>
 
-  <!-- ══════════════════════════════
-       메인 화면
-  ══════════════════════════════ -->
+  <!-- ══ 메인 ══ -->
   <div class="screen hidden" id="scMain">
-
-    <!-- 헤더 -->
     <div class="top-hdr">
       <div class="hdr-row">
-        <div class="hdr-left">
+        <div>
           <div class="hdr-sub">전군 교육 통합관리</div>
-          <div class="hdr-name">ROKA <em>EDU</em>-PASS</div>
+          <div class="hdr-name">MND <em>EDU</em>-PASS</div>
         </div>
         <div class="hdr-right">
           <div class="hdr-pct" id="pctNum">0%</div>
@@ -350,71 +341,64 @@ html, body {
       </div>
       <div class="prog-wrap"><div class="prog-bar" id="progBar"></div></div>
       <div class="prog-meta">
-        <div class="prog-l" id="progLabel">0 / 10개 완료</div>
+        <div class="prog-l" id="progLabel">0 / 8개 기준 완료</div>
         <div class="prog-r" id="progStr">진행 중</div>
       </div>
-      <!-- 홈으로 버튼 -->
-      <button class="btn-home" onclick="goIntro()">
-        <span class="btn-home-arr">←</span> 처음 화면으로
-      </button>
     </div>
 
-    <!-- 탭 -->
     <div class="tabs">
-      <button class="tab-btn on" onclick="switchTab('edu', this)">📋 교육 목록</button>
-      <button class="tab-btn"    onclick="switchTab('stat', this)">📊 이수 통계</button>
+      <button class="tab-btn on" onclick="switchTab('edu',this)">📋 교육 목록</button>
+      <button class="tab-btn"    onclick="switchTab('stat',this)">📊 이수 통계</button>
     </div>
 
-    <!-- 교육 목록 탭 -->
     <div class="scroll-body" id="tabEdu">
       <div class="edu-group">
         <div class="cat-hdr">
-          <div class="cat-num">1</div>
-          법정 필수 및 인권 교육
+          <div class="cat-num">1</div>법정 필수 및 인권 교육
         </div>
         <div id="list1"></div>
       </div>
       <div class="edu-group">
-        <div class="cat-hdr blue">
-          <div class="cat-num blue">2</div>
-          직무 및 안전 교육
+        <div class="cat-hdr cat2">
+          <div class="cat-num n2">2</div>직무 및 안전 교육
           <span class="cat-note">3개 중 1개 이상</span>
         </div>
         <div id="list2"></div>
       </div>
     </div>
 
-    <!-- 통계 탭 -->
     <div class="scroll-body" id="tabStat" style="display:none">
       <div class="stat-grid">
-        <div class="stat-card"><div class="stat-num org" id="sDone">0</div><div class="stat-lbl">완료한 교육</div></div>
-        <div class="stat-card"><div class="stat-num"     id="sLeft">10</div><div class="stat-lbl">남은 교육</div></div>
+        <div class="stat-card"><div class="stat-num acc" id="sDone">0</div><div class="stat-lbl">완료 항목</div></div>
+        <div class="stat-card"><div class="stat-num" id="sLeft">8</div><div class="stat-lbl">미완료 기준</div></div>
+      </div>
+      <div class="basis-box">
+        <strong>이수 기준 안내</strong><br>
+        법정·인권 교육 7개 + 직무·안전 교육 달성 여부(3개 중 1개) = <strong>총 8개 기준</strong>
       </div>
       <div class="rate-card">
         <div class="rate-row"><span class="rate-name">법정·인권 교육</span><span class="rate-pct" id="r1p">0%</span></div>
         <div class="rate-track"><div class="rate-fill" id="r1b" style="width:0%"></div></div>
+        <div class="rate-note" id="r1note">7개 중 0개 완료</div>
       </div>
       <div class="rate-card">
-        <div class="rate-row"><span class="rate-name">직무·안전 교육</span><span class="rate-pct" id="r2p" style="color:#3E51B5">0%</span></div>
-        <div class="rate-track"><div class="rate-fill blue" id="r2b" style="width:0%"></div></div>
+        <div class="rate-row"><span class="rate-name">직무·안전 교육</span><span class="rate-pct" id="r2p">미달성</span></div>
+        <div class="rate-track"><div class="rate-fill cat2" id="r2b" style="width:0%"></div></div>
+        <div class="rate-note" id="r2note">3개 중 1개 이상 수강 시 달성</div>
       </div>
       <div class="notice-box">
-        <strong style="color:var(--org-d)">※ 안내</strong><br>
         본 앱은 개인의 교육 이수 현황 관리를 돕는 도구이며,
         국방망과 연동되지 않는 독립형 시스템입니다.<br>
         공식 이수 여부는 각 교육 플랫폼에서 확인하세요.
       </div>
     </div>
 
-    <!-- 하단 바 -->
     <div class="bottom-bar">
       <div class="copyright">© 육군 12사단 소령 박지민</div>
       <button class="btn-reset" onclick="doReset()">초기화</button>
     </div>
+  </div>
 
-  </div><!-- /scMain -->
-
-  <!-- 일정 모달 -->
   <div class="modal-overlay" id="modal" onclick="closeModal()">
     <div class="modal-sheet" onclick="event.stopPropagation()">
       <div class="modal-grip"></div>
@@ -424,214 +408,165 @@ html, body {
     </div>
   </div>
 
-</div><!-- /app -->
-
+</div>
 <script>
-/* ════════════════════════════
-   교육 데이터 (다문화이해교육 제거 → 총 10개)
-════════════════════════════ */
-var EDU = [
-  /* 카테고리 1 — 법정 필수 및 인권 (7개) */
-  { cat:1, id:'e01', title:'성인지 교육 (국방부)',       url:'https://mnd.nhi.go.kr',    type:'gender',  tag:'3/16 ~ 12/31',  tc:'tag-period' },
-  { cat:1, id:'e02', title:'자살 예방 교육 (생명사랑)',  url:'https://mnd.nhi.go.kr',    type:'suicide', tag:'2/16 ~ 6/30',   tc:'tag-period' },
-  { cat:1, id:'e03', title:'반부패 청렴 교육',           url:'https://acrc.nhi.go.kr',   type:'check',   tag:'일정 확인',      tc:'tag-check'  },
-  { cat:1, id:'e04', title:'사이버 인권 교육',           url:'https://mnd.nhi.go.kr',    type:'hr',      tag:'매월 2회',       tc:'tag-period' },
-  { cat:1, id:'e05', title:'장애인 인식 개선 교육',      url:'https://mnd.nhi.go.kr',    type:'full',    tag:'1/1 ~ 12/31',   tc:'tag-full'   },
-  { cat:1, id:'e06', title:'아동학대 예방 교육',         url:'https://mnd.nhi.go.kr',    type:'full',    tag:'1/1 ~ 12/31',   tc:'tag-full'   },
-  { cat:1, id:'e07', title:'민주주의와 헌법수호',        url:'https://mnd.nhi.go.kr',    type:'demo',    tag:'3/19 ~ 3/31',   tc:'tag-period' },
-  /* 카테고리 2 — 직무 및 안전 (3개) */
-  { cat:2, id:'e08', title:'산업안전보건 교육',          url:'http://edu.kosha.or.kr',   type:'check',   tag:'일정 확인',      tc:'tag-check'  },
-  { cat:2, id:'e09', title:'육군 안전관리교육 (관리자)', url:'http://safety.step.or.kr', type:'always',  tag:'상시',           tc:'tag-always' },
-  { cat:2, id:'e10', title:'육군 안전관리교육 (실무자)', url:'http://safety.step.or.kr', type:'always',  tag:'상시',           tc:'tag-always' },
+/* ═══ 데이터 ═══ */
+var EDU=[
+  {cat:1,id:'e01',title:'성인지 교육 (국방부)',       url:'https://mnd.nhi.go.kr',    type:'gender',  tag:'3/16 ~ 12/31',tc:'tag-period'},
+  {cat:1,id:'e02',title:'자살 예방 교육 (생명사랑)',  url:'https://mnd.nhi.go.kr',    type:'suicide', tag:'2/16 ~ 6/30', tc:'tag-period'},
+  {cat:1,id:'e03',title:'반부패 청렴 교육',           url:'https://acrc.nhi.go.kr',   type:'check',   tag:'일정 확인',    tc:'tag-check'},
+  {cat:1,id:'e04',title:'사이버 인권 교육',           url:'https://mnd.nhi.go.kr',    type:'hr',      tag:'매월 2회',     tc:'tag-period'},
+  {cat:1,id:'e05',title:'장애인 인식 개선 교육',      url:'https://mnd.nhi.go.kr',    type:'full2',   tag:'1/1 ~ 12/31', tc:'tag-full'},
+  {cat:1,id:'e06',title:'아동학대 예방 교육',         url:'https://mnd.nhi.go.kr',    type:'full',    tag:'1/6 ~ 12/31', tc:'tag-full'},
+  {cat:1,id:'e07',title:'민주주의와 헌법수호',        url:'https://mnd.nhi.go.kr',    type:'demo',    tag:'3/30 ~ 6/30', tc:'tag-period'},
+  {cat:2,id:'e08',title:'산업안전보건 교육',          url:'http://edu.kosha.or.kr',   type:'check',   tag:'일정 확인',    tc:'tag-check'},
+  {cat:2,id:'e09',title:'육군 안전관리교육 (관리자)', url:'http://safety.step.or.kr', type:'always',  tag:'상시',         tc:'tag-always'},
+  {cat:2,id:'e10',title:'육군 안전관리교육 (실무자)', url:'http://safety.step.or.kr', type:'always',  tag:'상시',         tc:'tag-always'},
 ];
-
-/* ════════════════════════════
-   일정 데이터
-════════════════════════════ */
-var SCH = {
-  gender:  [{ l:'신청·수강 기간', v:'3월 16일 ~ 12월 31일' }],
-  suicide: [{ l:'신청·수강 기간', v:'2월 16일 ~ 6월 30일' }],
-  check:   [{ l:'안내', v:'해당 시스템에서 직접 확인' }],
-  hr:      [{ l:'전반기', v:'매월 1일 ~ 16일' }, { l:'후반기', v:'매월 17일 ~ 말일' }],
-  full:    [{ l:'수강 기간', v:'1월 1일 ~ 12월 31일 (연중 상시)' }],
-  demo:    [{ l:'신청·수강 기간', v:'3월 19일 ~ 3월 31일' }],
-  always:  [{ l:'신청', v:'상시 가능' }, { l:'학습 기간', v:'신청일로부터 30일' }],
+var SCH={
+  gender: [{l:'신청·수강 기간',v:'3월 16일 ~ 12월 31일'}],
+  suicide:[{l:'신청·수강 기간',v:'2월 16일 ~ 6월 30일'}],
+  check:  [{l:'안내',v:'해당 시스템에서 직접 확인'}],
+  hr:     [{l:'전반기',v:'매월 1일 ~ 16일'},{l:'후반기',v:'매월 17일 ~ 말일'}],
+  full:   [{l:'수강 기간',v:'1월 6일 ~ 12월 31일'}],
+  full2:  [{l:'수강 기간',v:'1월 1일 ~ 12월 31일 (연중)'}],
+  demo:   [{l:'신청·수강 기간',v:'3월 30일 ~ 6월 30일'}],
+  always: [{l:'신청',v:'상시 가능'},{l:'학습 기간',v:'신청일로부터 30일'}],
 };
 
-/* ════════════════════════════
-   localStorage — 완료 상태 영구 저장
-   키: roka_done_v3  (배열, 예: ["e01","e03"])
-════════════════════════════ */
-var DONE_KEY = 'roka_done_v3';
+/* ═══ 완료 상태 — localStorage 영구 저장 ═══ */
+var DONE_KEY='roka_done_v5';
+var done=[];
+function loadDone(){try{done=JSON.parse(localStorage.getItem(DONE_KEY)||'[]')}catch(e){done=[]}}
+function saveDone(){try{localStorage.setItem(DONE_KEY,JSON.stringify(done))}catch(e){}}
 
-function loadDone() {
-  try { return JSON.parse(localStorage.getItem(DONE_KEY) || '[]'); }
-  catch(e) { return []; }
-}
-function saveDone(arr) {
-  try { localStorage.setItem(DONE_KEY, JSON.stringify(arr)); } catch(e) {}
-}
-
-var done = loadDone(); /* 전역 완료 목록 */
-
-/* ════════════════════════════
-   접속자 카운터 — localStorage
-   (기기 단위 집계. 다중 사용자 집계는 별도 서버 API 필요)
-════════════════════════════ */
-function recordVisit() {
-  var KEY = 'roka_visits_v3';
-  var today = new Date().toISOString().slice(0, 10);
-  var data;
-  try { data = JSON.parse(localStorage.getItem(KEY)); } catch(e) {}
-  if (!data || typeof data.total !== 'number') data = { total: 0, date: '', today: 0 };
-  data.total += 1;
-  if (data.date === today) { data.today += 1; }
-  else { data.date = today; data.today = 1; }
-  try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e) {}
-  document.getElementById('visToday').textContent = data.today;
-  document.getElementById('visTotal').textContent = data.total;
+/* ═══ 접속자 카운터 ═══ */
+function recordVisit(){
+  var KEY='roka_visits_v5',today=new Date().toISOString().slice(0,10),data;
+  try{data=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+  if(!data||typeof data.total!=='number')data={total:0,date:'',today:0};
+  data.total+=1;
+  if(data.date===today){data.today+=1}else{data.date=today;data.today=1}
+  try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}
+  document.getElementById('visToday').textContent=data.today;
+  document.getElementById('visTotal').textContent=data.total;
 }
 
-/* ════════════════════════════
-   완료 토글
-════════════════════════════ */
-function toggle(id) {
-  var i = done.indexOf(id);
-  if (i >= 0) done.splice(i, 1); else done.push(id);
-  saveDone(done);  /* ← 즉시 저장 → 앱 껐다 켜도 유지 */
+/* ═══ 완료 토글 ═══ */
+function toggle(id){
+  var i=done.indexOf(id);
+  if(i>=0)done.splice(i,1);else done.push(id);
+  saveDone();render();
+}
+
+/* ═══ 렌더링
+   이수 기준: 법정·인권 7개 + 직무·안전 달성(3개중1개)=1 → 총 8점
+═══ */
+function render(){
+  var c1=EDU.filter(function(e){return e.cat===1});
+  var c2=EDU.filter(function(e){return e.cat===2});
+  var d1=c1.filter(function(e){return done.indexOf(e.id)>=0}).length;
+  var d2=c2.filter(function(e){return done.indexOf(e.id)>=0}).length;
+  var cat2ok=d2>=1?1:0;
+  var score=d1+cat2ok;
+  var BASIS=8;
+  var pct=Math.round(score/BASIS*100);
+
+  document.getElementById('pctNum').textContent=pct+'%';
+  document.getElementById('progBar').style.width=pct+'%';
+  document.getElementById('progLabel').textContent=score+' / '+BASIS+'개 기준 완료';
+  document.getElementById('progStr').textContent=
+    pct===100?'🎉 모두 완료!':pct>=50?'절반 이상 완료':'진행 중';
+
+  document.getElementById('sDone').textContent=score;
+  document.getElementById('sLeft').textContent=BASIS-score;
+
+  var p1=Math.round(d1/c1.length*100);
+  document.getElementById('r1b').style.width=p1+'%';
+  document.getElementById('r1p').textContent=p1+'%';
+  document.getElementById('r1note').textContent=c1.length+'개 중 '+d1+'개 완료';
+
+  if(cat2ok){
+    document.getElementById('r2b').style.width='100%';
+    document.getElementById('r2p').textContent='✅ 달성';
+    document.getElementById('r2note').textContent='3개 중 '+d2+'개 수강 완료 — 달성!';
+  }else{
+    document.getElementById('r2b').style.width='0%';
+    document.getElementById('r2p').textContent='미달성';
+    document.getElementById('r2note').textContent='3개 중 1개 이상 수강 시 달성 (현재 '+d2+'개)';
+  }
+
+  renderList('list1',c1);
+  renderList('list2',c2);
+}
+
+function renderList(elId,items){
+  document.getElementById(elId).innerHTML=items.map(function(e){
+    var isDone=done.indexOf(e.id)>=0;
+    var st=e.title.replace(/'/g,'&#39;');
+    return '<div class="edu-card'+(isDone?' done':'')+'">'+
+      '<button class="chk-circle'+(isDone?' done':'')+'" onclick="toggle(\''+e.id+'\')">'+(isDone?'✓':'')+'</button>'+
+      '<div class="edu-info">'+
+        '<div class="edu-title">'+e.title+'</div>'+
+        '<div style="display:flex;align-items:center;gap:8px;margin-top:2px">'+
+          '<span class="edu-tag '+e.tc+'">'+e.tag+'</span>'+
+          '<button class="btn-sch" onclick="openSch(\''+st+'\',\''+e.type+'\')">일정 보기</button>'+
+        '</div>'+
+      '</div>'+
+      '<div class="edu-actions">'+
+        '<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기</button>'+
+        '<button class="btn-done'+(isDone?' done':'')+'" onclick="toggle(\''+e.id+'\')">'+(isDone?'✓ 완료됨':'완료 표시')+'</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+/* ═══ 탭 전환 ═══ */
+function switchTab(t,el){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on')});
+  el.classList.add('on');
+  document.getElementById('tabEdu').style.display=t==='edu'?'':'none';
+  document.getElementById('tabStat').style.display=t==='stat'?'':'none';
+}
+
+/* ═══ 화면 전환 ═══ */
+function goMain(){
+  document.getElementById('scIntro').classList.add('hidden');
+  document.getElementById('scMain').classList.remove('hidden');
   render();
 }
 
-/* ════════════════════════════
-   렌더링
-════════════════════════════ */
-function render() {
-  var total = EDU.length;
-  var d = done.length;
-  var pct = Math.round(d / total * 100);
-
-  /* 헤더 */
-  document.getElementById('pctNum').textContent   = pct + '%';
-  document.getElementById('progBar').style.width  = pct + '%';
-  document.getElementById('progLabel').textContent = d + ' / ' + total + '개 완료';
-  document.getElementById('progStr').textContent  =
-    pct === 100 ? '🎉 모두 완료!' : pct >= 50 ? '절반 이상 완료' : '진행 중';
-
-  /* 통계 */
-  document.getElementById('sDone').textContent = d;
-  document.getElementById('sLeft').textContent = total - d;
-  var c1 = EDU.filter(function(e){ return e.cat === 1; });
-  var c2 = EDU.filter(function(e){ return e.cat === 2; });
-  var d1 = c1.filter(function(e){ return done.indexOf(e.id) >= 0; }).length;
-  var d2 = c2.filter(function(e){ return done.indexOf(e.id) >= 0; }).length;
-  var p1 = Math.round(d1 / c1.length * 100);
-  var p2 = Math.round(d2 / c2.length * 100);
-  document.getElementById('r1b').style.width = p1 + '%';
-  document.getElementById('r1p').textContent = p1 + '%';
-  document.getElementById('r2b').style.width = p2 + '%';
-  document.getElementById('r2p').textContent = p2 + '%';
-
-  /* 리스트 */
-  renderList('list1', c1);
-  renderList('list2', c2);
-}
-
-function renderList(elId, items) {
-  document.getElementById(elId).innerHTML = items.map(function(e) {
-    var isDone = done.indexOf(e.id) >= 0;
-    var safeTtl = e.title.replace(/'/g, '&#39;');
-    return (
-      '<div class="edu-card' + (isDone ? ' done' : '') + '">'
-        /* 왼쪽 원형 체크 (보조용) */
-        + '<button class="chk-circle' + (isDone ? ' done' : '') + '" onclick="toggle(\'' + e.id + '\')">'
-        + (isDone ? '✓' : '') + '</button>'
-        /* 중앙 */
-        + '<div class="edu-info">'
-          + '<div class="edu-title">' + e.title + '</div>'
-          + '<div style="display:flex;align-items:center;gap:8px;margin-top:2px">'
-            + '<span class="edu-tag ' + e.tc + '">' + e.tag + '</span>'
-            + '<button class="btn-sch" onclick="openSch(\'' + safeTtl + '\',\'' + e.type + '\')">일정 보기</button>'
-          + '</div>'
-        + '</div>'
-        /* 우측 버튼 묶음 */
-        + '<div class="edu-actions">'
-          + '<button class="btn-go" onclick="window.open(\'' + e.url + '\',\'_blank\')">수강하기</button>'
-          + '<button class="btn-done' + (isDone ? ' done' : '') + '" onclick="toggle(\'' + e.id + '\')">'
-          + (isDone ? '✓ 완료됨' : '완료 표시') + '</button>'
-        + '</div>'
-      + '</div>'
-    );
-  }).join('');
-}
-
-/* ════════════════════════════
-   탭 전환
-════════════════════════════ */
-function switchTab(t, el) {
-  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('on'); });
-  el.classList.add('on');
-  document.getElementById('tabEdu').style.display  = t === 'edu'  ? '' : 'none';
-  document.getElementById('tabStat').style.display = t === 'stat' ? '' : 'none';
-}
-
-/* ════════════════════════════
-   화면 전환
-════════════════════════════ */
-function goMain() {
-  document.getElementById('scIntro').classList.add('hidden');
-  document.getElementById('scMain').classList.remove('hidden');
-  render(); /* 메인으로 올 때마다 최신 완료 상태 반영 */
-}
-function goIntro() {
-  document.getElementById('scMain').classList.add('hidden');
-  document.getElementById('scIntro').classList.remove('hidden');
-}
-
-/* ════════════════════════════
-   일정 모달
-════════════════════════════ */
-function openSch(title, type) {
-  document.getElementById('mTitle').textContent = title;
-  var rows = SCH[type] || [{ l:'안내', v:'해당 시스템에서 확인해 주세요' }];
-  document.getElementById('mBody').innerHTML = rows.map(function(r){
-    return '<div class="sch-row"><span class="sch-lbl">' + r.l + '</span><span class="sch-val">' + r.v + '</span></div>';
+/* ═══ 모달 ═══ */
+function openSch(title,type){
+  document.getElementById('mTitle').textContent=title;
+  var rows=SCH[type]||[{l:'안내',v:'해당 시스템에서 확인'}];
+  document.getElementById('mBody').innerHTML=rows.map(function(r){
+    return '<div class="sch-row"><span class="sch-lbl">'+r.l+'</span><span class="sch-val">'+r.v+'</span></div>';
   }).join('');
   document.getElementById('modal').classList.add('on');
 }
-function closeModal() { document.getElementById('modal').classList.remove('on'); }
+function closeModal(){document.getElementById('modal').classList.remove('on')}
 
-/* ════════════════════════════
-   초기화
-════════════════════════════ */
-function doReset() {
-  if (confirm('이수 기록을 모두 초기화할까요?')) {
-    done = []; saveDone(done); render();
-  }
+/* ═══ 초기화 ═══ */
+function doReset(){
+  if(confirm('이수 기록을 모두 초기화할까요?')){done=[];saveDone();render();}
 }
 
-/* ════════════════════════════
-   카카오톡 인앱 브라우저 우회
-════════════════════════════ */
-if (/KAKAOTALK/i.test(navigator.userAgent)) {
-  if (/Android/i.test(navigator.userAgent)) {
-    location.href = 'intent://' + location.href.replace(/https?:\/\//i, '') + '#Intent;scheme=https;package=com.android.chrome;end';
-  } else {
-    alert('우측 상단 메뉴를 눌러 \'Safari로 열기\'를 선택해주세요!');
-  }
+/* ═══ 카카오 인앱 브라우저 ═══ */
+if(/KAKAOTALK/i.test(navigator.userAgent)){
+  if(/Android/i.test(navigator.userAgent)){
+    location.href='intent://'+location.href.replace(/https?:\/\//i,'')+'#Intent;scheme=https;package=com.android.chrome;end';
+  }else{alert('우측 상단 메뉴를 눌러 \'Safari로 열기\'를 선택해주세요!')}
 }
 
-/* ════════════════════════════
-   PWA
-════════════════════════════ */
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(function(){});
-}
+/* ═══ PWA ═══ */
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});
 
-/* ════════════════════════════
-   초기 실행
-════════════════════════════ */
-recordVisit(); /* 접속자 집계 */
-render();      /* 완료 상태 로드 후 렌더링 */
+/* ═══ 초기 실행 ═══ */
+loadDone();
+recordVisit();
+render();
+document.getElementById('tabStat').style.display='none';
 </script>
 </body>
 </html>
