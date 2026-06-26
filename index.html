@@ -440,16 +440,28 @@ var done=[];
 function loadDone(){try{done=JSON.parse(localStorage.getItem(DONE_KEY)||'[]')}catch(e){done=[]}}
 function saveDone(){try{localStorage.setItem(DONE_KEY,JSON.stringify(done))}catch(e){}}
 
-/* ═══ 접속자 카운터 ═══ */
+/* ═══ 접속자 카운터 — Supabase 공유 DB ═══ */
 function recordVisit(){
-  var KEY='roka_visits_v5',today=new Date().toISOString().slice(0,10),data;
-  try{data=JSON.parse(localStorage.getItem(KEY))}catch(e){}
-  if(!data||typeof data.total!=='number')data={total:0,date:'',today:0};
-  data.total+=1;
-  if(data.date===today){data.today+=1}else{data.date=today;data.today=1}
-  try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}
-  document.getElementById('visToday').textContent=data.today;
-  document.getElementById('visTotal').textContent=data.total;
+  var SB_URL='https://pxzvojcxdotayklnpvxs.supabase.co';
+  var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4enZvamN4ZG90YXlrbG5wdnhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMTAxODIsImV4cCI6MjA5Nzc4NjE4Mn0.8hEg70t3HjS-23GcfHR0YslMQZyTlja9OiMoGYLyWKU';
+  fetch(SB_URL+'/rest/v1/rpc/increment_visitor',{
+    method:'POST',
+    headers:{
+      'apikey':SB_KEY,
+      'Authorization':'Bearer '+SB_KEY,
+      'Content-Type':'application/json'
+    },
+    body:'{}'
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    document.getElementById('visToday').textContent=d.today;
+    document.getElementById('visTotal').textContent=d.total;
+  })
+  .catch(function(){
+    document.getElementById('visToday').textContent='-';
+    document.getElementById('visTotal').textContent='-';
+  });
 }
 
 /* ═══ 완료 토글 ═══ */
