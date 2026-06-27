@@ -213,11 +213,12 @@ html,body{
 .edu-card{
   background:var(--wh);border-radius:14px;
   padding:11px 12px;
-  display:flex;align-items:flex-start;gap:10px;
+  display:flex;align-items:center;gap:10px;
   border:1px solid var(--g2);margin-bottom:6px;
   transition:background .2s,border-color .2s,transform .12s,box-shadow .12s;
   box-shadow:var(--shadow-sm);
 }
+.edu-card.parts-card{align-items:flex-start}
 .edu-card:active{transform:scale(.99);box-shadow:none}
 .edu-card.done{background:var(--done-bg);border-color:var(--done-bdr)}
 .edu-card.done .edu-title{color:#aaa;text-decoration:line-through}
@@ -261,8 +262,8 @@ html,body{
   font-family:inherit;transition:all .18s;width:100%;
 }
 .btn-done.done{
-  background:var(--green);color:#fff;border:1.5px solid var(--green);
-  box-shadow:0 2px 6px rgba(78,154,48,.28);
+  background:#EDFAED;color:#2E7D32;border:1.5px solid #81C784;
+  box-shadow:none;
 }
 .btn-done:active{opacity:.8}
 .btn-done-a{
@@ -272,7 +273,7 @@ html,body{
   padding:6px 10px;cursor:pointer;white-space:nowrap;
   font-family:inherit;transition:all .18s;width:100%;
 }
-.btn-done-a.done{background:var(--green);color:#fff;border:1.5px solid var(--green);box-shadow:0 2px 6px rgba(78,154,48,.28)}
+.btn-done-a.done{background:#EDFAED;color:#2E7D32;border:1.5px solid #81C784;box-shadow:none}
 .btn-done-a:active{opacity:.8}
 .btn-done-b{
   font-size:11px;font-weight:700;
@@ -281,7 +282,7 @@ html,body{
   padding:6px 10px;cursor:pointer;white-space:nowrap;
   font-family:inherit;transition:all .18s;width:100%;
 }
-.btn-done-b.done{background:var(--green);color:#fff;border:1.5px solid var(--green);box-shadow:0 2px 6px rgba(78,154,48,.28)}
+.btn-done-b.done{background:#EDFAED;color:#2E7D32;border:1.5px solid #81C784;box-shadow:none}
 .btn-done-b:active{opacity:.8}
 .btn-sch{
   font-size:10px;font-weight:600;background:none;color:var(--g4);
@@ -644,7 +645,7 @@ function renderList(elId,items){
         }).join('')
       :'<button class="btn-done'+(isDone?' done':'')+'" onclick="toggle(\''+e.id+'\')">'+(isDone?'✓ 완료됨':'완료 표시')+'</button>';
     var schBtn=e.noSch?'':'<button class="btn-sch" onclick="openSch(\''+st+'\',\''+e.type+'\')">일정 보기</button>';
-    return '<div class="edu-card'+(isDone?' done':'')+'">'+
+    return '<div class="edu-card'+(e.parts?' parts-card':'')+(isDone?' done':'')+'">'+
       '<button class="chk-circle'+(isDone?' done':'')+'"'+chkAttr+'>'+(isDone?'✓':'')+'</button>'+
       '<div class="edu-info">'+
         '<div class="edu-title">'+e.title+'</div>'+
