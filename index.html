@@ -191,12 +191,19 @@ html,body{
 .fdbk-banner{
   background:linear-gradient(135deg,#EAF6E6,#D4EDCA);
   border:1px solid var(--g2);border-radius:16px;
-  padding:22px 16px;text-align:center;margin-bottom:14px;
+  padding:20px 16px 18px;text-align:center;margin-bottom:14px;
   box-shadow:var(--shadow-sm);
 }
-.fdbk-banner-icon{font-size:38px;margin-bottom:10px}
-.fdbk-banner-title{font-size:17px;font-weight:900;color:var(--cat1);margin-bottom:7px;letter-spacing:-.3px}
-.fdbk-banner-desc{font-size:12px;color:var(--g5);line-height:1.7;opacity:.9}
+.fdbk-banner-tag{
+  display:inline-block;
+  background:rgba(61,122,36,.12);border:1px solid rgba(61,122,36,.2);
+  border-radius:999px;padding:3px 10px;
+  font-size:10px;font-weight:700;color:var(--acc-d);letter-spacing:.06em;
+  margin-bottom:10px;
+}
+.fdbk-banner-title{font-size:16px;font-weight:900;color:var(--cat1);margin-bottom:8px;letter-spacing:-.3px}
+.fdbk-banner-desc{font-size:12px;color:var(--g5);line-height:1.75;opacity:.9}
+.fdbk-list-pub{font-size:10px;font-weight:500;color:var(--g3);letter-spacing:0}
 
 .fdbk-form{margin-bottom:16px}
 .fdbk-input{
@@ -507,9 +514,9 @@ html,body{
     </div>
 
     <div class="tabs">
-      <button class="tab-btn on" onclick="switchTab('edu',this)">📋 교육 목록</button>
-      <button class="tab-btn"    onclick="switchTab('stat',this)">📊 이수 통계</button>
-      <button class="tab-btn"    onclick="switchTab('fdbk',this)">💬 개선 의견</button>
+      <button class="tab-btn on" onclick="switchTab('edu',this)">교육 목록</button>
+      <button class="tab-btn"    onclick="switchTab('stat',this)">이수 통계</button>
+      <button class="tab-btn"    onclick="switchTab('fdbk',this)">✍ 개선 의견</button>
     </div>
 
     <div class="scroll-body" id="tabEdu">
@@ -556,20 +563,18 @@ html,body{
 
     <div class="scroll-body" id="tabFdbk" style="display:none">
       <div class="fdbk-banner">
-        <div class="fdbk-banner-icon">🚀</div>
-        <div class="fdbk-banner-title">앱 출시를 준비하고 있습니다!</div>
+        <div class="fdbk-banner-tag">출시 준비 중</div>
+        <div class="fdbk-banner-title">어플 출시를 준비하고 있습니다</div>
         <div class="fdbk-banner-desc">
-          전군 장병 여러분의 뜨거운 관심 덕분에<br>
-          정식 앱으로 출시하게 되었습니다.<br><br>
-          더 편리하고 유용한 앱을 만들기 위해<br>
-          <strong>기능 개선 의견</strong>을 들려주세요 🙏
+          전군 장병 여러분의 관심 덕분에 정식 어플로 출시하게 되었습니다.<br>
+          더 나은 서비스를 위해 <strong>기능 개선 의견</strong>을 남겨주세요.
         </div>
       </div>
       <div class="fdbk-form">
         <textarea id="fdbkInput" class="fdbk-input" placeholder="원하는 기능이나 개선 사항을 자유롭게 적어주세요 (5~300자)" maxlength="300" rows="4"></textarea>
         <button class="fdbk-submit" onclick="submitFeedback()">의견 보내기</button>
       </div>
-      <div class="fdbk-list-hdr">제출된 의견</div>
+      <div class="fdbk-list-hdr">제출된 의견 <span class="fdbk-list-pub">· 전체 공개</span></div>
       <div id="fdbkList"><div class="fdbk-empty">의견을 불러오는 중...</div></div>
     </div>
 
@@ -797,7 +802,7 @@ function submitFeedback(){
   .then(function(){
     input.value='';
     btn.disabled=false;btn.textContent='의견 보내기';
-    showToast('소중한 의견 감사합니다 🙏');
+    showToast('소중한 의견 감사합니다');
     loadFeedback();
   })
   .catch(function(){
