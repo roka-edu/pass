@@ -178,12 +178,65 @@ html,body{
 /* 탭 */
 .tabs{display:flex;background:var(--wh);border-bottom:1px solid var(--g2);flex-shrink:0}
 .tab-btn{
-  flex:1;padding:11px 0;font-size:13px;font-weight:700;
+  flex:1;padding:11px 0;font-size:12px;font-weight:700;
   color:var(--g4);border:none;background:none;
   cursor:pointer;border-bottom:2.5px solid transparent;
   transition:all .18s;font-family:inherit;
 }
 .tab-btn.on{color:var(--cat1);border-bottom-color:var(--acc)}
+
+/* ══════════════════════════════
+   피드백 탭
+══════════════════════════════ */
+.fdbk-banner{
+  background:linear-gradient(135deg,#EAF6E6,#D4EDCA);
+  border:1px solid var(--g2);border-radius:16px;
+  padding:22px 16px;text-align:center;margin-bottom:14px;
+  box-shadow:var(--shadow-sm);
+}
+.fdbk-banner-icon{font-size:38px;margin-bottom:10px}
+.fdbk-banner-title{font-size:17px;font-weight:900;color:var(--cat1);margin-bottom:7px;letter-spacing:-.3px}
+.fdbk-banner-desc{font-size:12px;color:var(--g5);line-height:1.7;opacity:.9}
+
+.fdbk-form{margin-bottom:16px}
+.fdbk-input{
+  width:100%;border:1.5px solid var(--g2);border-radius:12px;
+  padding:12px 14px;font-size:13px;font-family:inherit;
+  color:var(--bk);background:var(--wh);resize:none;
+  outline:none;transition:border-color .18s;
+  margin-bottom:8px;line-height:1.55;display:block;
+}
+.fdbk-input:focus{border-color:var(--acc)}
+.fdbk-input::placeholder{color:var(--g3)}
+.fdbk-submit{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,#5BAA35,#3D7A24);
+  color:#fff;border:none;border-radius:12px;
+  font-size:14px;font-weight:700;font-family:inherit;
+  cursor:pointer;transition:opacity .15s;
+  box-shadow:0 3px 12px rgba(61,122,36,.28);
+}
+.fdbk-submit:active{opacity:.85}
+.fdbk-submit:disabled{opacity:.45;cursor:not-allowed}
+
+.fdbk-list-hdr{
+  font-size:11px;font-weight:700;color:var(--g4);
+  letter-spacing:.07em;margin-bottom:9px;
+  display:flex;align-items:center;gap:6px;
+}
+.fdbk-list-hdr::after{content:'';flex:1;height:1px;background:var(--g2)}
+.fdbk-item{
+  background:var(--wh);border:1px solid var(--g2);
+  border-radius:12px;padding:13px 14px;margin-bottom:7px;
+  box-shadow:var(--shadow-sm);
+}
+.fdbk-num{
+  font-size:9px;font-weight:700;color:var(--g3);
+  margin-bottom:5px;letter-spacing:.04em;
+}
+.fdbk-content{font-size:13px;color:var(--bk);line-height:1.55;word-break:break-word}
+.fdbk-date{font-size:10px;color:var(--g3);margin-top:6px;font-weight:500}
+.fdbk-empty{text-align:center;color:var(--g3);font-size:13px;padding:40px 0;line-height:2}
 
 /* 스크롤 바디 */
 .scroll-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 24px}
@@ -453,6 +506,7 @@ html,body{
     <div class="tabs">
       <button class="tab-btn on" onclick="switchTab('edu',this)">📋 교육 목록</button>
       <button class="tab-btn"    onclick="switchTab('stat',this)">📊 이수 통계</button>
+      <button class="tab-btn"    onclick="switchTab('fdbk',this)">💬 개선 의견</button>
     </div>
 
     <div class="scroll-body" id="tabEdu">
@@ -495,6 +549,25 @@ html,body{
         국방망과 연동되지 않는 독립형 시스템입니다.<br>
         공식 이수 여부는 각 교육 플랫폼에서 확인하세요.
       </div>
+    </div>
+
+    <div class="scroll-body" id="tabFdbk" style="display:none">
+      <div class="fdbk-banner">
+        <div class="fdbk-banner-icon">🚀</div>
+        <div class="fdbk-banner-title">앱 출시를 준비하고 있습니다!</div>
+        <div class="fdbk-banner-desc">
+          전군 장병 여러분의 뜨거운 관심 덕분에<br>
+          정식 앱으로 출시하게 되었습니다.<br><br>
+          더 편리하고 유용한 앱을 만들기 위해<br>
+          <strong>기능 개선 의견</strong>을 들려주세요 🙏
+        </div>
+      </div>
+      <div class="fdbk-form">
+        <textarea id="fdbkInput" class="fdbk-input" placeholder="원하는 기능이나 개선 사항을 자유롭게 적어주세요 (5~300자)" maxlength="300" rows="4"></textarea>
+        <button class="fdbk-submit" onclick="submitFeedback()">의견 보내기</button>
+      </div>
+      <div class="fdbk-list-hdr">제출된 의견</div>
+      <div id="fdbkList"><div class="fdbk-empty">의견을 불러오는 중...</div></div>
     </div>
 
     <div class="bottom-bar">
@@ -560,15 +633,9 @@ function saveDone(){try{localStorage.setItem(DONE_KEY,JSON.stringify(done))}catc
 
 /* ═══ 접속자 카운터 — Supabase 공유 DB ═══ */
 function recordVisit(){
-  var SB_URL='https://pxzvojcxdotayklnpvxs.supabase.co';
-  var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4enZvamN4ZG90YXlrbG5wdnhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMTAxODIsImV4cCI6MjA5Nzc4NjE4Mn0.8hEg70t3HjS-23GcfHR0YslMQZyTlja9OiMoGYLyWKU';
   fetch(SB_URL+'/rest/v1/rpc/increment_visitor',{
     method:'POST',
-    headers:{
-      'apikey':SB_KEY,
-      'Authorization':'Bearer '+SB_KEY,
-      'Content-Type':'application/json'
-    },
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
     body:'{}'
   })
   .then(function(r){return r.json();})
@@ -670,6 +737,67 @@ function switchTab(t,el){
   el.classList.add('on');
   document.getElementById('tabEdu').style.display=t==='edu'?'':'none';
   document.getElementById('tabStat').style.display=t==='stat'?'':'none';
+  document.getElementById('tabFdbk').style.display=t==='fdbk'?'':'none';
+  if(t==='fdbk')loadFeedback();
+}
+
+/* ═══ 피드백 ═══ */
+var SB_URL='https://pxzvojcxdotayklnpvxs.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4enZvamN4ZG90YXlrbG5wdnhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMTAxODIsImV4cCI6MjA5Nzc4NjE4Mn0.8hEg70t3HjS-23GcfHR0YslMQZyTlja9OiMoGYLyWKU';
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function loadFeedback(){
+  fetch(SB_URL+'/rest/v1/rpc/get_feedback',{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+    body:'{}'
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    var el=document.getElementById('fdbkList');
+    if(!Array.isArray(data)||data.length===0){
+      el.innerHTML='<div class="fdbk-empty">아직 제출된 의견이 없습니다<br>첫 번째 의견을 남겨주세요!</div>';
+      return;
+    }
+    el.innerHTML=data.map(function(item,i){
+      var d=new Date(item.created_at);
+      var ds=(d.getMonth()+1)+'월 '+d.getDate()+'일';
+      return '<div class="fdbk-item">'+
+        '<div class="fdbk-num">#'+(data.length-i)+'</div>'+
+        '<div class="fdbk-content">'+escHtml(item.content)+'</div>'+
+        '<div class="fdbk-date">'+ds+'</div>'+
+      '</div>';
+    }).join('');
+  })
+  .catch(function(){
+    document.getElementById('fdbkList').innerHTML='<div class="fdbk-empty">불러오기 실패. 잠시 후 다시 시도해주세요.</div>';
+  });
+}
+
+function submitFeedback(){
+  var input=document.getElementById('fdbkInput');
+  var content=input.value.trim();
+  if(content.length<5){showToast('5자 이상 입력해주세요');return;}
+  if(content.length>300){showToast('300자 이내로 입력해주세요');return;}
+  var btn=document.querySelector('.fdbk-submit');
+  btn.disabled=true;btn.textContent='전송 중...';
+  fetch(SB_URL+'/rest/v1/rpc/submit_feedback',{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({p_content:content})
+  })
+  .then(function(r){if(!r.ok)throw new Error();return r.json();})
+  .then(function(){
+    input.value='';
+    btn.disabled=false;btn.textContent='의견 보내기';
+    showToast('소중한 의견 감사합니다 🙏');
+    loadFeedback();
+  })
+  .catch(function(){
+    btn.disabled=false;btn.textContent='의견 보내기';
+    showToast('전송 실패. 잠시 후 다시 시도해주세요.');
+  });
 }
 
 /* ═══ 화면 전환 ═══ */
