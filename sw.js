@@ -1,34 +1,60 @@
-self.addEventListener('install', (e) => self.skipWaiting());
-self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
+const CACHE = 'edu-pass-v3';
 
-// 푸시 알림 수신 대기 및 앱 실행 로직 보강
-self.addEventListener('push', (event) => {
-    const options = {
-        body: event.data ? event.data.text() : '교육 신청 기간입니다. 확인해주세요!',
-        icon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22white%22/><text y=%2250%%22 x=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%2260%22 fill=%22%23FF9800%22>☀️</text></svg>',
-        badge: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%2250%%22 x=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%2260%22 fill=%22%23FF9800%22>☀️</text></svg>',
-        vibrate: [200, 100, 200],
-        data: {
-            url: self.location.origin
-        }
-    };
-    event.waitUntil(self.registration.showNotification('ROKA EDU-PASS', options));
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(c => c.addAll(['./index.html','./icon.svg','./manifest.json']))
+      .then(() => self.skipWaiting())
+  );
 });
 
-// 알림 클릭 시 웹사이트/앱 열기
-self.addEventListener('notificationclick', (event) => {
-    event.notification.close();
-    event.waitUntil(
-        clients.matchAll({ type: 'window' }).then(windowClients => {
-            for (var i = 0; i < windowClients.length; i++) {
-                var client = windowClients[i];
-                if (client.url === event.notification.data.url && 'focus' in client) {
-                    return client.focus();
-                }
-            }
-            if (clients.openWindow) {
-                return clients.openWindow(event.notification.data.url);
-            }
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
+
+// 네비게이션(페이지 로드)은 항상 네트워크 우선 → 최신 index.html 보장
+self.addEventListener('fetch', e => {
+  if (e.request.mode === 'navigate') {
+    e.respondWith(
+      fetch(e.request, {cache: 'reload'})
+        .then(r => {
+          caches.open(CACHE).then(c => c.put(e.request, r.clone()));
+          return r;
         })
+        .catch(() => caches.match('./index.html'))
     );
+  } else {
+    e.respondWith(
+      caches.match(e.request).then(r => r || fetch(e.request))
+    );
+  }
+});
+
+// 푸시 알림
+self.addEventListener('push', e => {
+  const options = {
+    body: e.data ? e.data.text() : '교육 신청 기간입니다. 확인해주세요!',
+    icon: './icon.svg',
+    badge: './icon.svg',
+    vibrate: [200, 100, 200],
+    data: {url: self.location.origin}
+  };
+  e.waitUntil(self.registration.showNotification('MND EDU-PASS', options));
+});
+
+// 알림 클릭 시 앱 열기
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(
+    clients.matchAll({type:'window'}).then(list => {
+      for (var i=0;i<list.length;i++){
+        if (list[i].url===e.notification.data.url && 'focus' in list[i]) return list[i].focus();
+      }
+      if (clients.openWindow) return clients.openWindow(e.notification.data.url);
+    })
+  );
 });
