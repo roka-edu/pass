@@ -101,7 +101,6 @@ html,body{
 .intro-desc{
   font-size:13px;color:var(--g5);line-height:1.55;
   margin-bottom:34px;
-  white-space:nowrap;
   opacity:.85;
 }
 
@@ -214,7 +213,7 @@ html,body{
 .edu-card{
   background:var(--wh);border-radius:14px;
   padding:11px 12px;
-  display:flex;align-items:center;gap:10px;
+  display:flex;align-items:flex-start;gap:10px;
   border:1px solid var(--g2);margin-bottom:6px;
   transition:background .2s,border-color .2s,transform .12s,box-shadow .12s;
   box-shadow:var(--shadow-sm);
@@ -358,7 +357,7 @@ html,body{
 .modal-grip{width:36px;height:4px;border-radius:2px;background:var(--g2);margin:0 auto 16px}
 .modal-title{font-size:16px;font-weight:700;color:var(--bk);margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--g2)}
 .sch-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--g2)}
-.sch-row:last-child{border:none}
+.sch-row:last-child,.sch-row:has(+.sch-note){border-bottom:none}
 .sch-lbl{font-size:13px;color:var(--g4);font-weight:500}
 .sch-val{font-size:13px;font-weight:700;color:var(--acc-d)}
 .sch-note{
@@ -616,7 +615,7 @@ function renderList(elId,items){
       ?e.parts.every(function(p){return done.indexOf(p.id)>=0})
       :done.indexOf(e.id)>=0;
     var st=e.title.replace(/'/g,'&#39;');
-    var chkAttr=e.parts?'':' onclick="toggle(\''+e.id+'\')"';
+    var chkAttr=e.parts?' style="cursor:default"':' onclick="toggle(\''+e.id+'\')"';
     var actBtns=e.parts
       ?e.parts.map(function(p){
           var pd=done.indexOf(p.id)>=0;
