@@ -493,7 +493,8 @@ html,body{
 /* ═══ 데이터 ═══ */
 var EDU=[
   {cat:1,id:'e01',title:'성인지 교육 (국방부)',       url:'https://mnd.nhi.go.kr',     type:'gender',  tag:'3/16 ~ 12/31',tc:'tag-period'},
-  {cat:1,id:'e02',title:'자살 예방 교육 (생명사랑)',  url:'https://mnd.nhi.go.kr',     type:'suicide', tag:'2/16 ~ 6/30', tc:'tag-period'},
+  {cat:1,id:'e02',title:'자살 예방 교육 (생명사랑)',  url:'https://mnd.nhi.go.kr',     type:'suicide', tag:'전·후반기',   tc:'tag-period',
+   parts:[{id:'e02a',lbl:'전반기'},{id:'e02b',lbl:'후반기'}]},
   {cat:1,id:'e03',title:'반부패 청렴 교육',           url:'https://acti.nhi.go.kr/',   type:'integrity', tag:'매월 1~25일',  tc:'tag-period'},
   {cat:1,id:'e04',title:'사이버 인권 교육',           url:'https://mnd.nhi.go.kr',     type:'hr',      tag:'매월 2회',     tc:'tag-period'},
   {cat:1,id:'e05',title:'장애인 인식 개선 교육',      url:'https://mnd.nhi.go.kr',     type:'full2',   tag:'1/1 ~ 12/31', tc:'tag-full'},
@@ -505,7 +506,7 @@ var EDU=[
 ];
 var SCH={
   gender: [{l:'신청·수강 기간',v:'3월 16일 ~ 12월 31일'}],
-  suicide:[{l:'신청·수강 기간',v:'2월 16일 ~ 6월 30일'}],
+  suicide:[{l:'전반기 신청·수강',v:'2월 16일 ~ 6월 30일'},{l:'후반기 신청·수강',v:'하반기 일정 확인'}],
   check:  [{l:'안내',v:'해당 시스템에서 직접 확인'}],
   hr:     [{l:'전반기',v:'매월 1일 ~ 16일'},{l:'후반기',v:'매월 17일 ~ 말일'}],
   full:   [{l:'수강 기간',v:'1월 6일 ~ 12월 31일'}],
@@ -565,7 +566,10 @@ function toggle(id){
 function render(){
   var c1=EDU.filter(function(e){return e.cat===1});
   var c2=EDU.filter(function(e){return e.cat===2});
-  var d1=c1.filter(function(e){return done.indexOf(e.id)>=0}).length;
+  var d1=c1.filter(function(e){
+    if(e.parts)return e.parts.every(function(p){return done.indexOf(p.id)>=0});
+    return done.indexOf(e.id)>=0;
+  }).length;
   var d2=c2.filter(function(e){return done.indexOf(e.id)>=0}).length;
   var cat2ok=d2>=1?1:0;
   var score=d1+cat2ok;
@@ -602,10 +606,19 @@ function render(){
 
 function renderList(elId,items){
   document.getElementById(elId).innerHTML=items.map(function(e){
-    var isDone=done.indexOf(e.id)>=0;
+    var isDone=e.parts
+      ?e.parts.every(function(p){return done.indexOf(p.id)>=0})
+      :done.indexOf(e.id)>=0;
     var st=e.title.replace(/'/g,'&#39;');
+    var chkAttr=e.parts?'':' onclick="toggle(\''+e.id+'\')"';
+    var actBtns=e.parts
+      ?e.parts.map(function(p){
+          var pd=done.indexOf(p.id)>=0;
+          return '<button class="btn-done'+(pd?' done':'')+'" onclick="toggle(\''+p.id+'\')">'+(pd?'✓ '+p.lbl:p.lbl+' 완료')+'</button>';
+        }).join('')
+      :'<button class="btn-done'+(isDone?' done':'')+'" onclick="toggle(\''+e.id+'\')">'+(isDone?'✓ 완료됨':'완료 표시')+'</button>';
     return '<div class="edu-card'+(isDone?' done':'')+'">'+
-      '<button class="chk-circle'+(isDone?' done':'')+'" onclick="toggle(\''+e.id+'\')">'+(isDone?'✓':'')+'</button>'+
+      '<button class="chk-circle'+(isDone?' done':'')+'"'+chkAttr+'>'+(isDone?'✓':'')+'</button>'+
       '<div class="edu-info">'+
         '<div class="edu-title">'+e.title+'</div>'+
         '<div style="display:flex;align-items:center;gap:8px;margin-top:2px">'+
@@ -615,7 +628,7 @@ function renderList(elId,items){
       '</div>'+
       '<div class="edu-actions">'+
         '<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기</button>'+
-        '<button class="btn-done'+(isDone?' done':'')+'" onclick="toggle(\''+e.id+'\')">'+(isDone?'✓ 완료됨':'완료 표시')+'</button>'+
+        actBtns+
       '</div>'+
     '</div>';
   }).join('');
