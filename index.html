@@ -308,7 +308,7 @@ html,body{
 .edu-card.parts-card{align-items:flex-start}
 .edu-sch-row{font-size:10.5px;font-weight:600;color:var(--g4);line-height:1.7}
 .edu-sch-note{font-size:10px;font-weight:600;color:#C62828;margin-top:3px;line-height:1.4}
-.edu-actions{display:flex;flex-direction:column;gap:4px;flex-shrink:0;min-width:76px}
+.edu-actions{display:flex;flex-direction:column;gap:4px;flex-shrink:0;min-width:84px}
 .btn-go{
   font-size:11px;font-weight:700;
   background:linear-gradient(135deg,#5BAA35,#3D7A24);
@@ -336,8 +336,8 @@ html,body{
   font-size:11px;font-weight:700;
   background:#FFF8E1;color:#E65100;
   border:1.5px dashed #FFAB40;border-radius:8px;
-  padding:6px 10px;cursor:pointer;white-space:nowrap;
-  font-family:inherit;transition:all .18s;width:100%;
+  padding:6px 8px;cursor:pointer;white-space:nowrap;
+  font-family:inherit;transition:all .18s;width:100%;min-width:84px;
 }
 .btn-done-a.done{background:#EDFAED;color:#2E7D32;border:1.5px solid #81C784;box-shadow:none}
 .btn-done-a:active{opacity:.8}
@@ -345,8 +345,8 @@ html,body{
   font-size:11px;font-weight:700;
   background:#E3F2FD;color:#1565C0;
   border:1.5px dashed #90CAF9;border-radius:8px;
-  padding:6px 10px;cursor:pointer;white-space:nowrap;
-  font-family:inherit;transition:all .18s;width:100%;
+  padding:6px 8px;cursor:pointer;white-space:nowrap;
+  font-family:inherit;transition:all .18s;width:100%;min-width:84px;
 }
 .btn-done-b.done{background:#EDFAED;color:#2E7D32;border:1.5px solid #81C784;box-shadow:none}
 .btn-done-b:active{opacity:.8}
@@ -565,9 +565,9 @@ html,body{
 
     <div class="scroll-body" id="tabFdbk" style="display:none">
       <div class="fdbk-banner">
-<div class="fdbk-banner-title">어플 출시를 준비하고 있습니다</div>
         <div class="fdbk-banner-desc">
-          <span class="fdbk-desc-main">여러분들의 많은 관심 덕분에 어플로 출시를 준비하고 있습니다</span><br>
+          <span class="fdbk-desc-main">여러분의 많은 관심덕분에 어플로 출시를</span><br>
+          <span class="fdbk-desc-main">준비하고 있습니다</span><br>
           <span class="fdbk-desc-sub">더 나은 서비스를 위해 <strong>기능개선 의견</strong>을 남겨주세요.</span>
         </div>
       </div>
@@ -601,7 +601,7 @@ html,body{
 /* ═══ 데이터 ═══ */
 var EDU=[
   {cat:1,id:'e01',title:'성인지 교육 (국방부)',       url:'https://mnd.nhi.go.kr',     type:'gender',  tag:'3/16 ~ 12/31',tc:'tag-period', noSch:true},
-  {cat:1,id:'e02',title:'자살 예방 교육 (생명사랑)',  url:'https://mnd.nhi.go.kr',     type:'suicide', noSch:true,
+  {cat:1,id:'e02',title:'자살사고예방교육 (생명사랑)', url:'https://mnd.nhi.go.kr',     type:'suicide', noSch:true,
    schRows:['전반기 신청·수강  2/16 ~ 6/30','후반기 신청·수강  7/1 ~ 12/31'],
    schNote:'⚠ 전반기·후반기 각각 수강해야 이수 완료됩니다',
    parts:[{id:'e02a',lbl:'전반기'},{id:'e02b',lbl:'후반기'}]},
@@ -721,7 +721,7 @@ function renderList(elId,items){
       ?e.parts.map(function(p,i){
           var pd=done.indexOf(p.id)>=0;
           var cls=partCls[i]||'btn-done';
-          return '<button class="'+cls+(pd?' done':'')+'" onclick="toggle(\''+p.id+'\')">'+(pd?'✓ '+p.lbl:p.lbl+' 완료')+'</button>';
+          return '<button class="'+cls+(pd?' done':'')+'" onclick="toggle(\''+p.id+'\')">'+p.lbl+(pd?' 완료됨':' 표시')+'</button>';
         }).join('')
       :'<button class="btn-done'+(isDone?' done':'')+'" onclick="toggle(\''+e.id+'\')">'+(isDone?'✓ 완료됨':'완료 표시')+'</button>';
     var schBtn=e.noSch?'':'<button class="btn-sch" onclick="openSch(\''+st+'\',\''+e.type+'\')">일정 보기</button>';
