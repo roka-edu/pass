@@ -361,6 +361,12 @@ html,body{
 .sch-row:last-child{border:none}
 .sch-lbl{font-size:13px;color:var(--g4);font-weight:500}
 .sch-val{font-size:13px;font-weight:700;color:var(--acc-d)}
+.sch-note{
+  margin-top:10px;padding:9px 12px;
+  background:var(--g1);border-left:3px solid var(--acc);
+  border-radius:8px;font-size:11px;color:var(--g5);
+  font-weight:600;line-height:1.5;
+}
 .btn-modal-close{
   width:100%;margin-top:14px;padding:14px;
   background:var(--g1);border:none;border-radius:14px;
@@ -506,7 +512,7 @@ var EDU=[
 ];
 var SCH={
   gender: [{l:'신청·수강 기간',v:'3월 16일 ~ 12월 31일'}],
-  suicide:[{l:'전반기 신청·수강',v:'2월 16일 ~ 6월 30일'},{l:'후반기 신청·수강',v:'7월 1일 ~ 12월 31일'}],
+  suicide:[{l:'전반기 신청·수강',v:'2월 16일 ~ 6월 30일'},{l:'후반기 신청·수강',v:'7월 1일 ~ 12월 31일'},{note:'전반기·후반기 각각 수강해야 이수 완료됩니다'}],
   check:  [{l:'안내',v:'해당 시스템에서 직접 확인'}],
   hr:     [{l:'전반기',v:'매월 1일 ~ 16일'},{l:'후반기',v:'매월 17일 ~ 말일'}],
   full:   [{l:'수강 기간',v:'1월 6일 ~ 12월 31일'}],
@@ -654,6 +660,7 @@ function openSch(title,type){
   document.getElementById('mTitle').textContent=title;
   var rows=SCH[type]||[{l:'안내',v:'해당 시스템에서 확인'}];
   document.getElementById('mBody').innerHTML=rows.map(function(r){
+    if(r.note)return '<div class="sch-note">⚠ '+r.note+'</div>';
     return '<div class="sch-row"><span class="sch-lbl">'+r.l+'</span><span class="sch-val">'+r.v+'</span></div>';
   }).join('');
   document.getElementById('modal').classList.add('on');
