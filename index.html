@@ -80,12 +80,17 @@ html,body{
 
 .intro-sun{
   width:92px;height:92px;border-radius:50%;
-  background:linear-gradient(135deg,rgba(78,154,48,.18),rgba(78,154,48,.06));
-  border:2px solid rgba(78,154,48,.25);
+  background:linear-gradient(135deg,rgba(78,154,48,.16),rgba(61,122,36,.08));
+  border:2px solid rgba(78,154,48,.3);
   display:flex;align-items:center;justify-content:center;
-  font-size:50px;margin-bottom:22px;
+  margin-bottom:22px;
   animation:sunPulse 3s ease-in-out infinite;
   box-shadow:0 4px 24px rgba(78,154,48,.15);
+  position:relative;
+}
+.intro-sun::before{
+  content:'';position:absolute;inset:-6px;border-radius:50%;
+  border:1px dashed rgba(78,154,48,.22);
 }
 @keyframes sunPulse{
   0%,100%{box-shadow:0 4px 24px rgba(78,154,48,.15),0 0 0 0 rgba(78,154,48,.18)}
@@ -202,7 +207,9 @@ html,body{
   margin-bottom:10px;
 }
 .fdbk-banner-title{font-size:16px;font-weight:900;color:var(--cat1);margin-bottom:8px;letter-spacing:-.3px}
-.fdbk-banner-desc{font-size:12px;color:var(--g5);line-height:1.75;opacity:.9}
+.fdbk-banner-desc{font-size:12px;line-height:1.9}
+.fdbk-desc-main{color:var(--cat1);font-weight:700;font-size:13px}
+.fdbk-desc-sub{color:var(--g4);font-size:12px}
 .fdbk-list-pub{font-size:10px;font-weight:500;color:var(--g3);letter-spacing:0}
 
 .fdbk-form{margin-bottom:16px}
@@ -481,7 +488,18 @@ html,body{
   <div class="screen" id="scIntro">
     <div class="intro-content">
       <div class="intro-badge">전군 교육 통합관리 시스템</div>
-      <div class="intro-sun">☀️</div>
+      <div class="intro-sun">
+        <svg width="52" height="52" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="starGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6EC44D"/>
+              <stop offset="100%" stop-color="#2E6B1A"/>
+            </linearGradient>
+          </defs>
+          <polygon points="27,6 31.7,20.5 47,20.5 34.6,29.5 39.3,44 27,35 14.7,44 19.4,29.5 7,20.5 22.3,20.5"
+            fill="url(#starGrad)" opacity="0.92"/>
+        </svg>
+      </div>
       <div class="intro-title">MND <em>EDU</em>-PASS</div>
       <div class="intro-desc">개인별 교육 이수 현황을 한눈에 관리하세요</div>
       <button class="btn-start" onclick="goMain()">시작하기</button>
@@ -566,8 +584,8 @@ html,body{
         <div class="fdbk-banner-tag">출시 준비 중</div>
         <div class="fdbk-banner-title">어플 출시를 준비하고 있습니다</div>
         <div class="fdbk-banner-desc">
-          전군 장병 여러분의 관심 덕분에 정식 어플로 출시하게 되었습니다.<br>
-          더 나은 서비스를 위해 <strong>기능 개선 의견</strong>을 남겨주세요.
+          <span class="fdbk-desc-main">여러분들의 많은 관심 덕분에<br>어플로 출시를 준비하고 있습니다.</span><br>
+          <span class="fdbk-desc-sub">더 나은 서비스를 위해 <strong>기능개선 의견</strong>을 남겨주세요.</span>
         </div>
       </div>
       <div class="fdbk-form">
