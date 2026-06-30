@@ -721,7 +721,7 @@ function renderList(elId,items){
       ?e.parts.map(function(p,i){
           var pd=done.indexOf(p.id)>=0;
           var cls=partCls[i]||'btn-done';
-          return '<button class="'+cls+(pd?' done':'')+'" onclick="toggle(\''+p.id+'\')">'+(pd?'✓ ':'')+p.lbl+(pd?' 완료됨':' 표시')+'</button>';
+          return '<button class="'+cls+(pd?' done':'')+'" onclick="toggle(\''+p.id+'\')">'+(pd?p.lbl+' 완료':p.lbl)+'</button>';
         }).join('')
       :'<button class="btn-done'+(isDone?' done':'')+'" onclick="toggle(\''+e.id+'\')">'+(isDone?'✓ 완료됨':'완료 표시')+'</button>';
     var schBtn=e.noSch?'':'<button class="btn-sch" onclick="openSch(\''+st+'\',\''+e.type+'\')">일정 보기</button>';
