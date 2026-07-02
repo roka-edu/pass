@@ -258,7 +258,8 @@ html,body{
 .fdbk-comment-submit{font-size:12px;font-weight:700;background:var(--acc);color:#fff;border:none;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:opacity .12s}
 .fdbk-comment-submit:active{opacity:.8}
 .fdbk-comment-submit:disabled{opacity:.45;cursor:not-allowed}
-.fdbk-footer-right{display:flex;gap:5px;align-items:center}
+.fdbk-footer-right{display:flex;gap:10px;align-items:center}
+.fdbk-item-actions{display:flex;gap:4px}
 .fdbk-action-btn{font-size:10px;font-weight:700;background:none;border:1px solid;border-radius:5px;padding:2px 7px;cursor:pointer;font-family:inherit;transition:background .12s}
 .fdbk-edit-btn{color:var(--acc-d);border-color:var(--g2)}
 .fdbk-edit-btn:active{background:var(--g1)}
@@ -818,10 +819,12 @@ function loadFeedback(){
     el.innerHTML=data.map(function(item,i){
       var ds=fmtDateTime(item.created_at);
       var cnt=item.comment_count||0;
-      var mine=!item.device_token||item.device_token===myToken;
+      var mine=!!item.device_token&&item.device_token===myToken;
       var actionBtns=mine?
-        '<button class="fdbk-action-btn fdbk-edit-btn" onclick="startEditFeedback('+item.id+')">수정</button>'+
-        '<button class="fdbk-action-btn fdbk-del-btn" onclick="deleteFeedbackItem('+item.id+')">삭제</button>':'';
+        '<div class="fdbk-item-actions">'+
+          '<button class="fdbk-action-btn fdbk-edit-btn" onclick="startEditFeedback('+item.id+')">수정</button>'+
+          '<button class="fdbk-action-btn fdbk-del-btn" onclick="deleteFeedbackItem('+item.id+')">삭제</button>'+
+        '</div>':'';
       return '<div class="fdbk-item" id="fi-'+item.id+'" data-orig="'+escAttr(item.content)+'">'+
         '<div class="fdbk-num">#'+(data.length-i)+'</div>'+
         '<div class="fdbk-content" id="fct-'+item.id+'">'+escHtml(item.content)+'</div>'+
@@ -874,7 +877,7 @@ function loadComments(feedbackId){
     }
     listEl.innerHTML=data.map(function(c){
       var ds=fmtDateTime(c.created_at);
-      var mine=!c.device_token||c.device_token===myToken;
+      var mine=!!c.device_token&&c.device_token===myToken;
       var cmtBtns=mine?
         '<div class="fdbk-cmt-actions">'+
           '<button class="fdbk-action-btn fdbk-edit-btn" onclick="startEditComment('+c.id+','+feedbackId+')">수정</button>'+
@@ -943,6 +946,7 @@ function submitFeedback(){
 }
 
 function startEditFeedback(id){
+  if(!confirm('의견을 수정하시겠습니까?'))return;
   var orig=document.getElementById('fi-'+id).getAttribute('data-orig');
   document.getElementById('fct-'+id).innerHTML=
     '<textarea class="fdbk-edit-area" id="fea-'+id+'" maxlength="300">'+escHtml(orig)+'</textarea>'+
@@ -970,7 +974,7 @@ function saveFeedbackEdit(id){
   .catch(function(){ta.disabled=false;showToast('수정 실패. 잠시 후 다시 시도해주세요.');});
 }
 function deleteFeedbackItem(id){
-  if(!confirm('이 의견을 삭제하시겠습니까?'))return;
+  if(!confirm('의견을 삭제하시겠습니까?\n삭제 후에는 복구가 불가능합니다.'))return;
   fetch(SB_URL+'/rest/v1/rpc/delete_feedback',{
     method:'POST',
     headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
@@ -982,6 +986,7 @@ function deleteFeedbackItem(id){
 }
 
 function startEditComment(cid,fid){
+  if(!confirm('댓글을 수정하시겠습니까?'))return;
   var orig=document.getElementById('ci-'+cid).getAttribute('data-orig');
   document.getElementById('cct-'+cid).innerHTML=
     '<textarea class="fdbk-edit-area fdbk-edit-area-sm" id="cea-'+cid+'" maxlength="200">'+escHtml(orig)+'</textarea>'+
@@ -1009,7 +1014,7 @@ function saveCommentEdit(cid,fid){
   .catch(function(){ta.disabled=false;showToast('수정 실패. 잠시 후 다시 시도해주세요.');});
 }
 function deleteCommentItem(cid,fid){
-  if(!confirm('이 댓글을 삭제하시겠습니까?'))return;
+  if(!confirm('댓글을 삭제하시겠습니까?\n삭제 후에는 복구가 불가능합니다.'))return;
   fetch(SB_URL+'/rest/v1/rpc/delete_comment',{
     method:'POST',
     headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
