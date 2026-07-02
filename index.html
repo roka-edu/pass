@@ -258,6 +258,20 @@ html,body{
 .fdbk-comment-submit{font-size:12px;font-weight:700;background:var(--acc);color:#fff;border:none;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:opacity .12s}
 .fdbk-comment-submit:active{opacity:.8}
 .fdbk-comment-submit:disabled{opacity:.45;cursor:not-allowed}
+.fdbk-footer-right{display:flex;gap:5px;align-items:center}
+.fdbk-action-btn{font-size:10px;font-weight:700;background:none;border:1px solid;border-radius:5px;padding:2px 7px;cursor:pointer;font-family:inherit;transition:background .12s}
+.fdbk-edit-btn{color:var(--acc-d);border-color:var(--g2)}
+.fdbk-edit-btn:active{background:var(--g1)}
+.fdbk-del-btn{color:#d94f4f;border-color:#f5c6c6}
+.fdbk-del-btn:active{background:#fff0f0}
+.fdbk-edit-area{width:100%;border:1.5px solid var(--acc);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;color:var(--bk);background:var(--wh);outline:none;resize:vertical;min-height:60px;box-sizing:border-box;margin-top:4px}
+.fdbk-edit-area-sm{font-size:12px;min-height:44px}
+.fdbk-edit-actions{display:flex;gap:6px;margin-top:6px}
+.fdbk-save-btn{font-size:11px;font-weight:700;background:var(--acc);color:#fff;border:none;border-radius:6px;padding:4px 12px;cursor:pointer;font-family:inherit}
+.fdbk-save-btn:active{opacity:.8}
+.fdbk-cancel-btn{font-size:11px;font-weight:600;background:none;color:var(--g3);border:1px solid var(--g2);border-radius:6px;padding:4px 10px;cursor:pointer;font-family:inherit}
+.fdbk-comment-footer{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.fdbk-cmt-actions{display:flex;gap:4px}
 .fdbk-empty{text-align:center;color:var(--g3);font-size:13px;padding:40px 0;line-height:2}
 
 /* 스크롤 바디 */
@@ -771,8 +785,18 @@ var SB_URL='https://pxzvojcxdotayklnpvxs.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4enZvamN4ZG90YXlrbG5wdnhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMTAxODIsImV4cCI6MjA5Nzc4NjE4Mn0.8hEg70t3HjS-23GcfHR0YslMQZyTlja9OiMoGYLyWKU';
 
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function escAttr(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function fmtDateTime(iso){
+  var d=new Date(iso);
+  return (d.getMonth()+1)+'월 '+d.getDate()+'일 '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+function getMyFdbk(){try{return new Set(JSON.parse(localStorage.getItem('roka_my_fdbk')||'[]').map(String));}catch(e){return new Set();}}
+function saveMyFdbk(id){var s=getMyFdbk();s.add(String(id));localStorage.setItem('roka_my_fdbk',JSON.stringify(Array.from(s)));}
+function getMyComments(){try{return new Set(JSON.parse(localStorage.getItem('roka_my_cmts')||'[]').map(String));}catch(e){return new Set();}}
+function saveMyComment(id){var s=getMyComments();s.add(String(id));localStorage.setItem('roka_my_cmts',JSON.stringify(Array.from(s)));}
 
 function loadFeedback(){
+  var myFdbk=getMyFdbk();
   fetch(SB_URL+'/rest/v1/rpc/get_feedback',{
     method:'POST',
     headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
@@ -786,15 +810,21 @@ function loadFeedback(){
       return;
     }
     el.innerHTML=data.map(function(item,i){
-      var d=new Date(item.created_at);
-      var ds=(d.getMonth()+1)+'월 '+d.getDate()+'일';
+      var ds=fmtDateTime(item.created_at);
       var cnt=item.comment_count||0;
-      return '<div class="fdbk-item">'+
+      var mine=myFdbk.has(String(item.id));
+      var actionBtns=mine?
+        '<button class="fdbk-action-btn fdbk-edit-btn" onclick="startEditFeedback('+item.id+')">수정</button>'+
+        '<button class="fdbk-action-btn fdbk-del-btn" onclick="deleteFeedbackItem('+item.id+')">삭제</button>':'';
+      return '<div class="fdbk-item" id="fi-'+item.id+'" data-orig="'+escAttr(item.content)+'">'+
         '<div class="fdbk-num">#'+(data.length-i)+'</div>'+
-        '<div class="fdbk-content">'+escHtml(item.content)+'</div>'+
+        '<div class="fdbk-content" id="fct-'+item.id+'">'+escHtml(item.content)+'</div>'+
         '<div class="fdbk-footer">'+
           '<span class="fdbk-date">'+ds+'</span>'+
-          '<button class="fdbk-reply-btn" onclick="toggleComments('+item.id+',this)">댓글 '+cnt+'개</button>'+
+          '<div class="fdbk-footer-right">'+
+            actionBtns+
+            '<button class="fdbk-reply-btn" onclick="toggleComments('+item.id+',this)">댓글 '+cnt+'개</button>'+
+          '</div>'+
         '</div>'+
         '<div class="fdbk-comments" id="fc-'+item.id+'" style="display:none">'+
           '<div class="fdbk-comment-list" id="fcl-'+item.id+'"></div>'+
@@ -822,6 +852,7 @@ function toggleComments(id,btn){
 }
 
 function loadComments(feedbackId){
+  var myCmts=getMyComments();
   var listEl=document.getElementById('fcl-'+feedbackId);
   listEl.innerHTML='<div style="font-size:11px;color:var(--g3);padding:4px 0">불러오는 중...</div>';
   fetch(SB_URL+'/rest/v1/rpc/get_comments',{
@@ -836,11 +867,19 @@ function loadComments(feedbackId){
       return;
     }
     listEl.innerHTML=data.map(function(c){
-      var d=new Date(c.created_at);
-      var ds=(d.getMonth()+1)+'월 '+d.getDate()+'일';
-      return '<div class="fdbk-comment-item">'+
-        '<div class="fdbk-comment-content">'+escHtml(c.content)+'</div>'+
-        '<div class="fdbk-comment-date">'+ds+'</div>'+
+      var ds=fmtDateTime(c.created_at);
+      var mine=myCmts.has(String(c.id));
+      var cmtBtns=mine?
+        '<div class="fdbk-cmt-actions">'+
+          '<button class="fdbk-action-btn fdbk-edit-btn" onclick="startEditComment('+c.id+','+feedbackId+')">수정</button>'+
+          '<button class="fdbk-action-btn fdbk-del-btn" onclick="deleteCommentItem('+c.id+','+feedbackId+')">삭제</button>'+
+        '</div>':'';
+      return '<div class="fdbk-comment-item" id="ci-'+c.id+'" data-orig="'+escAttr(c.content)+'">'+
+        '<div class="fdbk-comment-content" id="cct-'+c.id+'">'+escHtml(c.content)+'</div>'+
+        '<div class="fdbk-comment-footer">'+
+          '<span class="fdbk-comment-date">'+ds+'</span>'+
+          cmtBtns+
+        '</div>'+
       '</div>';
     }).join('');
   })
@@ -861,9 +900,10 @@ function submitComment(feedbackId,btn){
     body:JSON.stringify({p_feedback_id:feedbackId,p_content:content})
   })
   .then(function(r){if(!r.ok)throw new Error();return r.json();})
-  .then(function(){
+  .then(function(newId){
     input.value='';
     btn.disabled=false;btn.textContent='등록';
+    if(newId)saveMyComment(newId);
     loadComments(feedbackId);
   })
   .catch(function(){
@@ -885,9 +925,10 @@ function submitFeedback(){
     body:JSON.stringify({p_content:content})
   })
   .then(function(r){if(!r.ok)throw new Error();return r.json();})
-  .then(function(){
+  .then(function(newId){
     input.value='';
     btn.disabled=false;btn.textContent='의견 보내기';
+    if(newId)saveMyFdbk(newId);
     showToast('소중한 의견 감사합니다');
     loadFeedback();
   })
@@ -895,6 +936,84 @@ function submitFeedback(){
     btn.disabled=false;btn.textContent='의견 보내기';
     showToast('전송 실패. 잠시 후 다시 시도해주세요.');
   });
+}
+
+function startEditFeedback(id){
+  var orig=document.getElementById('fi-'+id).getAttribute('data-orig');
+  document.getElementById('fct-'+id).innerHTML=
+    '<textarea class="fdbk-edit-area" id="fea-'+id+'" maxlength="300">'+escHtml(orig)+'</textarea>'+
+    '<div class="fdbk-edit-actions">'+
+      '<button class="fdbk-save-btn" onclick="saveFeedbackEdit('+id+')">저장</button>'+
+      '<button class="fdbk-cancel-btn" onclick="cancelEditFeedback('+id+')">취소</button>'+
+    '</div>';
+}
+function cancelEditFeedback(id){
+  var orig=document.getElementById('fi-'+id).getAttribute('data-orig');
+  document.getElementById('fct-'+id).textContent=orig;
+}
+function saveFeedbackEdit(id){
+  var ta=document.getElementById('fea-'+id);
+  var content=ta.value.trim();
+  if(content.length<5){showToast('5자 이상 입력해주세요');return;}
+  ta.disabled=true;
+  fetch(SB_URL+'/rest/v1/rpc/update_feedback',{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({p_id:id,p_content:content})
+  })
+  .then(function(r){if(!r.ok)throw new Error();return r.json();})
+  .then(function(){showToast('수정되었습니다');loadFeedback();})
+  .catch(function(){ta.disabled=false;showToast('수정 실패. 잠시 후 다시 시도해주세요.');});
+}
+function deleteFeedbackItem(id){
+  if(!confirm('이 의견을 삭제하시겠습니까?'))return;
+  fetch(SB_URL+'/rest/v1/rpc/delete_feedback',{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({p_id:id})
+  })
+  .then(function(r){if(!r.ok)throw new Error();return r.json();})
+  .then(function(){showToast('삭제되었습니다');loadFeedback();})
+  .catch(function(){showToast('삭제 실패. 잠시 후 다시 시도해주세요.');});
+}
+
+function startEditComment(cid,fid){
+  var orig=document.getElementById('ci-'+cid).getAttribute('data-orig');
+  document.getElementById('cct-'+cid).innerHTML=
+    '<textarea class="fdbk-edit-area fdbk-edit-area-sm" id="cea-'+cid+'" maxlength="200">'+escHtml(orig)+'</textarea>'+
+    '<div class="fdbk-edit-actions">'+
+      '<button class="fdbk-save-btn" onclick="saveCommentEdit('+cid+','+fid+')">저장</button>'+
+      '<button class="fdbk-cancel-btn" onclick="cancelEditComment('+cid+')">취소</button>'+
+    '</div>';
+}
+function cancelEditComment(cid){
+  var orig=document.getElementById('ci-'+cid).getAttribute('data-orig');
+  document.getElementById('cct-'+cid).textContent=orig;
+}
+function saveCommentEdit(cid,fid){
+  var ta=document.getElementById('cea-'+cid);
+  var content=ta.value.trim();
+  if(content.length<1){showToast('댓글을 입력해주세요');return;}
+  ta.disabled=true;
+  fetch(SB_URL+'/rest/v1/rpc/update_comment',{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({p_id:cid,p_content:content})
+  })
+  .then(function(r){if(!r.ok)throw new Error();return r.json();})
+  .then(function(){showToast('댓글이 수정되었습니다');loadComments(fid);})
+  .catch(function(){ta.disabled=false;showToast('수정 실패. 잠시 후 다시 시도해주세요.');});
+}
+function deleteCommentItem(cid,fid){
+  if(!confirm('이 댓글을 삭제하시겠습니까?'))return;
+  fetch(SB_URL+'/rest/v1/rpc/delete_comment',{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({p_id:cid})
+  })
+  .then(function(r){if(!r.ok)throw new Error();return r.json();})
+  .then(function(){showToast('댓글이 삭제되었습니다');loadComments(fid);})
+  .catch(function(){showToast('삭제 실패. 잠시 후 다시 시도해주세요.');});
 }
 
 /* ═══ 화면 전환 ═══ */
