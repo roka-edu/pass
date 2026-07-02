@@ -790,13 +790,19 @@ function fmtDateTime(iso){
   var d=new Date(iso);
   return (d.getMonth()+1)+'월 '+d.getDate()+'일 '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
 }
-function getMyFdbk(){try{return new Set(JSON.parse(localStorage.getItem('roka_my_fdbk')||'[]').map(String));}catch(e){return new Set();}}
-function saveMyFdbk(id){var s=getMyFdbk();s.add(String(id));localStorage.setItem('roka_my_fdbk',JSON.stringify(Array.from(s)));}
-function getMyComments(){try{return new Set(JSON.parse(localStorage.getItem('roka_my_cmts')||'[]').map(String));}catch(e){return new Set();}}
-function saveMyComment(id){var s=getMyComments();s.add(String(id));localStorage.setItem('roka_my_cmts',JSON.stringify(Array.from(s)));}
+function getDeviceToken(){
+  var t=localStorage.getItem('roka_device_token');
+  if(!t){
+    t='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){
+      var r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8);return v.toString(16);
+    });
+    localStorage.setItem('roka_device_token',t);
+  }
+  return t;
+}
 
 function loadFeedback(){
-  var myFdbk=getMyFdbk();
+  var myToken=getDeviceToken();
   fetch(SB_URL+'/rest/v1/rpc/get_feedback',{
     method:'POST',
     headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
@@ -812,7 +818,7 @@ function loadFeedback(){
     el.innerHTML=data.map(function(item,i){
       var ds=fmtDateTime(item.created_at);
       var cnt=item.comment_count||0;
-      var mine=myFdbk.has(String(item.id));
+      var mine=!item.device_token||item.device_token===myToken;
       var actionBtns=mine?
         '<button class="fdbk-action-btn fdbk-edit-btn" onclick="startEditFeedback('+item.id+')">수정</button>'+
         '<button class="fdbk-action-btn fdbk-del-btn" onclick="deleteFeedbackItem('+item.id+')">삭제</button>':'';
@@ -852,7 +858,7 @@ function toggleComments(id,btn){
 }
 
 function loadComments(feedbackId){
-  var myCmts=getMyComments();
+  var myToken=getDeviceToken();
   var listEl=document.getElementById('fcl-'+feedbackId);
   listEl.innerHTML='<div style="font-size:11px;color:var(--g3);padding:4px 0">불러오는 중...</div>';
   fetch(SB_URL+'/rest/v1/rpc/get_comments',{
@@ -868,7 +874,7 @@ function loadComments(feedbackId){
     }
     listEl.innerHTML=data.map(function(c){
       var ds=fmtDateTime(c.created_at);
-      var mine=myCmts.has(String(c.id));
+      var mine=!c.device_token||c.device_token===myToken;
       var cmtBtns=mine?
         '<div class="fdbk-cmt-actions">'+
           '<button class="fdbk-action-btn fdbk-edit-btn" onclick="startEditComment('+c.id+','+feedbackId+')">수정</button>'+
@@ -897,13 +903,12 @@ function submitComment(feedbackId,btn){
   fetch(SB_URL+'/rest/v1/rpc/add_comment',{
     method:'POST',
     headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
-    body:JSON.stringify({p_feedback_id:feedbackId,p_content:content})
+    body:JSON.stringify({p_feedback_id:feedbackId,p_content:content,p_device_token:getDeviceToken()})
   })
   .then(function(r){if(!r.ok)throw new Error();return r.json();})
   .then(function(newId){
     input.value='';
     btn.disabled=false;btn.textContent='등록';
-    if(newId)saveMyComment(newId);
     loadComments(feedbackId);
   })
   .catch(function(){
@@ -922,13 +927,12 @@ function submitFeedback(){
   fetch(SB_URL+'/rest/v1/rpc/submit_feedback',{
     method:'POST',
     headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
-    body:JSON.stringify({p_content:content})
+    body:JSON.stringify({p_content:content,p_device_token:getDeviceToken()})
   })
   .then(function(r){if(!r.ok)throw new Error();return r.json();})
   .then(function(newId){
     input.value='';
     btn.disabled=false;btn.textContent='의견 보내기';
-    if(newId)saveMyFdbk(newId);
     showToast('소중한 의견 감사합니다');
     loadFeedback();
   })
@@ -959,7 +963,7 @@ function saveFeedbackEdit(id){
   fetch(SB_URL+'/rest/v1/rpc/update_feedback',{
     method:'POST',
     headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
-    body:JSON.stringify({p_id:id,p_content:content})
+    body:JSON.stringify({p_id:id,p_content:content,p_device_token:getDeviceToken()})
   })
   .then(function(r){if(!r.ok)throw new Error();return r.json();})
   .then(function(){showToast('수정되었습니다');loadFeedback();})
@@ -970,7 +974,7 @@ function deleteFeedbackItem(id){
   fetch(SB_URL+'/rest/v1/rpc/delete_feedback',{
     method:'POST',
     headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
-    body:JSON.stringify({p_id:id})
+    body:JSON.stringify({p_id:id,p_device_token:getDeviceToken()})
   })
   .then(function(r){if(!r.ok)throw new Error();return r.json();})
   .then(function(){showToast('삭제되었습니다');loadFeedback();})
@@ -998,7 +1002,7 @@ function saveCommentEdit(cid,fid){
   fetch(SB_URL+'/rest/v1/rpc/update_comment',{
     method:'POST',
     headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
-    body:JSON.stringify({p_id:cid,p_content:content})
+    body:JSON.stringify({p_id:cid,p_content:content,p_device_token:getDeviceToken()})
   })
   .then(function(r){if(!r.ok)throw new Error();return r.json();})
   .then(function(){showToast('댓글이 수정되었습니다');loadComments(fid);})
@@ -1009,7 +1013,7 @@ function deleteCommentItem(cid,fid){
   fetch(SB_URL+'/rest/v1/rpc/delete_comment',{
     method:'POST',
     headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
-    body:JSON.stringify({p_id:cid})
+    body:JSON.stringify({p_id:cid,p_device_token:getDeviceToken()})
   })
   .then(function(r){if(!r.ok)throw new Error();return r.json();})
   .then(function(){showToast('댓글이 삭제되었습니다');loadComments(fid);})
