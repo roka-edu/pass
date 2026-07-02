@@ -244,7 +244,20 @@ html,body{
   margin-bottom:5px;letter-spacing:.04em;
 }
 .fdbk-content{font-size:13px;color:var(--bk);line-height:1.55;word-break:break-word}
-.fdbk-date{font-size:10px;color:var(--g3);margin-top:6px;font-weight:500}
+.fdbk-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.fdbk-date{font-size:10px;color:var(--g3);font-weight:500}
+.fdbk-reply-btn{font-size:11px;font-weight:700;color:var(--acc-d);background:none;border:1px solid var(--g2);border-radius:6px;padding:3px 9px;cursor:pointer;font-family:inherit;transition:background .15s}
+.fdbk-reply-btn:active{background:var(--g1)}
+.fdbk-comments{margin-top:10px;border-top:1px solid var(--g2);padding-top:10px}
+.fdbk-comment-item{padding:8px 10px;background:var(--g1);border-radius:8px;margin-bottom:5px}
+.fdbk-comment-content{font-size:12px;color:var(--bk);line-height:1.5;word-break:break-word}
+.fdbk-comment-date{font-size:10px;color:var(--g3);margin-top:3px}
+.fdbk-comment-form{display:flex;gap:6px;margin-top:8px}
+.fdbk-comment-input{flex:1;border:1.5px solid var(--g2);border-radius:8px;padding:7px 10px;font-size:12px;font-family:inherit;color:var(--bk);background:var(--wh);outline:none;transition:border-color .18s}
+.fdbk-comment-input:focus{border-color:var(--acc)}
+.fdbk-comment-submit{font-size:12px;font-weight:700;background:var(--acc);color:#fff;border:none;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:opacity .12s}
+.fdbk-comment-submit:active{opacity:.8}
+.fdbk-comment-submit:disabled{opacity:.45;cursor:not-allowed}
 .fdbk-empty{text-align:center;color:var(--g3);font-size:13px;padding:40px 0;line-height:2}
 
 /* 스크롤 바디 */
@@ -775,15 +788,87 @@ function loadFeedback(){
     el.innerHTML=data.map(function(item,i){
       var d=new Date(item.created_at);
       var ds=(d.getMonth()+1)+'월 '+d.getDate()+'일';
+      var cnt=item.comment_count||0;
       return '<div class="fdbk-item">'+
         '<div class="fdbk-num">#'+(data.length-i)+'</div>'+
         '<div class="fdbk-content">'+escHtml(item.content)+'</div>'+
-        '<div class="fdbk-date">'+ds+'</div>'+
+        '<div class="fdbk-footer">'+
+          '<span class="fdbk-date">'+ds+'</span>'+
+          '<button class="fdbk-reply-btn" onclick="toggleComments('+item.id+',this)">댓글 '+cnt+'개</button>'+
+        '</div>'+
+        '<div class="fdbk-comments" id="fc-'+item.id+'" style="display:none">'+
+          '<div class="fdbk-comment-list" id="fcl-'+item.id+'"></div>'+
+          '<div class="fdbk-comment-form">'+
+            '<input class="fdbk-comment-input" id="fci-'+item.id+'" placeholder="댓글을 입력하세요" maxlength="200">'+
+            '<button class="fdbk-comment-submit" onclick="submitComment('+item.id+',this)">등록</button>'+
+          '</div>'+
+        '</div>'+
       '</div>';
     }).join('');
   })
   .catch(function(){
     document.getElementById('fdbkList').innerHTML='<div class="fdbk-empty">불러오기 실패. 잠시 후 다시 시도해주세요.</div>';
+  });
+}
+
+function toggleComments(id,btn){
+  var el=document.getElementById('fc-'+id);
+  if(el.style.display==='none'){
+    el.style.display='block';
+    loadComments(id);
+  } else {
+    el.style.display='none';
+  }
+}
+
+function loadComments(feedbackId){
+  var listEl=document.getElementById('fcl-'+feedbackId);
+  listEl.innerHTML='<div style="font-size:11px;color:var(--g3);padding:4px 0">불러오는 중...</div>';
+  fetch(SB_URL+'/rest/v1/rpc/get_comments',{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({p_feedback_id:feedbackId})
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    if(!Array.isArray(data)||data.length===0){
+      listEl.innerHTML='<div style="font-size:11px;color:var(--g3);padding:4px 0">아직 댓글이 없습니다</div>';
+      return;
+    }
+    listEl.innerHTML=data.map(function(c){
+      var d=new Date(c.created_at);
+      var ds=(d.getMonth()+1)+'월 '+d.getDate()+'일';
+      return '<div class="fdbk-comment-item">'+
+        '<div class="fdbk-comment-content">'+escHtml(c.content)+'</div>'+
+        '<div class="fdbk-comment-date">'+ds+'</div>'+
+      '</div>';
+    }).join('');
+  })
+  .catch(function(){
+    listEl.innerHTML='<div style="font-size:11px;color:var(--g3);padding:4px 0">불러오기 실패</div>';
+  });
+}
+
+function submitComment(feedbackId,btn){
+  var input=document.getElementById('fci-'+feedbackId);
+  var content=input.value.trim();
+  if(content.length<1){showToast('댓글을 입력해주세요');return;}
+  if(content.length>200){showToast('200자 이내로 입력해주세요');return;}
+  btn.disabled=true;btn.textContent='등록 중';
+  fetch(SB_URL+'/rest/v1/rpc/add_comment',{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({p_feedback_id:feedbackId,p_content:content})
+  })
+  .then(function(r){if(!r.ok)throw new Error();return r.json();})
+  .then(function(){
+    input.value='';
+    btn.disabled=false;btn.textContent='등록';
+    loadComments(feedbackId);
+  })
+  .catch(function(){
+    btn.disabled=false;btn.textContent='등록';
+    showToast('등록 실패. 잠시 후 다시 시도해주세요.');
   });
 }
 
