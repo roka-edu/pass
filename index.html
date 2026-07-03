@@ -638,8 +638,7 @@ var EDU=[
   {cat:1,id:'e05',title:'장애인 인식 개선 교육',      url:'https://mnd.nhi.go.kr',     type:'full2',   tag:'1/1 ~ 12/31', tc:'tag-full',  noSch:true},
   {cat:1,id:'e06',title:'아동학대 예방 교육',         url:'https://mnd.nhi.go.kr',     type:'full',    tag:'1/6 ~ 12/31', tc:'tag-full',  noSch:true},
   {cat:1,id:'e07',title:'민주주의와 헌법수호',        url:'https://mnd.nhi.go.kr',     type:'demo',      tag:'3/30 ~ 6/30', tc:'tag-period', noSch:true},
-  {cat:1,id:'e11',title:'다문화 이해 교육',           url:'https://www.danurischool.kr/portal/education/allListAction.do', type:'multi', noSch:true,
-   schRows:['상시 수강 가능'],
+  {cat:1,id:'e11',title:'다문화 이해 교육',           url:'https://www.danurischool.kr/portal/education/allListAction.do', type:'multi', tag:'상시', tc:'tag-always', noSch:true,
    schNote:'공직자과정·군인과정 모두 수강 인정'},
   {cat:2,id:'e08',title:'산업안전보건 교육',          url:'https://edu.kosha.or.kr',   type:'check',   tag:'일정 확인',    tc:'tag-check'},
   {cat:2,id:'e09',title:'육군 안전관리교육 (관리자)', url:'https://safety.step.or.kr', type:'always',  tag:'상시',         tc:'tag-always'},
@@ -760,7 +759,8 @@ function renderList(elId,items){
     var tagRow=e.schRows
       ?(e.schRows.map(function(r){return '<div class="edu-sch-row">'+r+'</div>';}).join('')
         +(e.schNote?'<div class="edu-sch-note">'+e.schNote+'</div>':''))
-      :'<div style="display:flex;align-items:center;gap:8px;margin-top:2px"><span class="edu-tag '+(e.tc||'')+'">'+e.tag+'</span>'+schBtn+'</div>';
+      :'<div style="display:flex;align-items:center;gap:8px;margin-top:2px"><span class="edu-tag '+(e.tc||'')+'">'+e.tag+'</span>'+schBtn+'</div>'
+        +(e.schNote?'<div class="edu-sch-note">'+e.schNote+'</div>':'');
     return '<div class="edu-card'+(e.parts?' parts-card':'')+(isDone?' done':'')+'">'+
       '<button class="chk-circle'+(isDone?' done':'')+'"'+chkAttr+'>'+(isDone?'✓':'')+'</button>'+
       '<div class="edu-info">'+
