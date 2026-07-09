@@ -273,6 +273,11 @@ html,body{
 .fdbk-cancel-btn{font-size:11px;font-weight:600;background:none;color:var(--g3);border:1px solid var(--g2);border-radius:6px;padding:4px 10px;cursor:pointer;font-family:inherit}
 .fdbk-comment-footer{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
 .fdbk-cmt-actions{display:flex;gap:4px}
+.fdbk-cmt-reply-btn{font-size:10px;font-weight:600;color:var(--g3);background:none;border:1px solid var(--g2);border-radius:5px;padding:2px 7px;cursor:pointer;font-family:inherit;transition:background .12s}
+.fdbk-cmt-reply-btn:active{background:var(--g1)}
+.fdbk-replies{margin-left:14px;margin-top:4px;border-left:2px solid var(--g2);padding-left:8px}
+.fdbk-reply-item{background:transparent;padding:6px 8px}
+.fdbk-reply-form{margin-top:6px}
 .fdbk-empty{text-align:center;color:var(--g3);font-size:13px;padding:40px 0;line-height:2}
 
 /* 스크롤 바디 */
@@ -866,6 +871,38 @@ function toggleComments(id,btn){
   }
 }
 
+function renderComment(c,feedbackId,myToken,replies,isReply){
+  var ds=fmtDateTime(c.created_at);
+  var mine=!!c.device_token&&c.device_token===myToken;
+  var cmtBtns=mine?
+    '<div class="fdbk-cmt-actions" id="ca-'+c.id+'">'+
+      '<button class="fdbk-action-btn fdbk-edit-btn" onclick="startEditComment('+c.id+','+feedbackId+')">수정</button>'+
+      '<button class="fdbk-action-btn fdbk-del-btn" onclick="deleteCommentItem('+c.id+','+feedbackId+')">삭제</button>'+
+    '</div>':'';
+  var replyBtn=!isReply?
+    '<button class="fdbk-cmt-reply-btn" onclick="showReplyForm('+c.id+')">답글</button>':'';
+  var repliesHtml='';
+  if(replies&&replies.length>0){
+    repliesHtml='<div class="fdbk-replies">'+
+      replies.map(function(r){return renderComment(r,feedbackId,myToken,[],true);}).join('')+
+    '</div>';
+  }
+  return '<div class="fdbk-comment-item'+(isReply?' fdbk-reply-item':'')+'" id="ci-'+c.id+'" data-orig="'+escAttr(c.content)+'">'+
+    '<div class="fdbk-comment-content" id="cct-'+c.id+'">'+escHtml(c.content)+'</div>'+
+    '<div class="fdbk-comment-footer">'+
+      '<span class="fdbk-comment-date">'+ds+'</span>'+
+      '<div class="fdbk-footer-right">'+cmtBtns+replyBtn+'</div>'+
+    '</div>'+
+    repliesHtml+
+    (!isReply?'<div class="fdbk-reply-form" id="rf-'+c.id+'" style="display:none">'+
+      '<div class="fdbk-comment-form">'+
+        '<input class="fdbk-comment-input" id="rfi-'+c.id+'" placeholder="답글을 입력하세요" maxlength="200">'+
+        '<button class="fdbk-comment-submit" onclick="submitReply('+c.id+','+feedbackId+',this)">등록</button>'+
+      '</div>'+
+    '</div>':'')+
+  '</div>';
+}
+
 function loadComments(feedbackId){
   var myToken=getDeviceToken();
   var listEl=document.getElementById('fcl-'+feedbackId);
@@ -881,26 +918,45 @@ function loadComments(feedbackId){
       listEl.innerHTML='<div style="font-size:11px;color:var(--g3);padding:4px 0">아직 댓글이 없습니다</div>';
       return;
     }
-    listEl.innerHTML=data.map(function(c){
-      var ds=fmtDateTime(c.created_at);
-      var mine=!!c.device_token&&c.device_token===myToken;
-      var cmtBtns=mine?
-        '<div class="fdbk-cmt-actions">'+
-          '<button class="fdbk-action-btn fdbk-edit-btn" onclick="startEditComment('+c.id+','+feedbackId+')">수정</button>'+
-          '<button class="fdbk-action-btn fdbk-del-btn" onclick="deleteCommentItem('+c.id+','+feedbackId+')">삭제</button>'+
-        '</div>':'';
-      return '<div class="fdbk-comment-item" id="ci-'+c.id+'" data-orig="'+escAttr(c.content)+'">'+
-        '<div class="fdbk-comment-content" id="cct-'+c.id+'">'+escHtml(c.content)+'</div>'+
-        '<div class="fdbk-comment-footer">'+
-          '<span class="fdbk-comment-date">'+ds+'</span>'+
-          cmtBtns+
-        '</div>'+
-      '</div>';
+    var repliesMap={};
+    data.filter(function(c){return !!c.parent_comment_id;}).forEach(function(c){
+      if(!repliesMap[c.parent_comment_id])repliesMap[c.parent_comment_id]=[];
+      repliesMap[c.parent_comment_id].push(c);
+    });
+    listEl.innerHTML=data.filter(function(c){return !c.parent_comment_id;}).map(function(c){
+      return renderComment(c,feedbackId,myToken,repliesMap[c.id]||[],false);
     }).join('');
   })
   .catch(function(){
     listEl.innerHTML='<div style="font-size:11px;color:var(--g3);padding:4px 0">불러오기 실패</div>';
   });
+}
+
+function showReplyForm(commentId){
+  var rf=document.getElementById('rf-'+commentId);
+  if(!rf)return;
+  var open=rf.style.display!=='none';
+  rf.style.display=open?'none':'block';
+  if(!open)document.getElementById('rfi-'+commentId).focus();
+}
+
+function submitReply(parentCommentId,feedbackId,btn){
+  var input=document.getElementById('rfi-'+parentCommentId);
+  var content=input.value.trim();
+  if(content.length<1){showToast('답글을 입력해주세요');return;}
+  if(content.length>200){showToast('200자 이내로 입력해주세요');return;}
+  btn.disabled=true;btn.textContent='등록 중';
+  fetch(SB_URL+'/rest/v1/rpc/add_comment',{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({p_feedback_id:feedbackId,p_content:content,p_device_token:getDeviceToken(),p_parent_comment_id:parentCommentId})
+  })
+  .then(function(r){if(!r.ok)throw new Error();return r.json();})
+  .then(function(){
+    input.value='';btn.disabled=false;btn.textContent='등록';
+    loadComments(feedbackId);
+  })
+  .catch(function(){btn.disabled=false;btn.textContent='등록';showToast('등록 실패. 잠시 후 다시 시도해주세요.');});
 }
 
 function submitComment(feedbackId,btn){
@@ -994,16 +1050,17 @@ function deleteFeedbackItem(id){
 function startEditComment(cid,fid){
   if(!confirm('댓글을 수정하시겠습니까?'))return;
   var orig=document.getElementById('ci-'+cid).getAttribute('data-orig');
+  var actEl=document.getElementById('ca-'+cid);
+  if(actEl)actEl.style.display='none';
   document.getElementById('cct-'+cid).innerHTML=
     '<textarea class="fdbk-edit-area fdbk-edit-area-sm" id="cea-'+cid+'" maxlength="200">'+escHtml(orig)+'</textarea>'+
     '<div class="fdbk-edit-actions">'+
       '<button class="fdbk-save-btn" onclick="saveCommentEdit('+cid+','+fid+')">저장</button>'+
-      '<button class="fdbk-cancel-btn" onclick="cancelEditComment('+cid+')">취소</button>'+
+      '<button class="fdbk-cancel-btn" onclick="cancelEditComment('+cid+','+fid+')">취소</button>'+
     '</div>';
 }
-function cancelEditComment(cid){
-  var orig=document.getElementById('ci-'+cid).getAttribute('data-orig');
-  document.getElementById('cct-'+cid).textContent=orig;
+function cancelEditComment(cid,fid){
+  loadComments(fid);
 }
 function saveCommentEdit(cid,fid){
   var ta=document.getElementById('cea-'+cid);
