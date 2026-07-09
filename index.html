@@ -116,6 +116,20 @@ html,body{
 }
 .btn-start:active{transform:scale(.97);box-shadow:0 2px 8px rgba(61,122,36,.3)}
 
+.intro-announce{
+  margin-top:16px;width:100%;
+  background:rgba(255,248,220,.92);
+  border:1.5px solid #E8B000;
+  border-radius:10px;padding:12px 14px;
+  text-align:left;
+}
+.intro-announce-ttl{
+  font-size:11px;font-weight:800;color:#7B5800;
+  letter-spacing:.03em;margin-bottom:5px;display:flex;align-items:center;gap:5px;
+}
+.intro-announce-body{
+  font-size:12px;font-weight:500;color:#4A3200;line-height:1.65;
+}
 .intro-notice{
   margin-top:14px;font-size:11px;
   color:var(--g4);line-height:1.55;opacity:.8;
@@ -520,6 +534,10 @@ html,body{
       <div class="intro-title">MND <em>EDU</em>-PASS</div>
       <div class="intro-desc">개인별 교육 이수 현황을 한눈에 관리하세요</div>
       <button class="btn-start" onclick="goMain()">시작하기</button>
+      <div class="intro-announce">
+        <div class="intro-announce-ttl">📢 안내사항</div>
+        <div class="intro-announce-body">나라배움터에서 <b>7월 1일 이후</b> 시작한 교육은<br>수료증 제출 없이 <b>인사실무자에 의한 기록 변경</b>이 가능합니다.</div>
+      </div>
       <div class="intro-notice">본 앱은 국방망과 연동되지 않는 독립형 시스템입니다</div>
     </div>
     <div class="visitor-box">
