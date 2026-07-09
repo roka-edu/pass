@@ -1008,7 +1008,6 @@ function submitFeedback(){
 }
 
 function startEditFeedback(id){
-  if(!confirm('의견을 수정하시겠습니까?'))return;
   var orig=document.getElementById('fi-'+id).getAttribute('data-orig');
   document.getElementById('fct-'+id).innerHTML=
     '<textarea class="fdbk-edit-area" id="fea-'+id+'" maxlength="300">'+escHtml(orig)+'</textarea>'+
@@ -1031,7 +1030,7 @@ function saveFeedbackEdit(id){
     headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
     body:JSON.stringify({p_id:id,p_content:content,p_device_token:getDeviceToken()})
   })
-  .then(function(r){if(!r.ok)throw new Error();return r.json();})
+  .then(function(r){if(!r.ok)throw new Error();})
   .then(function(){showToast('수정되었습니다');loadFeedback();})
   .catch(function(){ta.disabled=false;showToast('수정 실패. 잠시 후 다시 시도해주세요.');});
 }
@@ -1042,13 +1041,12 @@ function deleteFeedbackItem(id){
     headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
     body:JSON.stringify({p_id:id,p_device_token:getDeviceToken()})
   })
-  .then(function(r){if(!r.ok)throw new Error();return r.json();})
+  .then(function(r){if(!r.ok)throw new Error();})
   .then(function(){showToast('삭제되었습니다');loadFeedback();})
   .catch(function(){showToast('삭제 실패. 잠시 후 다시 시도해주세요.');});
 }
 
 function startEditComment(cid,fid){
-  if(!confirm('댓글을 수정하시겠습니까?'))return;
   var orig=document.getElementById('ci-'+cid).getAttribute('data-orig');
   var actEl=document.getElementById('ca-'+cid);
   if(actEl)actEl.style.display='none';
@@ -1072,7 +1070,7 @@ function saveCommentEdit(cid,fid){
     headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
     body:JSON.stringify({p_id:cid,p_content:content,p_device_token:getDeviceToken()})
   })
-  .then(function(r){if(!r.ok)throw new Error();return r.json();})
+  .then(function(r){if(!r.ok)throw new Error();})
   .then(function(){showToast('댓글이 수정되었습니다');loadComments(fid);})
   .catch(function(){ta.disabled=false;showToast('수정 실패. 잠시 후 다시 시도해주세요.');});
 }
@@ -1083,7 +1081,7 @@ function deleteCommentItem(cid,fid){
     headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
     body:JSON.stringify({p_id:cid,p_device_token:getDeviceToken()})
   })
-  .then(function(r){if(!r.ok)throw new Error();return r.json();})
+  .then(function(r){if(!r.ok)throw new Error();})
   .then(function(){showToast('댓글이 삭제되었습니다');loadComments(fid);})
   .catch(function(){showToast('삭제 실패. 잠시 후 다시 시도해주세요.');});
 }
