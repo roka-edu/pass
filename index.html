@@ -307,6 +307,8 @@ html,body{
   border-radius:10px;padding:8px 12px;
   font-size:12px;font-weight:700;margin-bottom:7px;
   box-shadow:0 2px 8px rgba(30,79,18,.25);
+  cursor:pointer;user-select:none;
+  -webkit-user-select:none;
 }
 .cat-hdr.cat2{background:linear-gradient(135deg,#1B5E20,#0D3B12)}
 .cat-num{
@@ -362,34 +364,7 @@ html,body{
   border:1px solid rgba(46,125,50,.2);
   letter-spacing:.02em;
 }
-/* 필터 바 */
-.filter-bar{
-  display:flex;gap:6px;
-  padding:7px 12px;
-  overflow-x:auto;
-  background:var(--wh);
-  border-bottom:1px solid var(--g2);
-  flex-shrink:0;
-  -webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
-}
-.filter-bar::-webkit-scrollbar{display:none}
-.filter-chip{
-  flex-shrink:0;
-  font-size:11px;font-weight:700;
-  padding:5px 12px;
-  border-radius:999px;
-  border:1.5px solid var(--g2);
-  background:var(--wh);
-  color:var(--g4);
-  cursor:pointer;font-family:inherit;
-  transition:all .15s;white-space:nowrap;
-}
-.filter-chip.on{
-  background:var(--acc);
-  border-color:var(--acc);
-  color:#fff;
-}
+.cat-arrow{font-size:11px;color:rgba(255,255,255,.75);margin-left:4px;transition:transform .22s;}
 
 .edu-card.parts-card{align-items:flex-start}
 .edu-sch-row{font-size:10.5px;font-weight:600;color:var(--g4);line-height:1.7}
@@ -613,19 +588,19 @@ html,body{
       <button class="tab-btn"    onclick="switchTab('fdbk',this)">✍ 개선 의견</button>
     </div>
 
-    <div class="filter-bar" id="filterBar"></div>
-
     <div class="scroll-body" id="tabEdu">
       <div class="edu-group">
-        <div class="cat-hdr">
+        <div class="cat-hdr" onclick="toggleCat(1)">
           <div class="cat-num">1</div>법정 필수 및 인권 교육
+          <span class="cat-arrow" id="catArrow1">▲</span>
         </div>
         <div id="list1"></div>
       </div>
       <div class="edu-group">
-        <div class="cat-hdr cat2">
+        <div class="cat-hdr cat2" onclick="toggleCat(2)">
           <div class="cat-num n2">2</div>직무 및 안전 교육
           <span class="cat-note">3개 중 1개 이상</span>
+          <span class="cat-arrow" id="catArrow2">▲</span>
         </div>
         <div id="list2"></div>
       </div>
@@ -734,24 +709,26 @@ function showToast(msg){
   setTimeout(function(){t.classList.remove('show')},2000);
 }
 
-/* ═══ 필터 ═══ */
-function setFilter(s){
-  activeFilter=activeFilter===s?null:s;
-  renderFilterChips();render();
+/* ═══ 카테고리 아코디언 ═══ */
+var cat1Open=true,cat2Open=true;
+function toggleCat(n){
+  if(n===1)cat1Open=!cat1Open;else cat2Open=!cat2Open;
+  updateCatState();
 }
-function renderFilterChips(){
-  var sites=[];
-  EDU.forEach(function(e){if(sites.indexOf(e.site)<0)sites.push(e.site);});
-  document.getElementById('filterBar').innerHTML=
-    sites.map(function(s){
-      return '<button class="filter-chip'+(activeFilter===s?' on':'')+'" onclick="setFilter(\''+s+'\')">'+s+'</button>';
-    }).join('');
+function updateCatState(){
+  var l1=document.getElementById('list1');
+  var l2=document.getElementById('list2');
+  if(l1)l1.style.display=cat1Open?'':'none';
+  if(l2)l2.style.display=cat2Open?'':'none';
+  var a1=document.getElementById('catArrow1');
+  var a2=document.getElementById('catArrow2');
+  if(a1)a1.style.transform=cat1Open?'':'rotate(180deg)';
+  if(a2)a2.style.transform=cat2Open?'':'rotate(180deg)';
 }
 
 /* ═══ 완료 상태 — localStorage 영구 저장 ═══ */
 var DONE_KEY='roka_done_v5';
 var done=[];
-var activeFilter=null;
 function loadDone(){try{done=JSON.parse(localStorage.getItem(DONE_KEY)||'[]')}catch(e){done=[]}}
 function saveDone(){try{localStorage.setItem(DONE_KEY,JSON.stringify(done))}catch(e){}}
 
@@ -820,12 +797,12 @@ function render(){
 
   renderList('list1',c1);
   renderList('list2',c2);
+  updateCatState();
 }
 
 function renderList(elId,items){
-  var list=activeFilter?items.filter(function(e){return e.site===activeFilter;}):items;
   var partCls=['btn-done-a','btn-done-b'];
-  document.getElementById(elId).innerHTML=list.map(function(e){
+  document.getElementById(elId).innerHTML=items.map(function(e){
     var isDone=e.parts
       ?e.parts.every(function(p){return done.indexOf(p.id)>=0})
       :done.indexOf(e.id)>=0;
@@ -864,7 +841,6 @@ function renderList(elId,items){
 function switchTab(t,el){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on')});
   el.classList.add('on');
-  document.getElementById('filterBar').style.display=t==='edu'?'flex':'none';
   document.getElementById('tabEdu').style.display=t==='edu'?'':'none';
   document.getElementById('tabStat').style.display=t==='stat'?'':'none';
   document.getElementById('tabFdbk').style.display=t==='fdbk'?'':'none';
@@ -1208,7 +1184,6 @@ if('serviceWorker' in navigator){
 /* ═══ 초기 실행 ═══ */
 loadDone();
 recordVisit();
-renderFilterChips();
 render();
 document.getElementById('tabStat').style.display='none';
 </script>
