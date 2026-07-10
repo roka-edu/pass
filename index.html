@@ -352,6 +352,45 @@ html,body{
 .tag-full{background:#FFF3E0;color:#BF360C}
 .tag-check{background:#EDE7F6;color:#311B92}
 
+/* 사이트 뱃지 */
+.site-badge{
+  display:inline-block;
+  font-size:9px;font-weight:700;
+  border-radius:5px;padding:1.5px 6px;
+  margin-bottom:3px;
+  background:#E8F5E9;color:#2E7D32;
+  border:1px solid rgba(46,125,50,.2);
+  letter-spacing:.02em;
+}
+/* 필터 바 */
+.filter-bar{
+  display:flex;gap:6px;
+  padding:7px 12px;
+  overflow-x:auto;
+  background:var(--wh);
+  border-bottom:1px solid var(--g2);
+  flex-shrink:0;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.filter-bar::-webkit-scrollbar{display:none}
+.filter-chip{
+  flex-shrink:0;
+  font-size:11px;font-weight:700;
+  padding:5px 12px;
+  border-radius:999px;
+  border:1.5px solid var(--g2);
+  background:var(--wh);
+  color:var(--g4);
+  cursor:pointer;font-family:inherit;
+  transition:all .15s;white-space:nowrap;
+}
+.filter-chip.on{
+  background:var(--acc);
+  border-color:var(--acc);
+  color:#fff;
+}
+
 .edu-card.parts-card{align-items:flex-start}
 .edu-sch-row{font-size:10.5px;font-weight:600;color:var(--g4);line-height:1.7}
 .edu-sch-note{font-size:10px;font-weight:600;color:#C62828;margin-top:3px;line-height:1.4}
@@ -574,6 +613,8 @@ html,body{
       <button class="tab-btn"    onclick="switchTab('fdbk',this)">✍ 개선 의견</button>
     </div>
 
+    <div class="filter-bar" id="filterBar"></div>
+
     <div class="scroll-body" id="tabEdu">
       <div class="edu-group">
         <div class="cat-hdr">
@@ -653,22 +694,22 @@ html,body{
 <script>
 /* ═══ 데이터 ═══ */
 var EDU=[
-  {cat:1,id:'e01',title:'성인지 교육 (국방부)',       url:'https://mnd.nhi.go.kr',     type:'gender',  tag:'3/16 ~ 12/31',tc:'tag-period', noSch:true},
-  {cat:1,id:'e02',title:'자살사고예방교육 (생명사랑)', url:'https://mnd.nhi.go.kr',     type:'suicide', noSch:true,
+  {cat:1,id:'e01',title:'성인지 교육 (국방부)',       site:'나라배움터', url:'https://mnd.nhi.go.kr',     type:'gender',  tag:'3/16 ~ 12/31',tc:'tag-period', noSch:true},
+  {cat:1,id:'e02',title:'자살사고예방교육 (생명사랑)', site:'나라배움터', url:'https://mnd.nhi.go.kr',     type:'suicide', noSch:true,
    schRows:['전반기 신청·수강  2/16 ~ 6/30','후반기 신청·수강  7/1 ~ 12/31'],
    schNote:'⚠ 전반기·후반기 각각 수강해야 이수 완료됩니다',
    parts:[{id:'e02a',lbl:'전반기'},{id:'e02b',lbl:'후반기'}]},
-  {cat:1,id:'e03',title:'반부패 청렴 교육',           url:'https://acti.nhi.go.kr/',   type:'integrity', tag:'매월 1~25일',  tc:'tag-period', noSch:true},
-  {cat:1,id:'e04',title:'사이버 인권 교육',           url:'https://mnd.nhi.go.kr',     type:'hr',      tag:'1/1 ~ 12/31', tc:'tag-full', noSch:true},
-  {cat:1,id:'e05',title:'장애인 인식 개선 교육',      url:'https://mnd.nhi.go.kr',     type:'full2',   tag:'1/1 ~ 12/31', tc:'tag-full',  noSch:true},
-  {cat:1,id:'e06',title:'아동학대 예방 교육',         url:'https://mnd.nhi.go.kr',     type:'full',    tag:'1/6 ~ 12/31', tc:'tag-full',  noSch:true},
-  {cat:1,id:'e07',title:'민주주의와 헌법수호',        url:'https://mnd.nhi.go.kr',     type:'demo',      tag:'3/30 ~ 6/30', tc:'tag-period', noSch:true},
-  {cat:1,id:'e11',title:'다문화 이해 교육',           url:'https://www.danurischool.kr/portal/education/allListAction.do', type:'multi', tag:'상시', tc:'tag-always', noSch:true,
+  {cat:1,id:'e03',title:'반부패 청렴 교육',           site:'나라배움터', url:'https://acti.nhi.go.kr/',   type:'integrity', tag:'매월 1~25일',  tc:'tag-period', noSch:true},
+  {cat:1,id:'e04',title:'사이버 인권 교육',           site:'나라배움터', url:'https://mnd.nhi.go.kr',     type:'hr',      tag:'1/1 ~ 12/31', tc:'tag-full', noSch:true},
+  {cat:1,id:'e05',title:'장애인 인식 개선 교육',      site:'나라배움터', url:'https://mnd.nhi.go.kr',     type:'full2',   tag:'1/1 ~ 12/31', tc:'tag-full',  noSch:true},
+  {cat:1,id:'e06',title:'아동학대 예방 교육',         site:'나라배움터', url:'https://mnd.nhi.go.kr',     type:'full',    tag:'1/6 ~ 12/31', tc:'tag-full',  noSch:true},
+  {cat:1,id:'e07',title:'민주주의와 헌법수호',        site:'나라배움터', url:'https://mnd.nhi.go.kr',     type:'demo',    tag:'3/30 ~ 6/30', tc:'tag-period', noSch:true},
+  {cat:1,id:'e11',title:'다문화 이해 교육',           site:'다누리배움터', url:'https://www.danurischool.kr/portal/education/allListAction.do', type:'multi', tag:'상시', tc:'tag-always', noSch:true,
    schNote:'⚠ 공직자과정·군인과정 모두 수강 인정'},
-  {cat:1,id:'e12',title:'개인정보보호 교육',          url:'https://edu.privacy.go.kr/user/course/uCrsRcmdList.do', type:'privacy', tag:'1/5 ~ 12/31', tc:'tag-full', noSch:true},
-  {cat:2,id:'e08',title:'산업안전보건 교육',          url:'https://edu.kosha.or.kr',   type:'check',   tag:'일정 확인',    tc:'tag-check'},
-  {cat:2,id:'e09',title:'육군 안전관리교육 (관리자)', url:'https://safety.step.or.kr', type:'always',  tag:'상시',         tc:'tag-always', noSch:true},
-  {cat:2,id:'e10',title:'육군 안전관리교육 (실무자)', url:'https://safety.step.or.kr', type:'always',  tag:'상시',         tc:'tag-always', noSch:true},
+  {cat:1,id:'e12',title:'개인정보보호 교육',          site:'개인정보포털', url:'https://edu.privacy.go.kr/user/course/uCrsRcmdList.do', type:'privacy', tag:'1/5 ~ 12/31', tc:'tag-full', noSch:true},
+  {cat:2,id:'e08',title:'산업안전보건 교육',          site:'안전보건공단', url:'https://edu.kosha.or.kr',   type:'check',   tag:'일정 확인',    tc:'tag-check'},
+  {cat:2,id:'e09',title:'육군 안전관리교육 (관리자)', site:'STEP',       url:'https://safety.step.or.kr', type:'always',  tag:'상시',         tc:'tag-always', noSch:true},
+  {cat:2,id:'e10',title:'육군 안전관리교육 (실무자)', site:'STEP',       url:'https://safety.step.or.kr', type:'always',  tag:'상시',         tc:'tag-always', noSch:true},
 ];
 var SCH={
   gender: [{l:'신청·수강 기간',v:'3월 16일 ~ 12월 31일'}],
@@ -693,9 +734,24 @@ function showToast(msg){
   setTimeout(function(){t.classList.remove('show')},2000);
 }
 
+/* ═══ 필터 ═══ */
+function setFilter(s){
+  activeFilter=activeFilter===s?null:s;
+  renderFilterChips();render();
+}
+function renderFilterChips(){
+  var sites=[];
+  EDU.forEach(function(e){if(sites.indexOf(e.site)<0)sites.push(e.site);});
+  document.getElementById('filterBar').innerHTML=
+    sites.map(function(s){
+      return '<button class="filter-chip'+(activeFilter===s?' on':'')+'" onclick="setFilter(\''+s+'\')">'+s+'</button>';
+    }).join('');
+}
+
 /* ═══ 완료 상태 — localStorage 영구 저장 ═══ */
 var DONE_KEY='roka_done_v5';
 var done=[];
+var activeFilter=null;
 function loadDone(){try{done=JSON.parse(localStorage.getItem(DONE_KEY)||'[]')}catch(e){done=[]}}
 function saveDone(){try{localStorage.setItem(DONE_KEY,JSON.stringify(done))}catch(e){}}
 
@@ -767,8 +823,9 @@ function render(){
 }
 
 function renderList(elId,items){
+  var list=activeFilter?items.filter(function(e){return e.site===activeFilter;}):items;
   var partCls=['btn-done-a','btn-done-b'];
-  document.getElementById(elId).innerHTML=items.map(function(e){
+  document.getElementById(elId).innerHTML=list.map(function(e){
     var isDone=e.parts
       ?e.parts.every(function(p){return done.indexOf(p.id)>=0})
       :done.indexOf(e.id)>=0;
@@ -792,6 +849,7 @@ function renderList(elId,items){
       '<button class="chk-circle'+(isDone?' done':'')+'"'+chkAttr+'>'+(isDone?'✓':'')+'</button>'+
       '<div class="edu-info">'+
         '<div class="edu-title">'+e.title+'</div>'+
+        (e.site?'<span class="site-badge">'+e.site+'</span>':'')+
         tagRow+
       '</div>'+
       '<div class="edu-actions">'+
@@ -806,6 +864,7 @@ function renderList(elId,items){
 function switchTab(t,el){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on')});
   el.classList.add('on');
+  document.getElementById('filterBar').style.display=t==='edu'?'flex':'none';
   document.getElementById('tabEdu').style.display=t==='edu'?'':'none';
   document.getElementById('tabStat').style.display=t==='stat'?'':'none';
   document.getElementById('tabFdbk').style.display=t==='fdbk'?'':'none';
@@ -1149,6 +1208,7 @@ if('serviceWorker' in navigator){
 /* ═══ 초기 실행 ═══ */
 loadDone();
 recordVisit();
+renderFilterChips();
 render();
 document.getElementById('tabStat').style.display='none';
 </script>
