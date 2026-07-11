@@ -363,10 +363,10 @@ html,body{
   display:inline-block;
   font-size:9px;font-weight:700;
   border-radius:5px;padding:1.5px 6px;
-  margin-bottom:3px;
   background:#E8F5E9;color:#2E7D32;
   border:1px solid rgba(46,125,50,.2);
   letter-spacing:.02em;
+  flex-shrink:0;
 }
 .cat-arrow{font-size:11px;color:rgba(255,255,255,.75);margin-left:4px;transition:transform .22s;}
 
@@ -830,16 +830,17 @@ function renderList(elId,items){
         }).join('')
       :'<button class="btn-done'+(isDone?' done':'')+'" onclick="toggle(\''+e.id+'\')">'+(isDone?'✓ 완료됨':'완료 표시')+'</button>';
     var schBtn=e.noSch?'':'<button class="btn-sch" onclick="openSch(\''+st+'\',\''+e.type+'\')">일정 보기</button>';
+    var siteBadge=e.site?'<span class="site-badge">'+e.site+'</span>':'';
     var tagRow=e.schRows
-      ?(e.schRows.map(function(r){return '<div class="edu-sch-row">'+r+'</div>';}).join('')
+      ?('<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px">'+siteBadge+'</div>')+
+        (e.schRows.map(function(r){return '<div class="edu-sch-row">'+r+'</div>';}).join('')
         +(e.schNote?'<div class="edu-sch-note">'+e.schNote+'</div>':''))
-      :'<div style="display:flex;align-items:center;gap:8px;margin-top:2px"><span class="edu-tag '+(e.tc||'')+'">'+e.tag+'</span>'+schBtn+'</div>'
+      :'<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px"><span class="edu-tag '+(e.tc||'')+'">'+e.tag+'</span>'+siteBadge+schBtn+'</div>'
         +(e.schNote?'<div class="edu-sch-note">'+e.schNote+'</div>':'');
     return '<div class="edu-card'+(e.parts?' parts-card':'')+(isDone?' done':'')+'">'+
       '<button class="chk-circle'+(isDone?' done':'')+'"'+chkAttr+'>'+(isDone?'✓':'')+'</button>'+
       '<div class="edu-info">'+
         '<div class="edu-title">'+e.title+'</div>'+
-        (e.site?'<span class="site-badge">'+e.site+'</span>':'')+
         tagRow+
       '</div>'+
       '<div class="edu-actions">'+
