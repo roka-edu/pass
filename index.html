@@ -563,6 +563,7 @@ html,body{
       </div>
       <div class="intro-notice">본 앱은 국방망과 연동되지 않는 독립형 시스템입니다</div>
     </div>
+    <div style="position:absolute;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:20px;font-size:10px;color:var(--g4);font-weight:500;opacity:.7">© 육군 12사단 소령 박지민</div>
     <div class="visitor-box">
       <div class="vb-row">오늘 접속 <b id="visToday"><span class="vb-loading">•••</span></b>명</div>
       <div class="vb-row">누적 접속 <b id="visTotal"><span class="vb-loading">•••</span></b>명</div>
@@ -734,7 +735,7 @@ function showToast(msg){
 }
 
 /* ═══ 카테고리 아코디언 ═══ */
-var cat1Open=true,cat2Open=true;
+var cat1Open=false,cat2Open=true;
 function toggleCat(n){
   if(n===1)cat1Open=!cat1Open;else cat2Open=!cat2Open;
   updateCatState();
