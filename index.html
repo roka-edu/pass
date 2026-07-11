@@ -734,7 +734,10 @@ function updateCatState(){
 /* ═══ 완료 상태 — localStorage 영구 저장 ═══ */
 var DONE_KEY='roka_done_v5';
 var done=[];
-function loadDone(){try{done=JSON.parse(localStorage.getItem(DONE_KEY)||'[]')}catch(e){done=[]}}
+function loadDone(){
+  try{done=JSON.parse(localStorage.getItem(DONE_KEY)||'[]')}catch(e){done=[]}
+  var i=done.indexOf('e01');if(i>=0){done.splice(i,1,'e01a');saveDone();}
+}
 function saveDone(){try{localStorage.setItem(DONE_KEY,JSON.stringify(done))}catch(e){}}
 
 /* ═══ 접속자 카운터 — Supabase 공유 DB ═══ */
