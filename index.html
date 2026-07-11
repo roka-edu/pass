@@ -667,6 +667,23 @@ html,body{
     </div>
   </div>
 
+  <div class="modal-overlay" id="confirmModal" onclick="closeConfirmModal()">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-grip"></div>
+      <div style="text-align:center;padding:4px 0 8px">
+        <div style="font-size:38px;margin-bottom:14px">🎓</div>
+        <div style="font-size:16px;font-weight:900;color:var(--cat1);letter-spacing:-.3px;margin-bottom:12px">소집교육 수료 확인</div>
+        <div class="sch-note" style="text-align:left;margin-bottom:20px">
+          부대에서 실시하는 <b>소집교육을 수료하신 후</b> 확인을 눌러주세요.
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-modal-close" style="margin-top:0;flex:1" onclick="closeConfirmModal()">취소</button>
+          <button onclick="doConfirmToggle()" style="flex:2;padding:14px;background:linear-gradient(135deg,#5BAA35,#3D7A24);color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 3px 12px rgba(61,122,36,.28)">✓ 수료 완료</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
 </div>
@@ -674,7 +691,7 @@ html,body{
 /* ═══ 데이터 ═══ */
 var EDU=[
   {cat:1,id:'e01',title:'성인지 교육 (국방부)',       site:'나라배움터', url:'https://mnd.nhi.go.kr',     type:'gender',  tag:'3/16 ~ 12/31',tc:'tag-period', noSch:true,
-   parts:[{id:'e01a',lbl:'원격교육'},{id:'e01b',lbl:'소집교육',confirm:'부대 소집교육 수료 후 눌러주세요.\n수료를 완료하셨으면 확인을 눌러주세요.'}]},
+   parts:[{id:'e01a',lbl:'원격교육'},{id:'e01b',lbl:'소집교육',confirm:true}]},
   {cat:1,id:'e02',title:'자살사고예방교육 (생명사랑)', site:'나라배움터', url:'https://mnd.nhi.go.kr',     type:'suicide', noSch:true,
    schRows:['전반기 신청·수강  2/16 ~ 6/30','후반기 신청·수강  7/1 ~ 12/31'],
    schNote:'⚠ 전반기·후반기 각각 수강해야 이수 완료됩니다',
@@ -759,10 +776,19 @@ function recordVisit(){
 }
 
 /* ═══ 완료 토글 ═══ */
-function toggleConfirm(id,msg){
-  var isDone=done.indexOf(id)>=0;
-  if(!isDone&&!confirm(msg))return;
-  toggle(id);
+var _confirmId=null;
+function toggleConfirm(id){
+  if(done.indexOf(id)>=0){toggle(id);return;}
+  _confirmId=id;
+  document.getElementById('confirmModal').classList.add('on');
+}
+function closeConfirmModal(){
+  document.getElementById('confirmModal').classList.remove('on');
+  _confirmId=null;
+}
+function doConfirmToggle(){
+  if(_confirmId){toggle(_confirmId);_confirmId=null;}
+  closeConfirmModal();
 }
 function toggle(id){
   var i=done.indexOf(id);
@@ -827,7 +853,7 @@ function renderList(elId,items){
           var pd=done.indexOf(p.id)>=0;
           var cls=partCls[i]||'btn-done';
           var onclk=p.confirm
-            ?'toggleConfirm(\''+p.id+'\',\''+p.confirm.replace(/\n/g,'\\n')+'\')'
+            ?'toggleConfirm(\''+p.id+'\')'
             :'toggle(\''+p.id+'\')';
           return '<button class="'+cls+(pd?' done':'')+'" onclick="'+onclk+'">'+(pd?'✓ '+p.lbl+' 완료':p.lbl)+'</button>';
         }).join('')
