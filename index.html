@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="EDU-PASS">
-<meta name="theme-color" content="#3D7A24">
+<meta name="theme-color" content="#52AC82">
 <meta name="mobile-web-app-capable" content="yes">
 <title>MND EDU-PASS</title>
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -16,27 +16,27 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --acc:#4E9A30;--acc-d:#3D7A24;--acc-lt:#F0F7EE;
-  --bg:#F4FAF2;
-  --bk:#1A2E14;--wh:#FFFFFF;
-  --g1:#EBF4E8;--g2:#D6EBCF;--g3:#A8CC99;--g4:#6E9E60;--g5:#3D6E2E;
-  --hdr-bg:#F0F7EE;
-  --cat1:#2E6B1A;--cat2:#1B5E20;
-  --green:#4E9A30;--red:#D93025;
-  --done-bg:#F0FFF5;--done-bdr:rgba(78,154,48,.28);
+  --acc:#52AC82;--acc-d:#357A5C;--acc-lt:#EBF7F2;
+  --bg:#EDF8F3;
+  --bk:#1C2E26;--wh:#FFFFFF;
+  --g1:#DFF2EA;--g2:#C2E6D6;--g3:#8CCBB2;--g4:#5E9E82;--g5:#2E6B50;
+  --hdr-bg:rgba(255,255,255,.85);
+  --cat1:#267A57;--cat2:#1B6447;
+  --green:#52AC82;--red:#D93025;
+  --done-bg:#EDFAF3;--done-bdr:rgba(82,172,130,.28);
   --shadow-sm:0 1px 4px rgba(0,0,0,.07);
   --shadow-md:0 3px 12px rgba(0,0,0,.10);
 }
 html,body{
   width:100%;height:100vh;height:100dvh;overflow:hidden;
   font-family:'Noto Sans KR',-apple-system,sans-serif;
-  background:#D4EDD1;
+  background:#BEE8D3;
   display:flex;justify-content:center;align-items:center;
   -webkit-font-smoothing:antialiased;
 }
 .app{
   width:100%;max-width:440px;height:100vh;height:100dvh;
-  background:var(--bg);
+  background:linear-gradient(180deg,#EDF8F3 0%,#F5F9F7 100%);
   display:flex;flex-direction:column;
   position:relative;overflow:hidden;
 }
@@ -53,7 +53,7 @@ html,body{
    인트로 화면
 ══════════════════════════════ */
 #scIntro{
-  background:linear-gradient(160deg,#EEF7EA 0%,#DFF0D8 55%,#CCE8C3 100%);
+  background:linear-gradient(160deg,#BEE8D3 0%,#D8EFE3 40%,#FEF0BE 100%);
   align-items:center;
   justify-content:center;
   padding:0 32px;
@@ -74,8 +74,8 @@ html,body{
 
 .intro-badge{
   display:inline-flex;align-items:center;gap:5px;
-  background:rgba(78,154,48,.12);
-  border:1px solid rgba(78,154,48,.2);
+  background:rgba(82,172,130,.12);
+  border:1px solid rgba(82,172,130,.2);
   border-radius:999px;padding:4px 12px;
   font-size:10px;font-weight:700;color:var(--acc-d);
   letter-spacing:.06em;text-transform:uppercase;
@@ -84,16 +84,16 @@ html,body{
 
 .intro-sun{
   width:92px;height:92px;border-radius:50%;
-  background:linear-gradient(135deg,rgba(78,154,48,.18),rgba(78,154,48,.06));
-  border:2px solid rgba(78,154,48,.25);
+  background:linear-gradient(135deg,rgba(82,172,130,.22),rgba(82,172,130,.08));
+  border:2px solid rgba(82,172,130,.3);
   display:flex;align-items:center;justify-content:center;
-  font-size:50px;margin-bottom:22px;
+  margin-bottom:22px;overflow:hidden;padding:18px;
   animation:sunPulse 3s ease-in-out infinite;
-  box-shadow:0 4px 24px rgba(78,154,48,.15);
+  box-shadow:0 4px 24px rgba(82,172,130,.18);
 }
 @keyframes sunPulse{
-  0%,100%{box-shadow:0 4px 24px rgba(78,154,48,.15),0 0 0 0 rgba(78,154,48,.18)}
-  50%{box-shadow:0 4px 24px rgba(78,154,48,.2),0 0 0 20px rgba(78,154,48,0)}
+  0%,100%{box-shadow:0 4px 24px rgba(82,172,130,.18),0 0 0 0 rgba(82,172,130,.2)}
+  50%{box-shadow:0 4px 24px rgba(82,172,130,.22),0 0 0 20px rgba(82,172,130,0)}
 }
 
 .intro-title{
@@ -110,15 +110,15 @@ html,body{
 
 .btn-start{
   width:100%;padding:17px;
-  background:linear-gradient(135deg,#5BAA35,#3D7A24);
+  background:linear-gradient(135deg,#52AC82,#357A5C);
   color:#fff;
   border:none;border-radius:16px;
   font-size:17px;font-weight:900;letter-spacing:-.2px;
   cursor:pointer;font-family:inherit;
   transition:transform .12s,box-shadow .15s;
-  box-shadow:0 4px 16px rgba(61,122,36,.35);
+  box-shadow:0 4px 16px rgba(53,122,92,.35);
 }
-.btn-start:active{transform:scale(.97);box-shadow:0 2px 8px rgba(61,122,36,.3)}
+.btn-start:active{transform:scale(.97);box-shadow:0 2px 8px rgba(53,122,92,.3)}
 
 .intro-announce{
   margin-top:16px;width:100%;
@@ -146,7 +146,7 @@ html,body{
   right:20px;
   background:rgba(255,255,255,.72);
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  border:1px solid rgba(78,154,48,.18);
+  border:1px solid rgba(82,172,130,.18);
   border-radius:12px;
   padding:9px 14px;
   box-shadow:0 2px 12px rgba(0,0,0,.07);
@@ -163,16 +163,17 @@ html,body{
 /* ══════════════════════════════
    메인 화면
 ══════════════════════════════ */
-#scMain{background:var(--bg);z-index:5}
+#scMain{background:linear-gradient(180deg,#EDF8F3 0%,#F5F9F7 100%);z-index:5}
 
 /* 헤더 */
 .top-hdr{
   background:var(--hdr-bg);
-  border-bottom:1.5px solid var(--g2);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(82,172,130,.15);
   padding:14px 16px;
   padding-top:calc(14px + env(safe-area-inset-top,0px));
   flex-shrink:0;
-  box-shadow:0 2px 8px rgba(0,0,0,.04);
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
 }
 .hdr-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:11px}
 .hdr-sub{font-size:11px;font-weight:700;color:var(--g4);letter-spacing:.05em;margin-bottom:2px}
@@ -186,7 +187,7 @@ html,body{
 .prog-wrap{background:var(--g2);border-radius:999px;height:7px;margin-bottom:6px;overflow:hidden}
 .prog-bar{
   height:7px;border-radius:999px;
-  background:linear-gradient(90deg,#6EC44D,#3D7A24);
+  background:linear-gradient(90deg,#6CCCA8,#357A5C);
   transition:width .6s cubic-bezier(.4,0,.2,1);width:0%;
 }
 .prog-meta{display:flex;justify-content:space-between}
@@ -194,7 +195,7 @@ html,body{
 .prog-r{font-size:11px;color:var(--acc-d);font-weight:700}
 
 /* 탭 */
-.tabs{display:flex;background:var(--wh);border-bottom:1px solid var(--g2);flex-shrink:0}
+.tabs{display:flex;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid rgba(82,172,130,.15);flex-shrink:0}
 .tab-btn{
   flex:1;padding:11px 0;font-size:12px;font-weight:700;
   color:var(--g4);border:none;background:none;
@@ -207,14 +208,14 @@ html,body{
    피드백 탭
 ══════════════════════════════ */
 .fdbk-banner{
-  background:linear-gradient(135deg,#EAF6E6,#D4EDCA);
-  border:1px solid var(--g2);border-radius:16px;
+  background:linear-gradient(135deg,#DFF5EC,#D0EDE0);
+  border:1px solid rgba(82,172,130,.2);border-radius:16px;
   padding:20px 16px 18px;text-align:center;margin-bottom:14px;
   box-shadow:var(--shadow-sm);
 }
 .fdbk-banner-tag{
   display:inline-block;
-  background:rgba(61,122,36,.12);border:1px solid rgba(61,122,36,.2);
+  background:rgba(82,172,130,.12);border:1px solid rgba(82,172,130,.2);
   border-radius:999px;padding:3px 10px;
   font-size:10px;font-weight:700;color:var(--acc-d);letter-spacing:.06em;
   margin-bottom:10px;
@@ -237,11 +238,11 @@ html,body{
 .fdbk-input::placeholder{color:var(--g3)}
 .fdbk-submit{
   width:100%;padding:14px;
-  background:linear-gradient(135deg,#5BAA35,#3D7A24);
+  background:linear-gradient(135deg,#52AC82,#357A5C);
   color:#fff;border:none;border-radius:12px;
   font-size:14px;font-weight:700;font-family:inherit;
   cursor:pointer;transition:opacity .15s;
-  box-shadow:0 3px 12px rgba(61,122,36,.28);
+  box-shadow:0 3px 12px rgba(53,122,92,.28);
 }
 .fdbk-submit:active{opacity:.85}
 .fdbk-submit:disabled{opacity:.45;cursor:not-allowed}
@@ -306,15 +307,15 @@ html,body{
 .edu-group{margin-bottom:14px}
 .cat-hdr{
   display:flex;align-items:center;gap:8px;
-  background:linear-gradient(135deg,#2E6B1A,#1E4F12);
+  background:linear-gradient(135deg,#357A5C,#1E5E42);
   color:#fff;
   border-radius:10px;padding:8px 12px;
   font-size:12px;font-weight:700;margin-bottom:7px;
-  box-shadow:0 2px 8px rgba(30,79,18,.25);
+  box-shadow:0 2px 8px rgba(30,94,66,.22);
   cursor:pointer;user-select:none;
   -webkit-user-select:none;
 }
-.cat-hdr.cat2{background:linear-gradient(135deg,#1B5E20,#0D3B12)}
+.cat-hdr.cat2{background:linear-gradient(135deg,#1B6447,#103D2C)}
 .cat-num{
   width:22px;height:22px;border-radius:6px;
   background:rgba(255,255,255,.22);color:#fff;
@@ -326,10 +327,12 @@ html,body{
 
 /* 교육 카드 */
 .edu-card{
-  background:var(--wh);border-radius:14px;
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border-radius:14px;
   padding:11px 12px;
   display:flex;align-items:center;gap:10px;
-  border:1px solid var(--g2);margin-bottom:6px;
+  border:1px solid rgba(82,172,130,.18);margin-bottom:6px;
   transition:background .2s,border-color .2s,transform .12s,box-shadow .12s;
   box-shadow:var(--shadow-sm);
 }
@@ -346,7 +349,7 @@ html,body{
 }
 .chk-circle.done{
   background:var(--green);border-color:var(--green);color:#fff;
-  box-shadow:0 2px 8px rgba(78,154,48,.4);
+  box-shadow:0 2px 8px rgba(82,172,130,.4);
 }
 
 .edu-info{flex:1;min-width:0}
@@ -363,8 +366,8 @@ html,body{
   display:inline-block;
   font-size:9px;font-weight:700;
   border-radius:5px;padding:1.5px 6px;
-  background:#E8F5E9;color:#2E7D32;
-  border:1px solid rgba(46,125,50,.2);
+  background:#E0F7EE;color:#267A57;
+  border:1px solid rgba(82,172,130,.22);
   letter-spacing:.02em;
   flex-shrink:0;
 }
@@ -376,12 +379,12 @@ html,body{
 .edu-actions{display:flex;flex-direction:column;gap:4px;flex-shrink:0;width:104px}
 .btn-go{
   font-size:11px;font-weight:700;
-  background:linear-gradient(135deg,#5BAA35,#3D7A24);
+  background:linear-gradient(135deg,#52AC82,#357A5C);
   color:#fff;
   border:none;border-radius:8px;padding:6px 10px;
   cursor:pointer;white-space:nowrap;font-family:inherit;
   transition:opacity .12s;
-  box-shadow:0 2px 6px rgba(61,122,36,.28);
+  box-shadow:0 2px 6px rgba(53,122,92,.28);
   width:100%;
 }
 .btn-go:active{opacity:.8}
@@ -426,7 +429,8 @@ html,body{
 ══════════════════════════════ */
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
 .stat-card{
-  background:var(--wh);border:1px solid var(--g2);
+  background:rgba(255,255,255,.78);border:1px solid rgba(82,172,130,.18);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
   border-radius:16px;padding:16px 12px;text-align:center;
   box-shadow:var(--shadow-sm);
 }
@@ -454,10 +458,10 @@ html,body{
 .rate-track{background:var(--g1);border-radius:999px;height:7px;overflow:hidden}
 .rate-fill{
   height:7px;border-radius:999px;
-  background:linear-gradient(90deg,#6EC44D,#3D7A24);
+  background:linear-gradient(90deg,#6CCCA8,#357A5C);
   transition:width .6s cubic-bezier(.4,0,.2,1);
 }
-.rate-fill.cat2{background:linear-gradient(90deg,#66BB6A,#388E3C)}
+.rate-fill.cat2{background:linear-gradient(90deg,#5BBFA0,#1B6447)}
 .rate-note{font-size:10px;color:var(--g4);margin-top:6px;font-weight:500}
 
 .notice-box{
@@ -469,7 +473,9 @@ html,body{
 
 /* 하단 바 */
 .bottom-bar{
-  background:var(--wh);border-top:1px solid var(--g2);
+  background:rgba(255,255,255,.85);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border-top:1px solid rgba(82,172,130,.15);
   padding:8px 16px;
   padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));
   display:flex;justify-content:space-between;align-items:center;
@@ -534,7 +540,7 @@ html,body{
   position:absolute;
   bottom:calc(72px + env(safe-area-inset-bottom,0px));
   left:50%;transform:translateX(-50%) translateY(12px);
-  background:rgba(26,46,20,.92);
+  background:rgba(28,46,38,.92);
   color:#fff;border-radius:999px;
   padding:10px 20px;font-size:13px;font-weight:600;
   white-space:nowrap;pointer-events:none;
@@ -551,7 +557,13 @@ html,body{
   <div class="screen" id="scIntro">
     <div class="intro-content">
       <div class="intro-badge">전군 교육 통합관리 시스템</div>
-      <div class="intro-sun">☀️</div>
+      <div class="intro-sun">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <path d="M50 8 L78 20 L78 52 C78 70 65 82 50 92 C35 82 22 70 22 52 L22 20 Z" fill="rgba(255,255,255,.25)"/>
+          <path d="M50 16 L70 25 L70 52 C70 65 61 75 50 83 C39 75 30 65 30 52 L30 25 Z" fill="rgba(255,255,255,.38)"/>
+          <polyline points="37,51 47,62 65,39" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
       <div class="intro-title">MND <em>EDU</em>-PASS</div>
       <div class="intro-desc">개인별 교육 이수 현황을 한눈에 관리하세요</div>
       <button class="btn-start" onclick="goMain()">시작하기</button>
@@ -681,7 +693,7 @@ html,body{
         </div>
         <div style="display:flex;gap:8px">
           <button class="btn-modal-close" style="margin-top:0;flex:1" onclick="closeConfirmModal()">취소</button>
-          <button onclick="doConfirmToggle()" style="flex:2;padding:14px;background:linear-gradient(135deg,#5BAA35,#3D7A24);color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 3px 12px rgba(61,122,36,.28)">✓ 수료 완료</button>
+          <button onclick="doConfirmToggle()" style="flex:2;padding:14px;background:linear-gradient(135deg,#52AC82,#357A5C);color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 3px 12px rgba(53,122,92,.28)">✓ 수료 완료</button>
         </div>
       </div>
     </div>
