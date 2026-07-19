@@ -820,12 +820,16 @@ function toggle(id){
 /* ═══ 렌더링 ═══ */
 var currentTab='edu';
 
+var CAT2_IDS=['e08','e09','e10'];
+function cat2GbDone(){return CAT2_IDS.some(function(id){return method[id]==='gb';});}
+
 function countGb(){
   var n=0;
-  EDU.forEach(function(e){
+  EDU.filter(function(e){return e.cat===1;}).forEach(function(e){
     if(e.parts){if(e.parts.every(function(p){return method[p.id]==='gb';}))n++;}
     else{if(method[e.id]==='gb')n++;}
   });
+  if(cat2GbDone())n++;
   return n;
 }
 function toggleGb(id){
@@ -840,24 +844,41 @@ function toggleGb(id){
   }
   saveMethod();render();
 }
+function toggleGbCat2(){
+  if(cat2GbDone()){
+    CAT2_IDS.forEach(function(id){delete method[id];});
+  }else{
+    var doneOnes=CAT2_IDS.filter(function(id){return done.indexOf(id)>=0;});
+    var toMark=doneOnes.length>0?doneOnes:CAT2_IDS;
+    toMark.forEach(function(id){method[id]='gb';});
+  }
+  saveMethod();render();
+}
 function renderGb(){
   var el=document.getElementById('tabGb');
   if(!el)return;
-  el.innerHTML='<div class="gb-header">인사실무자에 의한 기록변경 완료 여부를 교육별로 표시해주세요</div>'+
-    EDU.map(function(e){
-      var isGb=e.parts
-        ?e.parts.every(function(p){return method[p.id]==='gb';})
-        :method[e.id]==='gb';
-      var sub=e.parts?'<div class="gb-sub">'+e.parts.map(function(p){return p.lbl;}).join(' · ')+'</div>':'';
-      return '<div class="gb-item'+(isGb?' done':'')+'" onclick="toggleGb(\''+e.id+'\')">'+
-        '<button class="chk-circle'+(isGb?' done':'')+'" onclick="event.stopPropagation();toggleGb(\''+e.id+'\')" style="flex-shrink:0">'+
-          (isGb?'✓':'')+'</button>'+
-        '<div class="gb-info">'+
-          '<div class="gb-title">'+e.title+'</div>'+
-          sub+
-        '</div>'+
-      '</div>';
-    }).join('');
+  var c1=EDU.filter(function(e){return e.cat===1;});
+  var c2done=cat2GbDone();
+  var c1Html=c1.map(function(e){
+    var isGb=e.parts
+      ?e.parts.every(function(p){return method[p.id]==='gb';})
+      :method[e.id]==='gb';
+    var sub=e.parts?'<div class="gb-sub">'+e.parts.map(function(p){return p.lbl;}).join(' · ')+'</div>':'';
+    return '<div class="gb-item'+(isGb?' done':'')+'" onclick="toggleGb(\''+e.id+'\')">'+
+      '<button class="chk-circle'+(isGb?' done':'')+'" onclick="event.stopPropagation();toggleGb(\''+e.id+'\')" style="flex-shrink:0">'+
+        (isGb?'✓':'')+'</button>'+
+      '<div class="gb-info"><div class="gb-title">'+e.title+'</div>'+sub+'</div>'+
+    '</div>';
+  }).join('');
+  var c2Html='<div class="gb-item'+(c2done?' done':'')+'" onclick="toggleGbCat2()">'+
+    '<button class="chk-circle'+(c2done?' done':'')+'" onclick="event.stopPropagation();toggleGbCat2()" style="flex-shrink:0">'+
+      (c2done?'✓':'')+'</button>'+
+    '<div class="gb-info">'+
+      '<div class="gb-title">안전관리교육</div>'+
+      '<div class="gb-sub">3개 중 1개 수강 시 기록변경 가능</div>'+
+    '</div>'+
+  '</div>';
+  el.innerHTML='<div class="gb-header">인사실무자에 의한 기록변경 완료 여부를 교육별로 표시해주세요</div>'+c1Html+c2Html;
 }
 
 function render(){
@@ -875,7 +896,7 @@ function render(){
 
   if(currentTab==='gb'){
     var gbCount=countGb();
-    var gbTotal=EDU.length;
+    var gbTotal=EDU.filter(function(e){return e.cat===1;}).length+1;
     var gbPct=gbTotal>0?Math.round(gbCount/gbTotal*100):0;
     document.getElementById('pctNum').textContent=gbPct+'%';
     document.getElementById('progBar').style.width=gbPct+'%';
