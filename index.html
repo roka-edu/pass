@@ -378,6 +378,7 @@ html,body{
 .edu-sch-row{font-size:10.5px;font-weight:600;color:var(--g4);line-height:1.7}
 .edu-sch-note{font-size:10px;font-weight:600;color:#C62828;margin-top:3px;line-height:1.4}
 .edu-actions{display:flex;flex-direction:column;gap:4px;flex-shrink:0;width:104px}
+.edu-actions-solo{justify-content:center;align-self:stretch}
 .btn-go{
   font-size:12px;font-weight:700;
   background:linear-gradient(135deg,#52AC82,#357A5C);
@@ -928,17 +929,18 @@ function renderList(elId,items){
       }).join('');
       actionsHtml=
         '<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기</button>'+
-        '<div class="btn-done-wrap">'+partBtns+'</div>';
+        partBtns;
     }else{
-      actionsHtml=
-        '<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기</button>'+
-        '<button class="btn-done'+(isDone?' done':'')+'" onclick="toggle(\''+e.id+'\')">'+(isDone?'✓ 완료':'수강완료')+'</button>';
+      actionsHtml=isDone
+        ?'<button class="btn-done done" onclick="toggle(\''+e.id+'\')">✓ 완료</button>'
+        :'<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기</button>'+
+          '<button class="btn-done" onclick="toggle(\''+e.id+'\')">수강완료</button>';
     }
 
     return '<div class="edu-card'+(isDone?' done':'')+(e.parts?' parts-card':'')+'">'+
       '<button class="chk-circle'+(isDone?' done':'')+'"'+chkAttr+'>'+(isDone?'✓':'')+'</button>'+
       '<div class="edu-info">'+infoHtml+'</div>'+
-      '<div class="edu-actions">'+actionsHtml+'</div>'+
+      '<div class="edu-actions'+(isDone&&!e.parts?' edu-actions-solo':'')+'">'+actionsHtml+'</div>'+
     '</div>';
   }).join('');
 }
