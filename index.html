@@ -330,14 +330,22 @@ html,body{
   background:rgba(255,255,255,.78);
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
   border-radius:14px;
-  padding:11px 12px;
-  display:flex;align-items:center;gap:10px;
-  border:1px solid rgba(82,172,130,.18);margin-bottom:6px;
+  padding:12px;
+  display:flex;flex-direction:column;gap:10px;
+  border:1px solid rgba(82,172,130,.18);margin-bottom:8px;
   transition:background .2s,border-color .2s,transform .12s,box-shadow .12s;
   box-shadow:var(--shadow-sm);
 }
-.edu-card.parts-card{align-items:flex-start}
 .edu-card:active{transform:scale(.99);box-shadow:none}
+.edu-card-top{display:flex;align-items:flex-start;gap:10px;}
+.edu-top-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.edu-meta-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:3px;}
+.edu-card-btns{display:flex;gap:6px;}
+.edu-card-btns+.edu-card-btns{margin-top:4px;}
+.edu-card-btns .btn-go{flex:3;width:auto;}
+.edu-card-btns .btn-done-wrap{flex:2;}
+.edu-card-btns .btn-gb-full{flex:2;width:auto;margin-top:0;}
+.edu-card-btns .btn-done-a,.edu-card-btns .btn-done-b{flex:1;width:auto;}
 .edu-card.done{background:var(--done-bg);border-color:var(--done-bdr)}
 .edu-card.done .edu-title{color:#aaa;text-decoration:line-through}
 
@@ -378,14 +386,13 @@ html,body{
 .edu-sch-note{font-size:10px;font-weight:600;color:#C62828;margin-top:3px;line-height:1.4}
 .edu-actions{display:flex;flex-direction:column;gap:4px;flex-shrink:0;width:104px}
 .btn-go{
-  font-size:11px;font-weight:700;
+  font-size:12px;font-weight:700;
   background:linear-gradient(135deg,#52AC82,#357A5C);
   color:#fff;
-  border:none;border-radius:8px;padding:6px 10px;
-  cursor:pointer;white-space:nowrap;font-family:inherit;
+  border:none;border-radius:8px;padding:10px 10px;
+  cursor:pointer;font-family:inherit;
   transition:opacity .12s;
   box-shadow:0 2px 6px rgba(53,122,92,.28);
-  width:100%;
 }
 .btn-go:active{opacity:.8}
 .btn-done{
@@ -404,8 +411,8 @@ html,body{
   font-size:11px;font-weight:700;
   background:#FFF8E1;color:#E65100;
   border:1.5px dashed #FFAB40;border-radius:8px;
-  padding:6px 8px;cursor:pointer;white-space:nowrap;
-  font-family:inherit;transition:all .18s;width:100%;
+  padding:10px 8px;cursor:pointer;
+  font-family:inherit;transition:all .18s;width:100%;text-align:center;
 }
 .btn-done-a.done{background:#EDFAED;color:#2E7D32;border:1.5px solid #81C784;box-shadow:none}
 .btn-done-a:active{opacity:.8}
@@ -413,8 +420,8 @@ html,body{
   font-size:11px;font-weight:700;
   background:#E3F2FD;color:#1565C0;
   border:1.5px dashed #90CAF9;border-radius:8px;
-  padding:6px 8px;cursor:pointer;white-space:nowrap;
-  font-family:inherit;transition:all .18s;width:100%;
+  padding:10px 8px;cursor:pointer;
+  font-family:inherit;transition:all .18s;width:100%;text-align:center;
 }
 .btn-done-b.done{background:#EDFAED;color:#2E7D32;border:1.5px solid #81C784;box-shadow:none}
 .btn-done-b:active{opacity:.8}
@@ -423,7 +430,7 @@ html,body{
   flex:1;font-size:10px;font-weight:700;
   background:var(--g1);color:var(--g4);
   border:1.5px dashed var(--g3);border-radius:8px;
-  padding:6px 2px;cursor:pointer;
+  padding:10px 2px;cursor:pointer;
   font-family:inherit;transition:all .18s;text-align:center;
 }
 .btn-su.done{background:#EDFAF3;color:#267A57;border:1.5px solid #52AC82}
@@ -432,17 +439,17 @@ html,body{
   flex:1;font-size:10px;font-weight:700;
   background:#FFF8E1;color:#9A6B00;
   border:1.5px dashed #FFD54F;border-radius:8px;
-  padding:6px 2px;cursor:pointer;
+  padding:10px 2px;cursor:pointer;
   font-family:inherit;transition:all .18s;text-align:center;
 }
 .btn-gb.done{background:#FFF3CD;color:#7A5000;border:1.5px solid #FFB300}
 .btn-gb:active{opacity:.8}
 .btn-gb-full{
-  width:100%;font-size:10px;font-weight:700;
+  font-size:10px;font-weight:700;
   background:#FFF8E1;color:#9A6B00;
   border:1.5px dashed #FFD54F;border-radius:8px;
-  padding:5px 6px;cursor:pointer;
-  font-family:inherit;transition:all .18s;margin-top:3px;text-align:center;
+  padding:10px 6px;cursor:pointer;
+  font-family:inherit;transition:all .18s;text-align:center;
 }
 .btn-gb-full.done{background:#FFF3CD;color:#7A5000;border:1.5px solid #FFB300}
 .btn-gb-full:active{opacity:.8}
@@ -911,46 +918,59 @@ function renderList(elId,items){
       :done.indexOf(e.id)>=0;
     var st=e.title.replace(/'/g,'&#39;');
     var chkAttr=e.parts?' style="cursor:default"':' onclick="toggle(\''+e.id+'\')"';
-    var partCls=['btn-done-a','btn-done-b'];
-    var actBtns=e.parts
-      ?(function(){
-          var pb=e.parts.map(function(p,i){
-            var pd=done.indexOf(p.id)>=0;
-            var cls=partCls[i]||'btn-done';
-            var onclk=p.confirm?'toggleConfirm(\''+p.id+'\')':'toggle(\''+p.id+'\')';
-            return '<button class="'+cls+(pd?' done':'')+'" onclick="'+onclk+'">'+(pd?'✓ '+p.lbl+' 완료':p.lbl)+'</button>';
-          }).join('');
-          var pids=e.parts.map(function(p){return p.id;});
-          var allGb=pids.every(function(id){return done.indexOf(id)>=0&&method[id]==='gb';});
-          var ps='['+pids.map(function(id){return '\''+id+'\''}).join(',')+']';
-          return pb+'<button class="btn-gb-full'+(allGb?' done':'')+'" onclick="togglePartsGb('+ps+')">'+(allGb?'✓ 기변완료':'기변완료')+'</button>';
-        })()
-      :(function(){
-          var isSu=done.indexOf(e.id)>=0&&method[e.id]!=='gb';
-          var isGb=done.indexOf(e.id)>=0&&method[e.id]==='gb';
-          return '<div class="btn-done-wrap">'+
+    var siteBadge=e.site?'<span class="site-badge">'+e.site+'</span>':'';
+    var schBtn=e.noSch?'':'<button class="btn-sch" onclick="openSch(\''+st+'\',\''+e.type+'\')">일정 보기</button>';
+
+    /* ─ 상단: 제목 + 메타 ─ */
+    var infoHtml=e.schRows
+      ?'<div class="edu-title">'+e.title+'</div>'+
+        '<div class="edu-meta-row">'+siteBadge+'</div>'+
+        e.schRows.map(function(r){return '<div class="edu-sch-row">'+r+'</div>';}).join('')+
+        (e.schNote?'<div class="edu-sch-note">'+e.schNote+'</div>':'')
+      :'<div class="edu-top-row">'+
+          '<div class="edu-title">'+e.title+'</div>'+
+          '<span class="edu-tag '+(e.tc||'')+'">'+e.tag+'</span>'+
+        '</div>'+
+        '<div class="edu-meta-row">'+siteBadge+schBtn+'</div>'+
+        (e.schNote?'<div class="edu-sch-note">'+e.schNote+'</div>':'');
+
+    /* ─ 하단: 버튼 ─ */
+    var btnsHtml;
+    if(e.parts){
+      var pids=e.parts.map(function(p){return p.id;});
+      var allGb=pids.every(function(id){return done.indexOf(id)>=0&&method[id]==='gb';});
+      var ps='['+pids.map(function(id){return '\''+id+'\''}).join(',')+']';
+      var partBtns=e.parts.map(function(p,i){
+        var pd=done.indexOf(p.id)>=0;
+        var cls=partCls[i]||'btn-done';
+        var onclk=p.confirm?'toggleConfirm(\''+p.id+'\')':'toggle(\''+p.id+'\')';
+        return '<button class="'+cls+(pd?' done':'')+'" onclick="'+onclk+'">'+(pd?'✓ '+p.lbl:p.lbl)+'</button>';
+      }).join('');
+      btnsHtml=
+        '<div class="edu-card-btns">'+
+          '<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기</button>'+
+          '<button class="btn-gb-full'+(allGb?' done':'')+'" onclick="togglePartsGb('+ps+')">'+(allGb?'✓ 기변완료':'기변완료')+'</button>'+
+        '</div>'+
+        '<div class="edu-card-btns">'+partBtns+'</div>';
+    }else{
+      var isSu=done.indexOf(e.id)>=0&&method[e.id]!=='gb';
+      var isGb=done.indexOf(e.id)>=0&&method[e.id]==='gb';
+      btnsHtml=
+        '<div class="edu-card-btns">'+
+          '<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기</button>'+
+          '<div class="btn-done-wrap">'+
             '<button class="btn-su'+(isSu?' done':'')+'" onclick="toggleWithMethod(\''+e.id+'\',\'su\')">'+(isSu?'✓ 수강':'수강완료')+'</button>'+
             '<button class="btn-gb'+(isGb?' done':'')+'" onclick="toggleWithMethod(\''+e.id+'\',\'gb\')">'+(isGb?'✓ 기변':'기변완료')+'</button>'+
-          '</div>';
-        })();
-    var schBtn=e.noSch?'':'<button class="btn-sch" onclick="openSch(\''+st+'\',\''+e.type+'\')">일정 보기</button>';
-    var siteBadge=e.site?'<span class="site-badge">'+e.site+'</span>':'';
-    var tagRow=e.schRows
-      ?('<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px">'+siteBadge+'</div>')+
-        (e.schRows.map(function(r){return '<div class="edu-sch-row">'+r+'</div>';}).join('')
-        +(e.schNote?'<div class="edu-sch-note">'+e.schNote+'</div>':''))
-      :'<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px"><span class="edu-tag '+(e.tc||'')+'">'+e.tag+'</span>'+siteBadge+schBtn+'</div>'
-        +(e.schNote?'<div class="edu-sch-note">'+e.schNote+'</div>':'');
-    return '<div class="edu-card'+(e.parts?' parts-card':'')+(isDone?' done':'')+'">'+
-      '<button class="chk-circle'+(isDone?' done':'')+'"'+chkAttr+'>'+(isDone?'✓':'')+'</button>'+
-      '<div class="edu-info">'+
-        '<div class="edu-title">'+e.title+'</div>'+
-        tagRow+
+          '</div>'+
+        '</div>';
+    }
+
+    return '<div class="edu-card'+(isDone?' done':'')+'">'+
+      '<div class="edu-card-top">'+
+        '<button class="chk-circle'+(isDone?' done':'')+'"'+chkAttr+'>'+(isDone?'✓':'')+'</button>'+
+        '<div class="edu-info">'+infoHtml+'</div>'+
       '</div>'+
-      '<div class="edu-actions">'+
-        '<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기</button>'+
-        actBtns+
-      '</div>'+
+      btnsHtml+
     '</div>';
   }).join('');
 }
