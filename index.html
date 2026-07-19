@@ -396,17 +396,18 @@ html,body{
 }
 .btn-go:active{opacity:.8}
 .btn-done{
-  font-size:11px;font-weight:700;
-  background:var(--g1);color:var(--g4);
-  border:1.5px dashed var(--g3);border-radius:8px;
-  padding:6px 10px;cursor:pointer;white-space:nowrap;
-  font-family:inherit;transition:all .18s;width:100%;
+  font-size:12px;font-weight:700;
+  background:rgba(255,255,255,.9);color:var(--acc-d);
+  border:1.5px solid rgba(82,172,130,.45);border-radius:8px;
+  padding:10px 8px;cursor:pointer;
+  font-family:inherit;transition:all .18s;width:100%;text-align:center;
 }
 .btn-done.done{
-  background:#EDFAED;color:#2E7D32;border:1.5px solid #81C784;
-  box-shadow:none;
+  background:var(--acc);color:#fff;border-color:var(--acc);
+  box-shadow:0 2px 6px rgba(82,172,130,.3);
 }
 .btn-done:active{opacity:.8}
+.edu-card-btns .btn-done{flex:2;width:auto;}
 .btn-done-a{
   font-size:11px;font-weight:700;
   background:#FFF8E1;color:#E65100;
@@ -937,9 +938,6 @@ function renderList(elId,items){
     /* ─ 하단: 버튼 ─ */
     var btnsHtml;
     if(e.parts){
-      var pids=e.parts.map(function(p){return p.id;});
-      var allGb=pids.every(function(id){return done.indexOf(id)>=0&&method[id]==='gb';});
-      var ps='['+pids.map(function(id){return '\''+id+'\''}).join(',')+']';
       var partBtns=e.parts.map(function(p,i){
         var pd=done.indexOf(p.id)>=0;
         var cls=partCls[i]||'btn-done';
@@ -949,19 +947,13 @@ function renderList(elId,items){
       btnsHtml=
         '<div class="edu-card-btns">'+
           '<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기</button>'+
-          '<button class="btn-gb-full'+(allGb?' done':'')+'" onclick="togglePartsGb('+ps+')">'+(allGb?'✓ 기변완료':'기변완료')+'</button>'+
         '</div>'+
         '<div class="edu-card-btns">'+partBtns+'</div>';
     }else{
-      var isSu=done.indexOf(e.id)>=0&&method[e.id]!=='gb';
-      var isGb=done.indexOf(e.id)>=0&&method[e.id]==='gb';
       btnsHtml=
         '<div class="edu-card-btns">'+
           '<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기</button>'+
-          '<div class="btn-done-wrap">'+
-            '<button class="btn-su'+(isSu?' done':'')+'" onclick="toggleWithMethod(\''+e.id+'\',\'su\')">'+(isSu?'✓ 수강':'수강완료')+'</button>'+
-            '<button class="btn-gb'+(isGb?' done':'')+'" onclick="toggleWithMethod(\''+e.id+'\',\'gb\')">'+(isGb?'✓ 기변':'기변완료')+'</button>'+
-          '</div>'+
+          '<button class="btn-done'+(isDone?' done':'')+'" onclick="toggle(\''+e.id+'\')">'+(isDone?'✓ 완료':'수강완료')+'</button>'+
         '</div>';
     }
 
