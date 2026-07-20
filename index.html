@@ -1315,7 +1315,7 @@ if(/KAKAOTALK/i.test(navigator.userAgent)){
 
 /* ═══ PWA ═══ */
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').then(function(reg){reg.update();}).catch(function(){});
+  navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(reg){reg.update();}).catch(function(){});
   navigator.serviceWorker.addEventListener('controllerchange',function(){window.location.reload();});
 }
 
