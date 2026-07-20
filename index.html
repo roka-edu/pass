@@ -397,8 +397,9 @@ html,body{
   font-family:inherit;transition:all .18s;width:100%;text-align:center;
 }
 .btn-done.done{
-  background:#357A5C;color:#fff;border-color:#357A5C;
-  box-shadow:0 2px 6px rgba(53,122,92,.35);
+  background:#B7E5CC;color:#1A5C3E;border-color:#52AC82;
+  box-shadow:0 2px 6px rgba(82,172,130,.30);
+  font-weight:800;
 }
 .btn-done:active{opacity:.8}
 .edu-card-btns .btn-done{flex:2;width:auto;}
@@ -704,7 +705,7 @@ var EDU=[
   {cat:1,id:'e11',title:'다문화 이해 교육',           site:'다누리배움터', url:'https://www.danurischool.kr/portal/education/allListAction.do', type:'multi', tag:'상시', tc:'tag-always', noSch:true,
    schNote:'⚠ 공직자과정·군인과정 모두 수강 인정'},
   {cat:1,id:'e12',title:'개인정보보호 교육',          site:'개인정보포털', url:'https://edu.privacy.go.kr/user/course/uCrsRcmdList.do', type:'privacy', tag:'1/5 ~ 12/31', tc:'tag-full', noSch:true},
-  {cat:2,id:'e08',title:'산업안전보건 교육',          site:'안전보건공단', url:'https://edu.kosha.or.kr',   type:'check',   tag:'일정 확인',    tc:'tag-check'},
+  {cat:2,id:'e08',title:'산업안전보건 교육',          site:'안전보건공단', url:'https://edu.kosha.or.kr',   type:'check',   noSch:true},
   {cat:2,id:'e09',title:'육군 안전관리교육 (관리자)', site:'STEP',       url:'https://safety.step.or.kr', type:'always',  tag:'상시',         tc:'tag-always', noSch:true},
   {cat:2,id:'e10',title:'육군 안전관리교육 (실무자)', site:'STEP',       url:'https://safety.step.or.kr', type:'always',  tag:'상시',         tc:'tag-always', noSch:true},
 ];
@@ -939,7 +940,7 @@ function renderList(elId,items){
         (e.schNote?'<div class="edu-sch-note">'+e.schNote+'</div>':'')
       :'<div class="edu-top-row">'+
           '<div class="edu-title">'+e.title+'</div>'+
-          '<span class="edu-tag '+(e.tc||'')+'">'+e.tag+'</span>'+
+          (e.tag?'<span class="edu-tag '+(e.tc||'')+'">'+e.tag+'</span>':'')+
         '</div>'+
         '<div class="edu-meta-row">'+siteBadge+schBtn+'</div>'+
         (e.schNote?'<div class="edu-sch-note">'+e.schNote+'</div>':'');
