@@ -410,7 +410,7 @@ html,body{
   padding:10px 8px;cursor:pointer;
   font-family:inherit;transition:all .18s;width:100%;text-align:center;
 }
-.btn-done-a.done{background:#EDFAED;color:#2E7D32;border:1.5px solid #81C784;box-shadow:none}
+.btn-done-a.done{background:#3A6494;color:#EFF6FF;border:1.5px solid #4A7AB0;box-shadow:0 2px 8px rgba(58,100,148,.35)}
 .btn-done-a:active{opacity:.8}
 .btn-done-b{
   font-size:11px;font-weight:700;
@@ -419,7 +419,7 @@ html,body{
   padding:10px 8px;cursor:pointer;
   font-family:inherit;transition:all .18s;width:100%;text-align:center;
 }
-.btn-done-b.done{background:#EDFAED;color:#2E7D32;border:1.5px solid #81C784;box-shadow:none}
+.btn-done-b.done{background:#3A6494;color:#EFF6FF;border:1.5px solid #4A7AB0;box-shadow:0 2px 8px rgba(58,100,148,.35)}
 .btn-done-b:active{opacity:.8}
 .btn-done-wrap{display:flex;gap:4px;width:100%}
 .btn-su{
@@ -955,7 +955,7 @@ function renderList(elId,items){
           var pd=done.indexOf(p.id)>=0;
           var cls=partCls[i]||'btn-done';
           var onclk=p.confirm?'toggleConfirm(\''+p.id+'\')':'toggle(\''+p.id+'\')';
-          return '<button class="'+cls+(pd?' done':'')+'" onclick="'+onclk+'">'+(pd?'✓ '+p.lbl:p.lbl)+'</button>';
+          return '<button class="'+cls+(pd?' done':'')+'" onclick="'+onclk+'">'+(pd?'✓ '+p.lbl+'완료':p.lbl)+'</button>';
         }).join('');
         actionsHtml='<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기</button>'+partBtns;
       }
