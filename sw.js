@@ -1,4 +1,4 @@
-const CACHE = 'edu-pass-v37';
+const CACHE = 'edu-pass-v38';
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -13,6 +13,8 @@ self.addEventListener('activate', e => {
     caches.keys()
       .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
+      .then(() => self.clients.matchAll({type:'window', includeUncontrolled:true}))
+      .then(function(clients){ clients.forEach(function(c){ c.postMessage({type:'SW_UPDATED',version:CACHE}); }); })
   );
 });
 

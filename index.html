@@ -1316,9 +1316,16 @@ if(/KAKAOTALK/i.test(navigator.userAgent)){
 }
 
 /* ═══ PWA ═══ */
+var APP_VER='v38';
+(function(){
+  var stored=localStorage.getItem('app_cache_ver');
+  localStorage.setItem('app_cache_ver',APP_VER);
+  if(stored&&stored!==APP_VER){window.location.href=window.location.href;}
+})();
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(reg){reg.update();}).catch(function(){});
-  navigator.serviceWorker.addEventListener('controllerchange',function(){window.location.reload();});
+  navigator.serviceWorker.addEventListener('controllerchange',function(){window.location.href=window.location.href;});
+  navigator.serviceWorker.addEventListener('message',function(e){if(e.data&&e.data.type==='SW_UPDATED'){window.location.href=window.location.href;}});
 }
 
 /* ═══ 초기 실행 ═══ */
