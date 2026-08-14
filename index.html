@@ -967,8 +967,11 @@ function renderList(elId,items){
         var onclk=p.confirm?'toggleConfirm(\''+p.id+'\')':'toggle(\''+p.id+'\')';
         return '<button class="btn-part'+(pd?' done':'')+'" onclick="'+onclk+'">'+(pd?'✓ '+p.lbl+'완료':p.lbl)+'</button>';
       }).join('')+'</div>';
-      actionsHtml='<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기</button>'+
-        (isDone?'<button class="btn-done done" onclick="toggleAllParts('+pids+')">✓ 수강완료</button>':'');
+      if(isDone){
+        actionsHtml='<button class="btn-done done" onclick="toggleAllParts('+pids+')">✓ 수강완료</button>';
+      }else{
+        actionsHtml='<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기</button>';
+      }
     }else{
       actionsHtml=isDone
         ?'<button class="btn-done done" onclick="toggle(\''+e.id+'\')">✓ 수강완료</button>'
@@ -976,7 +979,7 @@ function renderList(elId,items){
           '<button class="btn-done" onclick="toggle(\''+e.id+'\')">수강완료</button>';
     }
 
-    var soloClass=(!e.parts&&isDone)?' edu-actions-solo':'';
+    var soloClass=isDone?' edu-actions-solo':'';
     return '<div class="edu-card'+(isDone?' done':'')+(e.parts?' parts-card':'')+'">'+
       '<button class="chk-circle'+(isDone?' done':'')+'"'+chkAttr+'>'+(isDone?'✓':'')+'</button>'+
       '<div class="edu-info">'+infoHtml+partsRowHtml+'</div>'+
@@ -1326,7 +1329,7 @@ if(/KAKAOTALK/i.test(navigator.userAgent)){
 }
 
 /* ═══ PWA ═══ */
-var APP_VER='v41';
+var APP_VER='v42';
 (function(){
   var stored=localStorage.getItem('app_cache_ver');
   localStorage.setItem('app_cache_ver',APP_VER);
