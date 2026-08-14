@@ -16,8 +16,8 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --acc:#52AC82;--acc-d:#357A5C;--acc-lt:#EBF7F2;
-  --bg:#EDF8F3;
+  --acc:#52AC82;--acc-d:#357A5C;--acc-lt:#E4F2EB;
+  --bg:#F0F5F2;
   --bk:#1C2E26;--wh:#FFFFFF;
   --g1:#DFF2EA;--g2:#C2E6D6;--g3:#8CCBB2;--g4:#5E9E82;--g5:#2E6B50;
   --hdr-bg:rgba(255,255,255,.85);
@@ -30,7 +30,7 @@
 html,body{
   width:100%;height:100vh;height:100dvh;overflow:hidden;
   font-family:'Noto Sans KR',-apple-system,sans-serif;
-  background:#BEE8D3;
+  background:#B5D5C8;
   display:flex;justify-content:center;align-items:center;
   -webkit-font-smoothing:antialiased;
 }
@@ -195,14 +195,14 @@ html,body{
 .prog-r{font-size:11px;color:var(--acc-d);font-weight:700}
 
 /* 탭 */
-.tabs{display:flex;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid rgba(82,172,130,.15);flex-shrink:0}
+.tabs{display:flex;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid rgba(82,172,130,.12);flex-shrink:0;padding:7px 12px;gap:5px}
 .tab-btn{
-  flex:1;padding:11px 0;font-size:12px;font-weight:700;
+  flex:1;padding:9px 0;font-size:12px;font-weight:700;
   color:var(--g4);border:none;background:none;
-  cursor:pointer;border-bottom:2.5px solid transparent;
+  cursor:pointer;border-bottom:none;border-radius:8px;
   transition:all .18s;font-family:inherit;
 }
-.tab-btn.on{color:var(--cat1);border-bottom-color:var(--acc)}
+.tab-btn.on{color:var(--cat1);background:var(--acc-lt);border-bottom-color:transparent}
 
 /* ══════════════════════════════
    피드백 탭
@@ -306,40 +306,41 @@ html,body{
 /* 카테고리 헤더 */
 .edu-group{margin-bottom:14px}
 .cat-hdr{
-  display:flex;align-items:center;gap:8px;
-  background:linear-gradient(135deg,#357A5C,#1E5E42);
-  color:#fff;
-  border-radius:10px;padding:8px 12px;
-  font-size:12px;font-weight:700;margin-bottom:7px;
-  box-shadow:0 2px 8px rgba(30,94,66,.22);
+  display:flex;align-items:center;gap:7px;
+  background:none;
+  color:var(--acc-d);
+  border-radius:0;padding:6px 2px;
+  font-size:10.5px;font-weight:800;margin-bottom:8px;margin-top:4px;
+  box-shadow:none;
   cursor:pointer;user-select:none;
-  -webkit-user-select:none;
+  -webkit-user-select:none;letter-spacing:.04em;
 }
-.cat-hdr.cat2{background:linear-gradient(135deg,#1B6447,#103D2C)}
+.cat-hdr.cat2{background:none;color:var(--acc-d)}
 .cat-num{
-  width:22px;height:22px;border-radius:6px;
-  background:rgba(255,255,255,.22);color:#fff;
-  font-size:12px;font-weight:900;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  width:auto;height:auto;border-radius:99px;
+  background:var(--acc-lt);color:var(--acc-d);
+  font-size:9.5px;font-weight:800;
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+  padding:2px 8px;
 }
-.cat-num.n2{background:rgba(255,255,255,.18)}
-.cat-note{font-size:10px;color:rgba(255,255,255,.55);font-weight:500;margin-left:auto}
+.cat-num.n2{background:var(--g1);color:var(--cat2)}
+.cat-note{font-size:9.5px;color:var(--g4);font-weight:600;margin-left:0}
+.cat-line{flex:1;height:1px;background:rgba(82,172,130,.18)}
 
 /* 교육 카드 */
 .edu-card{
-  background:rgba(255,255,255,.78);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  border-radius:14px;
+  background:#FFFFFF;
+  border-radius:12px;
   padding:12px;
   display:flex;flex-direction:row;align-items:center;gap:10px;
-  border:1px solid rgba(82,172,130,.18);margin-bottom:8px;
+  border:1px solid rgba(82,172,130,.15);margin-bottom:7px;
   transition:background .2s,border-color .2s,transform .12s,box-shadow .12s;
-  box-shadow:var(--shadow-sm);
+  box-shadow:0 1px 3px rgba(0,0,0,.05),0 3px 8px rgba(0,0,0,.04);
 }
 .edu-card:active{transform:scale(.99);box-shadow:none}
 .edu-top-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
 .edu-meta-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:3px;}
-.edu-card.done{background:var(--done-bg);border-color:var(--done-bdr)}
+.edu-card.done{background:var(--acc-lt);border-color:rgba(82,172,130,.2)}
 .edu-card.done .edu-title{color:#aaa;text-decoration:line-through}
 
 .chk-circle{
@@ -372,7 +373,7 @@ html,body{
   letter-spacing:.02em;
   flex-shrink:0;
 }
-.cat-arrow{font-size:11px;color:rgba(255,255,255,.75);margin-left:4px;transition:transform .22s;}
+.cat-arrow{font-size:10px;color:var(--g4);margin-left:0;transition:transform .22s;}
 
 .edu-card.parts-card{align-items:flex-start}
 .edu-sch-row{font-size:10.5px;font-weight:600;color:var(--g4);line-height:1.7}
@@ -422,6 +423,16 @@ html,body{
 .btn-done-b.done{background:#3A6494;color:#EFF6FF;border:1.5px solid #4A7AB0;box-shadow:0 2px 8px rgba(58,100,148,.35)}
 .btn-done-b:active{opacity:.8}
 .btn-done-wrap{display:flex;gap:4px;width:100%}
+.parts-row{display:flex;gap:4px;margin-top:7px}
+.btn-part{
+  flex:1;font-size:10.5px;font-weight:700;
+  background:#F7FAF8;color:var(--g5);
+  border:1.5px dashed var(--g3);border-radius:7px;
+  padding:8px 3px;cursor:pointer;
+  font-family:inherit;transition:all .18s;text-align:center;
+}
+.btn-part.done{background:#3A6494;color:#EFF6FF;border:1.5px solid #4A7AB0}
+.btn-part:active{opacity:.8}
 .btn-su{
   flex:1;font-size:10px;font-weight:700;
   background:var(--g1);color:var(--g4);
@@ -464,11 +475,10 @@ html,body{
 }
 .gb-item{
   display:flex;align-items:center;gap:10px;
-  background:rgba(255,255,255,.78);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  background:#FFFFFF;
   border-radius:12px;padding:12px;
-  border:1px solid rgba(82,172,130,.18);margin-bottom:8px;
-  box-shadow:var(--shadow-sm);
+  border:1px solid rgba(82,172,130,.15);margin-bottom:7px;
+  box-shadow:0 1px 3px rgba(0,0,0,.05),0 3px 8px rgba(0,0,0,.04);
   transition:background .2s,border-color .2s;
   cursor:pointer;
 }
@@ -620,6 +630,7 @@ html,body{
       <div class="edu-group">
         <div class="cat-hdr" onclick="toggleCat(1)">
           <div class="cat-num">1</div>법정 필수 및 인권 교육
+          <span class="cat-line"></span>
           <span class="cat-arrow" id="catArrow1">▲</span>
         </div>
         <div id="list1"></div>
@@ -628,6 +639,7 @@ html,body{
         <div class="cat-hdr cat2" onclick="toggleCat(2)">
           <div class="cat-num n2">2</div>직무 및 안전 교육
           <span class="cat-note">3개 중 1개 이상</span>
+          <span class="cat-line"></span>
           <span class="cat-arrow" id="catArrow2">▲</span>
         </div>
         <div id="list2"></div>
@@ -947,19 +959,16 @@ function renderList(elId,items){
         (e.schNote?'<div class="edu-sch-note">'+e.schNote+'</div>':'');
 
     var actionsHtml;
+    var partsRowHtml='';
     if(e.parts){
-      if(isDone){
-        var pids='['+e.parts.map(function(p){return '\''+p.id+'\''}).join(',')+']';
-        actionsHtml='<button class="btn-done done" onclick="toggleAllParts('+pids+')">✓ 수강완료</button>';
-      }else{
-        var partBtns=e.parts.map(function(p,i){
-          var pd=done.indexOf(p.id)>=0;
-          var cls=partCls[i]||'btn-done';
-          var onclk=p.confirm?'toggleConfirm(\''+p.id+'\')':'toggle(\''+p.id+'\')';
-          return '<button class="'+cls+(pd?' done':'')+'" onclick="'+onclk+'">'+(pd?'✓ '+p.lbl+'완료':p.lbl)+'</button>';
-        }).join('');
-        actionsHtml='<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기</button>'+partBtns;
-      }
+      var pids='['+e.parts.map(function(p){return '\''+p.id+'\''}).join(',')+']';
+      partsRowHtml='<div class="parts-row">'+e.parts.map(function(p){
+        var pd=done.indexOf(p.id)>=0;
+        var onclk=p.confirm?'toggleConfirm(\''+p.id+'\')':'toggle(\''+p.id+'\')';
+        return '<button class="btn-part'+(pd?' done':'')+'" onclick="'+onclk+'">'+(pd?'✓ '+p.lbl+'완료':p.lbl)+'</button>';
+      }).join('')+'</div>';
+      actionsHtml='<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기</button>'+
+        (isDone?'<button class="btn-done done" onclick="toggleAllParts('+pids+')">✓ 수강완료</button>':'');
     }else{
       actionsHtml=isDone
         ?'<button class="btn-done done" onclick="toggle(\''+e.id+'\')">✓ 수강완료</button>'
@@ -967,10 +976,11 @@ function renderList(elId,items){
           '<button class="btn-done" onclick="toggle(\''+e.id+'\')">수강완료</button>';
     }
 
+    var soloClass=(!e.parts&&isDone)?' edu-actions-solo':'';
     return '<div class="edu-card'+(isDone?' done':'')+(e.parts?' parts-card':'')+'">'+
       '<button class="chk-circle'+(isDone?' done':'')+'"'+chkAttr+'>'+(isDone?'✓':'')+'</button>'+
-      '<div class="edu-info">'+infoHtml+'</div>'+
-      '<div class="edu-actions'+(isDone?' edu-actions-solo':'')+'">'+actionsHtml+'</div>'+
+      '<div class="edu-info">'+infoHtml+partsRowHtml+'</div>'+
+      '<div class="edu-actions'+soloClass+'">'+actionsHtml+'</div>'+
     '</div>';
   }).join('');
 }
@@ -1316,7 +1326,7 @@ if(/KAKAOTALK/i.test(navigator.userAgent)){
 }
 
 /* ═══ PWA ═══ */
-var APP_VER='v40';
+var APP_VER='v41';
 (function(){
   var stored=localStorage.getItem('app_cache_ver');
   localStorage.setItem('app_cache_ver',APP_VER);
