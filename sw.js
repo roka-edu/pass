@@ -1,4 +1,4 @@
-const CACHE = 'edu-pass-v44';
+const CACHE = 'edu-pass-v45';
 
 self.addEventListener('install', e => {
   e.waitUntil(
