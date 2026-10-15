@@ -264,6 +264,15 @@ html,body{
   display:flex;align-items:center;gap:6px;
 }
 .fdbk-list-hdr::after{content:'';flex:1;height:1px;background:var(--g2)}
+.fdbk-report-btn{font-size:10px;font-weight:600;color:#a0b8ac;background:none;border:none;padding:2px 4px;cursor:pointer;font-family:inherit}
+.fdbk-report-badge{display:inline-block;font-size:10px;font-weight:800;color:#fff;background:#d94f4f;border-radius:5px;padding:1px 6px;margin-bottom:5px}
+.fdbk-rules-note{font-size:10.5px;line-height:1.45;color:var(--g4);margin:-2px 2px 10px}
+.fdbk-hidden-notice{font-size:11px;font-weight:600;color:var(--g4);text-decoration:underline;cursor:pointer;margin:0 0 9px 2px}
+.report-title{font-size:16px;font-weight:900;color:var(--cat1);text-align:center;margin:4px 0 8px}
+.report-desc{font-size:12px;color:var(--g4);text-align:center;line-height:1.5;margin-bottom:16px}
+.report-opt{display:block;width:100%;padding:13px;margin-top:8px;border-radius:12px;border:1px solid var(--g2);background:#fff;font-size:14px;font-weight:700;font-family:inherit;color:var(--cat1);cursor:pointer}
+.report-opt.danger{color:#fff;background:#d94f4f;border-color:#d94f4f}
+.report-opt.cancel{color:var(--g4);background:var(--g1,#f3f7f5)}
 .fdbk-admin-badge{order:1;font-size:10px;font-weight:800;letter-spacing:0;color:#d94f4f;border:1px solid #f5c6c6;border-radius:6px;padding:2px 7px}
 .fdbk-item{
   background:var(--wh);border:1px solid var(--g2);
@@ -671,9 +680,11 @@ html,body{
       </div>
       <div class="fdbk-form">
         <textarea id="fdbkInput" class="fdbk-input" placeholder="원하는 기능이나 개선 사항을 자유롭게 적어주세요 (5~300자)" maxlength="300" rows="4"></textarea>
+        <div class="fdbk-rules-note">욕설·비방·개인정보 등 부적절한 글은 삭제되며, 다른 사람의 글은 '신고'로 알려주세요.</div>
         <button class="fdbk-submit" onclick="submitFeedback()">의견 보내기</button>
       </div>
       <div class="fdbk-list-hdr">제출된 의견 <span class="fdbk-list-pub">· 전체 공개</span><span class="fdbk-admin-badge" id="fdbkAdminBadge" style="display:none">관리자 모드</span></div>
+      <div class="fdbk-hidden-notice" id="fdbkHiddenNotice" style="display:none" onclick="restoreHidden()">숨긴 글이 있습니다 · 다시 보기</div>
       <div id="fdbkList"><div class="fdbk-empty">의견을 불러오는 중...</div></div>
     </div>
 
@@ -689,6 +700,16 @@ html,body{
       <div class="modal-title" id="mTitle"></div>
       <div id="mBody"></div>
       <button class="btn-modal-close" onclick="closeModal()">닫기</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay center" id="reportModal" onclick="closeReportMenu()">
+    <div class="modal-sheet" style="padding-bottom:20px" onclick="event.stopPropagation()">
+      <div class="report-title" id="reportTitle">이 의견을 어떻게 할까요?</div>
+      <div class="report-desc">신고하면 이 글이 내 화면에서 숨겨지고 관리자가 검토합니다.</div>
+      <button class="report-opt danger" onclick="doReport()">신고하기</button>
+      <button class="report-opt" id="reportBlockBtn" onclick="doBlock()">작성자 차단</button>
+      <button class="report-opt cancel" onclick="closeReportMenu()">취소</button>
     </div>
   </div>
 
@@ -1034,30 +1055,50 @@ function getDeviceToken(){
 
 function loadFeedback(){
   var myToken=getDeviceToken();
-  fetch(SB_URL+'/rest/v1/rpc/get_feedback',{
-    method:'POST',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
-    body:'{}'
-  })
-  .then(function(r){return r.json();})
-  .then(function(data){
+  var adminKey=getAdminKey();
+  var reportsReq=adminKey?
+    sbRpc('admin_get_reports',{p_key:adminKey}).then(function(r){return r.ok?r.json():[];}).catch(function(){return [];}):
+    Promise.resolve([]);
+  Promise.all([
+    fetch(SB_URL+'/rest/v1/rpc/get_feedback',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+      body:'{}'
+    }).then(function(r){return r.json();}),
+    reportsReq
+  ])
+  .then(function(res){
+    var data=res[0];
+    reportCounts={};
+    (Array.isArray(res[1])?res[1]:[]).forEach(function(r){reportCounts[r.target_type+':'+r.target_id]=Number(r.report_count)||0;});
+    updateAdminBadge();
+    updateHiddenNotice();
     var el=document.getElementById('fdbkList');
-    if(!Array.isArray(data)||data.length===0){
+    var hidden=getHidden(),blocked=getBlocked();
+    var total=Array.isArray(data)?data.length:0;
+    var visible=(Array.isArray(data)?data:[]).map(function(item,i){item._num=total-i;return item;}).filter(function(item){
+      return hidden.feedback.indexOf(item.id)<0&&!(item.device_token&&blocked.indexOf(item.device_token)>=0);
+    });
+    if(visible.length===0){
       el.innerHTML='<div class="fdbk-empty">아직 제출된 의견이 없습니다<br>첫 번째 의견을 남겨주세요!</div>';
       return;
     }
-    var admin=!!getAdminKey();
-    el.innerHTML=data.map(function(item,i){
+    var admin=!!adminKey;
+    el.innerHTML=visible.map(function(item){
       var ds=fmtDateTime(item.created_at);
       var cnt=item.comment_count||0;
       var mine=!!item.device_token&&item.device_token===myToken;
-      var actionBtns=(mine||admin)?
+      fbTokens[item.id]=item.device_token||'';
+      var rc=admin?(reportCounts['feedback:'+item.id]||0):0;
+      var actionBtns=
         '<div class="fdbk-item-actions">'+
+          (!mine?'<button class="fdbk-report-btn" onclick="openReportMenu(\'feedback\','+item.id+',0)">신고</button>':'')+
           (mine?'<button class="fdbk-action-btn fdbk-edit-btn" onclick="startEditFeedback('+item.id+')">수정</button>':'')+
-          '<button class="fdbk-action-btn fdbk-del-btn" onclick="'+(mine?'deleteFeedbackItem':'adminDeleteFeedback')+'('+item.id+')">삭제</button>'+
-        '</div>':'';
+          ((mine||admin)?'<button class="fdbk-action-btn fdbk-del-btn" onclick="'+(mine?'deleteFeedbackItem':'adminDeleteFeedback')+'('+item.id+')">삭제</button>':'')+
+        '</div>';
       return '<div class="fdbk-item" id="fi-'+item.id+'" data-orig="'+escAttr(item.content)+'">'+
-        '<div class="fdbk-num">#'+(data.length-i)+'</div>'+
+        (rc>0?'<div class="fdbk-report-badge">신고 '+rc+'건</div>':'')+
+        '<div class="fdbk-num">#'+item._num+'</div>'+
         '<div class="fdbk-content" id="fct-'+item.id+'">'+escHtml(item.content)+'</div>'+
         '<div class="fdbk-footer">'+
           '<span class="fdbk-date">'+ds+'</span>'+
@@ -1095,11 +1136,14 @@ function renderComment(c,feedbackId,myToken,replies,isReply){
   var ds=fmtDateTime(c.created_at);
   var mine=!!c.device_token&&c.device_token===myToken;
   var admin=!!getAdminKey();
-  var cmtBtns=(mine||admin)?
+  cmTokens[c.id]=c.device_token||'';
+  var rc=admin?(reportCounts['comment:'+c.id]||0):0;
+  var cmtBtns=
     '<div class="fdbk-cmt-actions" id="ca-'+c.id+'">'+
+      (!mine?'<button class="fdbk-report-btn" onclick="openReportMenu(\'comment\','+c.id+','+feedbackId+')">신고</button>':'')+
       (mine?'<button class="fdbk-action-btn fdbk-edit-btn" onclick="startEditComment('+c.id+','+feedbackId+')">수정</button>':'')+
-      '<button class="fdbk-action-btn fdbk-del-btn" onclick="'+(mine?'deleteCommentItem':'adminDeleteComment')+'('+c.id+','+feedbackId+')">삭제</button>'+
-    '</div>':'';
+      ((mine||admin)?'<button class="fdbk-action-btn fdbk-del-btn" onclick="'+(mine?'deleteCommentItem':'adminDeleteComment')+'('+c.id+','+feedbackId+')">삭제</button>':'')+
+    '</div>';
   var replyBtn=!isReply?
     '<button class="fdbk-cmt-reply-btn" onclick="showReplyForm('+c.id+')">답글</button>':'';
   var repliesHtml='';
@@ -1109,6 +1153,7 @@ function renderComment(c,feedbackId,myToken,replies,isReply){
     '</div>';
   }
   return '<div class="fdbk-comment-item'+(isReply?' fdbk-reply-item':'')+'" id="ci-'+c.id+'" data-orig="'+escAttr(c.content)+'">'+
+    (rc>0?'<div class="fdbk-report-badge">신고 '+rc+'건</div>':'')+
     '<div class="fdbk-comment-content" id="cct-'+c.id+'">'+escHtml(c.content)+'</div>'+
     '<div class="fdbk-comment-footer">'+
       '<span class="fdbk-comment-date">'+ds+'</span>'+
@@ -1137,6 +1182,10 @@ function loadComments(feedbackId){
   .then(function(data){
     var replyBtn=document.querySelector('#fi-'+feedbackId+' .fdbk-reply-btn');
     if(replyBtn)replyBtn.textContent='댓글 '+(Array.isArray(data)?data.length:0)+'개';
+    var hidden=getHidden(),blocked=getBlocked();
+    if(Array.isArray(data))data=data.filter(function(c){
+      return hidden.comment.indexOf(c.id)<0&&!(c.device_token&&blocked.indexOf(c.device_token)>=0);
+    });
     if(!Array.isArray(data)||data.length===0){
       listEl.innerHTML='<div style="font-size:11px;color:var(--g3);padding:4px 0">아직 댓글이 없습니다</div>';
       return;
@@ -1168,6 +1217,7 @@ function submitReply(parentCommentId,feedbackId,btn){
   var content=input.value.trim();
   if(content.length<1){showToast('답글을 입력해주세요');return;}
   if(content.length>200){showToast('200자 이내로 입력해주세요');return;}
+  if(!ensureRulesAgreed())return;
   btn.disabled=true;btn.textContent='등록 중';
   fetch(SB_URL+'/rest/v1/rpc/add_comment',{
     method:'POST',
@@ -1187,6 +1237,7 @@ function submitComment(feedbackId,btn){
   var content=input.value.trim();
   if(content.length<1){showToast('댓글을 입력해주세요');return;}
   if(content.length>200){showToast('200자 이내로 입력해주세요');return;}
+  if(!ensureRulesAgreed())return;
   btn.disabled=true;btn.textContent='등록 중';
   fetch(SB_URL+'/rest/v1/rpc/add_comment',{
     method:'POST',
@@ -1210,6 +1261,7 @@ function submitFeedback(){
   var content=input.value.trim();
   if(content.length<5){showToast('5자 이상 입력해주세요');return;}
   if(content.length>300){showToast('300자 이내로 입력해주세요');return;}
+  if(!ensureRulesAgreed())return;
   var btn=document.querySelector('.fdbk-submit');
   btn.disabled=true;btn.textContent='전송 중...';
   fetch(SB_URL+'/rest/v1/rpc/submit_feedback',{
@@ -1320,7 +1372,83 @@ function sbRpc(fn,body){
 }
 function updateAdminBadge(){
   var b=document.getElementById('fdbkAdminBadge');
-  if(b)b.style.display=getAdminKey()?'inline-block':'none';
+  if(!b)return;
+  var admin=!!getAdminKey();
+  b.style.display=admin?'inline-block':'none';
+  var n=Object.keys(reportCounts).length;
+  b.textContent='관리자 모드'+(admin&&n>0?' · 신고 '+n+'건':'');
+}
+
+/* ═══ 신고 · 작성자 차단 · 이용 규칙 ═══ */
+var fbTokens={},cmTokens={},reportCounts={};
+var COMMUNITY_RULES='아래와 같은 글은 사전 통보 없이 삭제되며, 작성자의 이용이 제한될 수 있습니다.\n\n'+
+  '• 욕설·비방·혐오·음란한 내용\n'+
+  '• 개인정보(이름·연락처·소속 등) 노출\n'+
+  '• 광고·도배 등 서비스와 무관한 내용\n\n'+
+  "부적절한 글은 '신고' 버튼으로 알려주세요.";
+function readJson(key){try{return JSON.parse(localStorage.getItem(key));}catch(e){return null;}}
+function getBlocked(){var v=readJson('roka_blocked_tokens');return Array.isArray(v)?v:[];}
+function getHidden(){
+  var v=readJson('roka_hidden_content');
+  return (v&&Array.isArray(v.feedback)&&Array.isArray(v.comment))?v:{feedback:[],comment:[]};
+}
+function updateHiddenNotice(){
+  var el=document.getElementById('fdbkHiddenNotice');
+  if(!el)return;
+  var h=getHidden();
+  el.style.display=(getBlocked().length||h.feedback.length||h.comment.length)?'block':'none';
+}
+function ensureRulesAgreed(){
+  if(localStorage.getItem('roka_rules_agreed')==='1')return true;
+  if(!confirm('[개선 의견 이용 규칙]\n\n'+COMMUNITY_RULES+'\n\n위 규칙에 동의하고 등록할까요?'))return false;
+  localStorage.setItem('roka_rules_agreed','1');
+  return true;
+}
+var reportTarget=null;
+function openReportMenu(type,id,fid){
+  reportTarget={type:type,id:id,fid:fid};
+  var token=(type==='feedback'?fbTokens:cmTokens)[id];
+  document.getElementById('reportTitle').textContent='이 '+(type==='feedback'?'의견을':'댓글을')+' 어떻게 할까요?';
+  document.getElementById('reportBlockBtn').style.display=token?'block':'none';
+  document.getElementById('reportModal').classList.add('on');
+}
+function closeReportMenu(){document.getElementById('reportModal').classList.remove('on');reportTarget=null;}
+function afterHideChange(t){
+  updateHiddenNotice();
+  if(t.type==='comment'&&t.fid)loadComments(t.fid);else loadFeedback();
+}
+function doReport(){
+  var t=reportTarget;if(!t)return;
+  closeReportMenu();
+  sbRpc('report_content',{p_target_type:t.type,p_target_id:t.id,p_device_token:getDeviceToken()})
+  .then(function(r){if(!r.ok)throw new Error();})
+  .then(function(){
+    var h=getHidden();
+    if(h[t.type].indexOf(t.id)<0)h[t.type].push(t.id);
+    localStorage.setItem('roka_hidden_content',JSON.stringify(h));
+    showToast('신고가 접수되었습니다. 검토 후 조치하겠습니다.');
+    afterHideChange(t);
+  })
+  .catch(function(){showToast('신고 실패. 잠시 후 다시 시도해주세요.');});
+}
+function doBlock(){
+  var t=reportTarget;if(!t)return;
+  var token=(t.type==='feedback'?fbTokens:cmTokens)[t.id];
+  closeReportMenu();
+  if(!token)return;
+  var b=getBlocked();
+  if(b.indexOf(token)<0)b.push(token);
+  localStorage.setItem('roka_blocked_tokens',JSON.stringify(b));
+  showToast('작성자를 차단했습니다');
+  updateHiddenNotice();
+  loadFeedback();
+}
+function restoreHidden(){
+  if(!confirm('신고해서 숨긴 글과 차단한 작성자의 글을 다시 표시할까요?'))return;
+  localStorage.removeItem('roka_blocked_tokens');
+  localStorage.removeItem('roka_hidden_content');
+  updateHiddenNotice();
+  loadFeedback();
 }
 function adminEntry(){
   if(getAdminKey()){
@@ -1410,7 +1538,7 @@ if(/KAKAOTALK/i.test(navigator.userAgent)){
 })();
 
 /* ═══ PWA ═══ */
-var APP_VER='v47';
+var APP_VER='v48';
 (function(){
   var stored=localStorage.getItem('app_cache_ver');
   localStorage.setItem('app_cache_ver',APP_VER);
