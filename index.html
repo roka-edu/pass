@@ -520,7 +520,7 @@ html,body{
   display:flex;justify-content:space-between;align-items:center;
   flex-shrink:0;
 }
-.copyright{font-size:10px;color:var(--g4);font-weight:500;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.copyright{font-size:10px;color:var(--g4);font-weight:500;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;cursor:default}
 .btn-back{
   font-size:11px;font-weight:700;color:var(--g4);
   background:var(--g1);border:none;
@@ -1494,6 +1494,14 @@ function adminDeleteComment(cid,fid){
   el.addEventListener('pointerdown',start);
   ['pointerup','pointerleave','pointercancel'].forEach(function(ev){el.addEventListener(ev,clear);});
   el.addEventListener('contextmenu',function(e){e.preventDefault();});
+  // Fallback for browsers that swallow long-press: 5 quick taps also opens it.
+  var taps=0,tapTimer=null;
+  el.addEventListener('click',function(){
+    taps++;
+    clearTimeout(tapTimer);
+    tapTimer=setTimeout(function(){taps=0;},1500);
+    if(taps>=5){taps=0;clearTimeout(tapTimer);clear();adminEntry();}
+  });
   updateAdminBadge();
 })();
 
@@ -1538,7 +1546,7 @@ if(/KAKAOTALK/i.test(navigator.userAgent)){
 })();
 
 /* ═══ PWA ═══ */
-var APP_VER='v48';
+var APP_VER='v49';
 (function(){
   var stored=localStorage.getItem('app_cache_ver');
   localStorage.setItem('app_cache_ver',APP_VER);
