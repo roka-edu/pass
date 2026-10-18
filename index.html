@@ -266,7 +266,6 @@ html,body{
 .fdbk-list-hdr::after{content:'';flex:1;height:1px;background:var(--g2)}
 .fdbk-report-btn{font-size:10px;font-weight:600;color:#a0b8ac;background:none;border:none;padding:2px 4px;cursor:pointer;font-family:inherit}
 .fdbk-report-badge{display:inline-block;font-size:10px;font-weight:800;color:#fff;background:#d94f4f;border-radius:5px;padding:1px 6px;margin-bottom:5px}
-.fdbk-rules-note{font-size:10.5px;line-height:1.45;color:var(--g4);margin:-2px 2px 10px}
 .fdbk-hidden-notice{font-size:11px;font-weight:600;color:var(--g4);text-decoration:underline;cursor:pointer;margin:0 0 9px 2px}
 .report-title{font-size:16px;font-weight:900;color:var(--cat1);text-align:center;margin:4px 0 8px}
 .report-desc{font-size:12px;color:var(--g4);text-align:center;line-height:1.5;margin-bottom:16px}
@@ -680,7 +679,6 @@ html,body{
       </div>
       <div class="fdbk-form">
         <textarea id="fdbkInput" class="fdbk-input" placeholder="원하는 기능이나 개선 사항을 자유롭게 적어주세요 (5~300자)" maxlength="300" rows="4"></textarea>
-        <div class="fdbk-rules-note">욕설·비방·개인정보 등 부적절한 글은 삭제되며, 다른 사람의 글은 '신고'로 알려주세요.</div>
         <button class="fdbk-submit" onclick="submitFeedback()">의견 보내기</button>
       </div>
       <div class="fdbk-list-hdr">제출된 의견 <span class="fdbk-list-pub">· 전체 공개</span><span class="fdbk-admin-badge" id="fdbkAdminBadge" style="display:none">관리자 모드</span></div>
@@ -1546,7 +1544,7 @@ if(/KAKAOTALK/i.test(navigator.userAgent)){
 })();
 
 /* ═══ PWA ═══ */
-var APP_VER='v49';
+var APP_VER='v50';
 (function(){
   var stored=localStorage.getItem('app_cache_ver');
   localStorage.setItem('app_cache_ver',APP_VER);
