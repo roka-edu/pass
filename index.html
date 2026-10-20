@@ -800,7 +800,22 @@ var method={};
 function loadDone(){
   try{done=JSON.parse(localStorage.getItem(DONE_KEY)||'[]')}catch(e){done=[]}
   var i=done.indexOf('e01');if(i>=0){done.splice(i,1,'e01a');saveDone();}
+  resetDoneIfNewYear();
 }
+/* 수강완료는 매년 1월 1일 초기화. 연도 기록이 없던 기존 사용자는 올해 기록을 그대로 둔다. */
+var DONE_YEAR_KEY='roka_done_year';
+function resetDoneIfNewYear(){
+  var year=String(new Date().getFullYear());
+  var stored=null;
+  try{stored=localStorage.getItem(DONE_YEAR_KEY);}catch(e){}
+  var isNewYear=!!stored&&stored!==year;
+  if(isNewYear){done=[];saveDone();}
+  if(stored!==year){try{localStorage.setItem(DONE_YEAR_KEY,year);}catch(e){}}
+  return isNewYear;
+}
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible'&&resetDoneIfNewYear())render();
+});
 function saveDone(){try{localStorage.setItem(DONE_KEY,JSON.stringify(done))}catch(e){}}
 function loadMethod(){try{method=JSON.parse(localStorage.getItem(METHOD_KEY)||'{}')}catch(e){method={}}}
 function saveMethod(){try{localStorage.setItem(METHOD_KEY,JSON.stringify(method))}catch(e){}}
@@ -1544,7 +1559,7 @@ if(/KAKAOTALK/i.test(navigator.userAgent)){
 })();
 
 /* ═══ PWA ═══ */
-var APP_VER='v50';
+var APP_VER='v51';
 (function(){
   var stored=localStorage.getItem('app_cache_ver');
   localStorage.setItem('app_cache_ver',APP_VER);
