@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <title>MND EDU-PASS</title>
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <script>
@@ -394,7 +394,7 @@ button{font-family:inherit}
     <div class="intro-wrap">
       <section class="hero">
         <div class="hero-brand">
-          <span class="hero-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
+          <span class="hero-icon"><svg width="26" height="26" viewBox="0 0 100 100" fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="50" cy="50" r="36" stroke-opacity="0.3"/><circle cx="50" cy="50" r="36" stroke-dasharray="170 227" transform="rotate(-90 50 50)"/><path d="M35 51l10 10 20-21"/></svg></span>
           <span class="hero-label">전군 교육 통합관리 시스템</span>
           <span class="theme-dots" role="radiogroup" aria-label="화면 테마">
             <button class="theme-dot" data-theme-opt="navy" role="radio" aria-label="네이비 테마" onclick="setTheme('navy')"><span style="background:#1E3A5F"></span></button>
@@ -1389,7 +1389,7 @@ if(/KAKAOTALK/i.test(navigator.userAgent)){
 })();
 
 /* ═══ PWA ═══ */
-var APP_VER='v55';
+var APP_VER='v56';
 (function(){
   var stored=localStorage.getItem('app_cache_ver');
   localStorage.setItem('app_cache_ver',APP_VER);

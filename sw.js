@@ -1,9 +1,9 @@
-const CACHE = 'edu-pass-v55';
+const CACHE = 'edu-pass-v56';
 
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE)
-      .then(c => c.addAll(['./index.html','./icon.svg','./manifest.json']))
+      .then(c => c.addAll(['./index.html','./icon.svg','./manifest.json','./apple-touch-icon.png','./icon-192.png']))
       .then(() => self.skipWaiting())
   );
 });
