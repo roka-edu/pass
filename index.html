@@ -27,6 +27,7 @@
   --dash:#C5CDD8;--note:#B42318;--danger:#C93636;--danger-border:#F3C4C4;--danger-soft:#FDECEC;--input-bg:#FFFFFF;
   --hero:#1E3A5F;--hero-border:#1E3A5F;--hero-text:#FFFFFF;--hero-sub:#DCE5F0;--hero-label:#C9D6E6;--icon-border:#6F8DB3;--icon-stroke:#FFFFFF;--hero-tile:#2B4A70;
   --body:#374151;--divider:#EEF1F5;--info-icon:#1E3A5F;--comment-bg:#F7F9FC;--reply-bg:#EEF2F7;--backdrop:rgba(15,23,42,.45);
+  --sh-card:0 1px 2px rgba(16,24,40,.06),0 4px 12px rgba(16,24,40,.07);--sh-raised:0 10px 24px rgba(30,58,95,.30);--sh-accent:0 4px 12px rgba(30,58,95,.30);--sh-sheet:0 -8px 32px rgba(15,23,42,.18);
   --outer:#E6EAF0;color-scheme:light;
 }
 html[data-theme="white"]{
@@ -37,6 +38,7 @@ html[data-theme="white"]{
   --dash:#C9CED6;--note:#B42318;--danger:#C93636;--danger-border:#F3C4C4;--danger-soft:#FDECEC;--input-bg:#FFFFFF;
   --hero:#FFFFFF;--hero-border:#E5E7EB;--hero-text:#111827;--hero-sub:#4B5563;--hero-label:#0F766E;--icon-border:#0F766E;--icon-stroke:#0F766E;--hero-tile:#F3F4F6;
   --body:#374151;--divider:#EEF0F2;--info-icon:#0F766E;--comment-bg:#F7F8F9;--reply-bg:#EFF1F3;--backdrop:rgba(17,24,39,.45);
+  --sh-card:0 1px 2px rgba(16,24,40,.06),0 4px 12px rgba(16,24,40,.07);--sh-raised:0 1px 2px rgba(16,24,40,.05),0 10px 24px rgba(16,24,40,.10);--sh-accent:0 4px 12px rgba(15,118,110,.30);--sh-sheet:0 -8px 32px rgba(17,24,39,.16);
   --outer:#ECEEF1;color-scheme:light;
 }
 html[data-theme="dark"]{
@@ -47,6 +49,7 @@ html[data-theme="dark"]{
   --dash:#46504C;--note:#F2A29A;--danger:#F08A8A;--danger-border:#5A2E2E;--danger-soft:#3A2323;--input-bg:#161B19;
   --hero:#1C2321;--hero-border:#2A322F;--hero-text:#FFFFFF;--hero-sub:#C3CBC7;--hero-label:#A7B0AB;--icon-border:#A8C66C;--icon-stroke:#A8C66C;--hero-tile:#262E2B;
   --body:#D6DDD9;--divider:#2A322F;--info-icon:#A8C66C;--comment-bg:#181E1C;--reply-bg:#202725;--backdrop:rgba(0,0,0,.6);
+  --sh-card:0 1px 2px rgba(0,0,0,.45),0 6px 16px rgba(0,0,0,.35);--sh-raised:0 12px 28px rgba(0,0,0,.55);--sh-accent:0 4px 14px rgba(168,198,108,.25);--sh-sheet:0 -8px 32px rgba(0,0,0,.5);
   --outer:#0B0E0D;color-scheme:dark;
 }
 html,body{
@@ -367,6 +370,13 @@ button{font-family:inherit}
 .report-opt{display:block;width:100%;height:48px;margin-top:8px;border-radius:12px;border:1px solid var(--border);background:var(--surface);font-size:14px;font-weight:700;color:var(--text);cursor:pointer}
 .report-opt.danger{color:#fff;background:#C93636;border-color:#C93636}
 .report-opt.cancel{color:var(--sub);background:var(--none-bg);border-color:var(--none-bg)}
+
+/* ═══ 음영 (앱과 동일) ═══ */
+.hero,.summary-card,.modal-overlay.center .modal-sheet{box-shadow:var(--sh-raised)}
+.hero{position:relative;z-index:1}
+.info-card,.theme-opt,.tabs,.edu-card,.gb-item,.fdbk-banner,.fdbk-item,.intro-play-banner{box-shadow:var(--sh-card)}
+.btn-start,.fdbk-submit,.tab-btn.on,.btn-done.done,.btn-modal-close,.dialog-ok{box-shadow:var(--sh-accent)}
+.modal-sheet{box-shadow:var(--sh-sheet)}
 
 /* ═══ 토스트 ═══ */
 .toast{
@@ -1389,7 +1399,7 @@ if(/KAKAOTALK/i.test(navigator.userAgent)){
 })();
 
 /* ═══ PWA ═══ */
-var APP_VER='v52';
+var APP_VER='v53';
 (function(){
   var stored=localStorage.getItem('app_cache_ver');
   localStorage.setItem('app_cache_ver',APP_VER);
