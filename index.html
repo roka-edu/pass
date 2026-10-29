@@ -378,6 +378,15 @@ button{font-family:inherit}
 .btn-start,.fdbk-submit,.tab-btn.on,.btn-done.done,.btn-modal-close,.dialog-ok{box-shadow:var(--sh-accent)}
 .modal-sheet{box-shadow:var(--sh-sheet)}
 
+/* 교육 카드의 기록변경 버튼: 미변경(노랑 점선) → 기변완료(테마별 채움색) */
+:root,html[data-theme="navy"]{--gb-todo-bg:#FFF4E0;--gb-todo-bd:#F0B44C;--gb-todo-tx:#8A5300;--gb-done-bg:#1F8A5B;--gb-done-tx:#FFFFFF}
+html[data-theme="white"]{--gb-todo-bg:#FFF4E0;--gb-todo-bd:#F0B44C;--gb-todo-tx:#8A5300;--gb-done-bg:#4F46E5;--gb-done-tx:#FFFFFF}
+html[data-theme="dark"]{--gb-todo-bg:#3A3020;--gb-todo-bd:#8A6A2C;--gb-todo-tx:#E8C77A;--gb-done-bg:#7AB8F5;--gb-done-tx:#0E1824}
+.btn-gb{min-height:36px;display:inline-flex;align-items:center;gap:4px;border-radius:10px;padding:0 12px;cursor:pointer;font-size:12.5px;font-weight:700;
+  background:var(--gb-todo-bg);border:1px dashed var(--gb-todo-bd);color:var(--gb-todo-tx)}
+.btn-gb.done{background:var(--gb-done-bg);border:1px solid var(--gb-done-bg);color:var(--gb-done-tx)}
+.btn-gb svg{stroke:currentColor;flex-shrink:0}
+.btn-gb:active{opacity:.75}
 /* ═══ 토스트 ═══ */
 .toast{
   position:absolute;
@@ -861,6 +870,10 @@ function renderList(elId,items){
     }else{
       toggles='<button class="btn-done'+(isDone?' done':'')+'" role="checkbox" aria-checked="'+isDone+'" onclick="toggle(\''+e.id+'\')">'+
         (isDone?ICON_CHECK:'')+'수강완료</button>';
+    }
+    if(isDone){
+      var gbOn=e.parts?e.parts.every(function(p){return method[p.id]==='gb';}):method[e.id]==='gb';
+      toggles+='<button class="btn-gb'+(gbOn?' done':'')+'" role="checkbox" aria-checked="'+gbOn+'" onclick="toggleGb(\''+e.id+'\')">'+(gbOn?ICON_CHECK+'기변완료':'기록변경')+'</button>';
     }
     var schBtn=e.noSch?'':'<button class="btn-sch" onclick="openSch(\''+st+'\',\''+e.type+'\')">일정 보기</button>';
     var goBtn=isDone?'':'<button class="btn-go" onclick="window.open(\''+e.url+'\',\'_blank\')">수강하기'+ICON_RIGHT+'</button>';
@@ -1403,7 +1416,7 @@ if(/KAKAOTALK/i.test(navigator.userAgent)){
 })();
 
 /* ═══ PWA ═══ */
-var APP_VER='v57';
+var APP_VER='v58';
 (function(){
   var stored=localStorage.getItem('app_cache_ver');
   localStorage.setItem('app_cache_ver',APP_VER);
