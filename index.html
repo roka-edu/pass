@@ -221,26 +221,6 @@ button{font-family:inherit}
 .btn-part:active,.btn-done:active,.btn-go:active{opacity:.75}
 
 /* ══════════════════════════════
-   기록변경 탭
-══════════════════════════════ */
-.gb-header{font-size:12.5px;color:var(--sub);line-height:1.45;padding:0 2px 10px}
-.gb-item{
-  display:flex;align-items:center;gap:12px;
-  background:var(--surface);border:1px solid var(--border);border-radius:14px;
-  padding:14px 16px;margin-bottom:8px;cursor:pointer;
-}
-.gb-item:active{opacity:.85}
-.gb-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
-.gb-title{font-size:15px;font-weight:700;color:var(--text);line-height:1.4}
-.gb-sub{font-size:12.5px;color:var(--sub)}
-.gb-badge{
-  display:inline-flex;align-items:center;gap:4px;flex-shrink:0;
-  border:1px dashed var(--dash);border-radius:10px;padding:8px 10px;
-  font-size:12px;font-weight:700;color:var(--sub);background:none;cursor:pointer;
-}
-.gb-item.done .gb-badge{border:1px solid var(--done-bg);background:var(--done-bg);color:var(--done-text)}
-
-/* ══════════════════════════════
    개선 의견 탭
 ══════════════════════════════ */
 .fdbk-banner{
@@ -374,7 +354,7 @@ button{font-family:inherit}
 /* ═══ 음영 (앱과 동일) ═══ */
 .hero,.summary-card,.modal-overlay.center .modal-sheet{box-shadow:var(--sh-raised)}
 .hero{position:relative;z-index:1}
-.info-card,.tabs,.edu-card,.gb-item,.fdbk-banner,.fdbk-item,.app-links{box-shadow:var(--sh-card)}
+.info-card,.tabs,.edu-card,.fdbk-banner,.fdbk-item,.app-links{box-shadow:var(--sh-card)}
 .btn-start,.fdbk-submit,.tab-btn.on,.btn-done.done,.btn-modal-close,.dialog-ok{box-shadow:var(--sh-accent)}
 .modal-sheet{box-shadow:var(--sh-sheet)}
 
@@ -481,13 +461,12 @@ html[data-theme="dark"]{--gb-todo-bg:#3A3020;--gb-todo-bd:#8A6A2C;--gb-todo-tx:#
         <div class="tile-row">
           <div class="tile"><span class="tile-label" id="tileLbl1">법정 필수</span><span class="tile-value" id="tileVal1">0 / 9</span></div>
           <div class="tile"><span class="tile-label" id="tileLbl2">직무 · 안전</span><span class="tile-value" id="tileVal2">0 / 1</span></div>
-          <div class="tile"><span class="tile-label">기준 연도</span><span class="tile-value" id="tileYear"></span></div>
+          <div class="tile"><span class="tile-label">기록변경</span><span class="tile-value" id="tileYear"></span></div>
         </div>
       </div>
 
       <div class="tabs" role="tablist">
         <button class="tab-btn on" role="tab" onclick="switchTab('edu',this)">교육 목록</button>
-        <button class="tab-btn"    role="tab" onclick="switchTab('gb',this)">기록변경</button>
         <button class="tab-btn"    role="tab" onclick="switchTab('fdbk',this)">개선 의견</button>
       </div>
     </div>
@@ -512,10 +491,6 @@ html[data-theme="dark"]{--gb-todo-bg:#3A3020;--gb-todo-bd:#8A6A2C;--gb-todo-tx:#
         </div>
         <div id="list2"></div>
       </div>
-    </div>
-
-    <div class="scroll-body" id="tabGb" style="display:none">
-      <!-- 기록변경 목록은 renderGb()가 채움 -->
     </div>
 
     <div class="scroll-body" id="tabFdbk" style="display:none">
@@ -758,7 +733,7 @@ function setSummary(pct,label,lbl1,val1,lbl2,val2){
   document.getElementById('tileVal1').textContent=val1;
   document.getElementById('tileLbl2').textContent=lbl2;
   document.getElementById('tileVal2').textContent=val2;
-  document.getElementById('tileYear').textContent=new Date().getFullYear();
+  document.getElementById('tileYear').textContent=countGb()+' / '+(EDU.filter(function(e){return e.cat===1;}).length+1);
 }
 
 var CAT2_IDS=['e08','e09','e10'];
@@ -785,38 +760,6 @@ function toggleGb(id){
   }
   saveMethod();render();
 }
-function toggleGbCat2(){
-  if(cat2GbDone()){
-    CAT2_IDS.forEach(function(id){delete method[id];});
-  }else{
-    var doneOnes=CAT2_IDS.filter(function(id){return done.indexOf(id)>=0;});
-    var toMark=doneOnes.length>0?doneOnes:CAT2_IDS;
-    toMark.forEach(function(id){method[id]='gb';});
-  }
-  saveMethod();render();
-}
-function renderGb(){
-  var el=document.getElementById('tabGb');
-  if(!el)return;
-  var c1=EDU.filter(function(e){return e.cat===1;});
-  var c2done=cat2GbDone();
-  function row(title,sub,isGb,onclk){
-    return '<div class="gb-item'+(isGb?' done':'')+'" role="checkbox" aria-checked="'+isGb+'" onclick="'+onclk+'">'+
-      '<div class="gb-info"><div class="gb-title">'+title+'</div>'+(sub?'<div class="gb-sub">'+sub+'</div>':'')+'</div>'+
-      '<span class="gb-badge">'+(isGb?ICON_CHECK+'변경 완료':'미변경')+'</span>'+
-    '</div>';
-  }
-  var c1Html=c1.map(function(e){
-    var isGb=e.parts
-      ?e.parts.every(function(p){return method[p.id]==='gb';})
-      :method[e.id]==='gb';
-    var sub=e.parts?e.parts.map(function(p){return p.lbl;}).join(' · '):'';
-    return row(e.title,sub,isGb,'toggleGb(\''+e.id+'\')');
-  }).join('');
-  var c2Html=row('안전관리교육','3개 중 1개 수강 시 기록변경 가능',c2done,'toggleGbCat2()');
-  el.innerHTML='<div class="gb-header">인사실무자에 의한 기록변경 완료 여부를 교육별로 표시해주세요</div>'+c1Html+c2Html;
-}
-
 function render(){
   var c1=EDU.filter(function(e){return e.cat===1});
   var c2=EDU.filter(function(e){return e.cat===2});
@@ -830,21 +773,12 @@ function render(){
   var BASIS=c1.length+1;
   var pct=Math.round(score/BASIS*100);
 
-  if(currentTab==='gb'){
-    var gbCount=countGb();
-    var gbTotal=EDU.filter(function(e){return e.cat===1;}).length+1;
-    var gbPct=gbTotal>0?Math.round(gbCount/gbTotal*100):0;
-    var gb2=cat2GbDone()?1:0;
-    setSummary(gbPct,'기록변경률','법정 필수 변경',(gbCount-gb2)+' / '+c1.length,'직무·안전 변경',gb2+' / 1');
-    renderGb();
-  }else{
-    setSummary(pct,'이수율','법정 필수',d1+' / '+c1.length,'직무 · 안전',cat2ok+' / 1');
-    document.getElementById('catCount1').textContent=d1+' / '+c1.length;
-    document.getElementById('catCount2').textContent=d2+' / '+c2.length;
-    renderList('list1',c1);
-    renderList('list2',c2);
-    updateCatState();
-  }
+  setSummary(pct,'이수율','법정 필수',d1+' / '+c1.length,'직무 · 안전',cat2ok+' / 1');
+  document.getElementById('catCount1').textContent=d1+' / '+c1.length;
+  document.getElementById('catCount2').textContent=d2+' / '+c2.length;
+  renderList('list1',c1);
+  renderList('list2',c2);
+  updateCatState();
 }
 
 function renderList(elId,items){
@@ -894,7 +828,6 @@ function switchTab(t,el){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on')});
   el.classList.add('on');
   document.getElementById('tabEdu').style.display=t==='edu'?'':'none';
-  document.getElementById('tabGb').style.display=t==='gb'?'':'none';
   document.getElementById('tabFdbk').style.display=t==='fdbk'?'':'none';
   if(t==='fdbk')loadFeedback();
   render();
@@ -1416,7 +1349,7 @@ if(/KAKAOTALK/i.test(navigator.userAgent)){
 })();
 
 /* ═══ PWA ═══ */
-var APP_VER='v58';
+var APP_VER='v59';
 (function(){
   var stored=localStorage.getItem('app_cache_ver');
   localStorage.setItem('app_cache_ver',APP_VER);
@@ -1433,7 +1366,6 @@ applyTheme(currentTheme());
 loadDone();loadMethod();
 recordVisit();
 render();
-document.getElementById('tabGb').style.display='none';
 </script>
 </body>
 </html>
