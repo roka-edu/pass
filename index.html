@@ -599,7 +599,7 @@ function showToast(msg){
 }
 
 /* ═══ 카테고리 아코디언 ═══ */
-var cat1Open=false,cat2Open=true;
+var cat1Open=true,cat2Open=true;
 function toggleCat(n){
   if(n===1)cat1Open=!cat1Open;else cat2Open=!cat2Open;
   updateCatState();
@@ -1362,7 +1362,7 @@ if(/KAKAOTALK/i.test(navigator.userAgent)){
 })();
 
 /* ═══ PWA ═══ */
-var APP_VER='v63';
+var APP_VER='v64';
 (function(){
   var stored=localStorage.getItem('app_cache_ver');
   localStorage.setItem('app_cache_ver',APP_VER);
