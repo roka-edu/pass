@@ -491,7 +491,7 @@ html[data-theme="dark"]{--gb-todo-bg:#3A3020;--gb-todo-bd:#8A6A2C;--gb-todo-tx:#
       <div class="edu-group">
         <div class="cat-hdr" onclick="toggleCat(2)" role="button">
           <span class="cat-title">직무 · 안전 교육</span>
-          <span class="cat-note">3개 중 1개 이상</span>
+          <span class="cat-note">2개 중 1개 이상</span>
           <span class="cat-spacer"></span>
           <span class="cat-count" id="catCount2"></span>
           <span class="cat-arrow" id="catArrow2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></span>
@@ -572,8 +572,9 @@ var EDU=[
     guide:['개인정보취급자: 정보주체·개인정보처리자 과정 중 선택','개인정보 보호책임자: 보호책임자 과정 수강','나라배움터 개인정보교육 과정도 인정'],
     links:[{l:'정보주체',u:'https://edu.privacy.go.kr/user/course/infoList.do?srchCrsClNo=11'},{l:'개인정보처리자',u:'https://edu.privacy.go.kr/user/course/infoList.do?srchCrsClNo=10'},{l:'보호책임자',u:'https://edu.privacy.go.kr/user/course/infoList.do?srchCrsClNo=30'},{l:'나라배움터 실무과정',u:'https://e-learning.nhi.go.kr/mobile/crs/apply/elrnApplyView.do?crseSessId=C020031855202600001'},{l:'나라배움터 전문과정',u:'https://e-learning.nhi.go.kr/mobile/crs/apply/elrnApplyView.do?crseSessId=C020031856202600001'}]},
   {cat:2,id:'e08',title:'산업안전보건 교육',          site:'안전보건공단', url:'https://edu.kosha.or.kr',   type:'check',   noSch:true},
-  {cat:2,id:'e09',title:'육군 안전관리교육 (관리자)', site:'STEP',       url:'https://safety.step.or.kr', type:'always',  tag:'상시',         tc:'tag-always', noSch:true},
-  {cat:2,id:'e10',title:'육군 안전관리교육 (실무자)', site:'STEP',       url:'https://safety.step.or.kr', type:'always',  tag:'상시',         tc:'tag-always', noSch:true},
+  {cat:2,id:'e09',title:'육군 안전관리교육',          site:'STEP',       url:'https://safety.step.or.kr', type:'always',  tag:'상시',         tc:'tag-always', noSch:true,
+    guideHead:'본인에게 해당하는 과정 1개만 수강',
+    guide:['관리자: [필수] 안전 관리자','실무자: [필수] 안전 실무자','STEP 첫 화면 전체과정 맨 위에 두 과정이 있습니다']},
 ];
 var SCH={
   gender: [{l:'신청·수강 기간',v:'3월 16일 ~ 12월 31일'}],
